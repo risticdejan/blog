@@ -10,7 +10,7 @@
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>com.itakademija</groupId>
+            <groupId>com.dejanristic</groupId>
             <artifactId>core</artifactId>
             <version>${project.version}</version>
         </dependency>
