@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BlogApplication {
 
     public static void main(String[] args) {
+        System.setProperty("server.servlet.context-path", "/blog");
         SpringApplication.run(BlogApplication.class, args);
     }
 
