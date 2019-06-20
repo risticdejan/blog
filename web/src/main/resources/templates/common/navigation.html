@@ -10,16 +10,22 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item" th:classappend="${activeTab == 'home' ? 'active':''}">
-                        <a class="nav-link" th:href="@{__${T(com.itakademija.blog.util.UrlMappings).HOME}__}">Home</a>
+                        <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).HOME}__}">Home</a>
                     </li>
                     <li class="nav-item" th:classappend="${activeTab == 'about' ? 'active':''}">
-                        <a class="nav-link" th:href="@{__${T(com.itakademija.blog.util.UrlMappings).ABOUT}__}">About</a>
+                        <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ABOUT}__}">About</a>
                     </li>
                     <li class="nav-item" th:classappend="${activeTab == 'post' ? 'active':''}">
-                        <a class="nav-link" th:href="@{__${T(com.itakademija.blog.util.UrlMappings).POST}__}">Post</a>
+                        <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).POST}__}">Post</a>
                     </li>
                     <li class="nav-item" th:classappend="${activeTab == 'contact' ? 'active':''}">
-                        <a class="nav-link" th:href="@{__${T(com.itakademija.blog.util.UrlMappings).CONTACT}__}">Contact</a>
+                        <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).CONTACT}__}">Contact</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${activeTab == 'login' ? 'active':''}">
+                        <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).LOGIN}__}">Login</a>
+                    </li>
+                    <li class="nav-item" th:classappend="${activeTab == 'register' ? 'active':''}">
+                        <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).REGISTER}__}">Register</a>
                     </li>
                 </ul>
             </div>

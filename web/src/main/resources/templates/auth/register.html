@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head th:replace="~{common/head :: headFragment}"></head>
+
+    <body>
+
+        <!-- Navigation -->
+        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'register'})}"></nav>
+
+        <!-- Page Header -->
+        <header class="masthead" style="background-image: url('img/contact-bg.jpg')">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <div class="page-heading">
+                            <h1>Register</h1>
+                            <span class="subheading">Join us now</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <form>
+                        <div class="form-group floating-label-form-group controls">
+                            <label for="inputUsername">Username</label>
+                            <input type="text" class="form-control" id="inputUsername" name="username" placeholder="Enter username">
+                        </div>
+                        <div class="form-group floating-label-form-group controls">
+                            <label for="inputEmail">Email address</label>
+                            <input type="email" class="form-control" id="inputEmail" name="email"  placeholder="Enter email">
+                        </div>
+                        <div class="form-group floating-label-form-group controls">
+                            <label for="inputPassword">Password</label>
+                            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Enter Password">
+                        </div>
+                        <div class="form-group floating-label-form-group controls">
+                            <label for="inputConfirmPassword">Confirm Password</label>
+                            <input type="password" class="form-control" id="inputConfirmPassword" name="confrimPassword" placeholder="Confirm Password">
+                        </div>
+                        <br/>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+        <footer th:replace="~{common/footer :: footerFragment}"></footer>
+
+        <div th:replace="~{common/script :: scriptFragment}"></div>
+
+    </body>
+
+</html>
+

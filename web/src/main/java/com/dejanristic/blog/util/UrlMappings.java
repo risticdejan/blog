@@ -7,6 +7,8 @@ public class UrlMappings {
     public static final String ABOUT = "/about";
     public static final String CONTACT = "/contact";
     public static final String POST = "/post";
+    public static final String LOGIN = "/login";
+    public static final String REGISTER = "/register";
 
     private UrlMappings() {
     }
