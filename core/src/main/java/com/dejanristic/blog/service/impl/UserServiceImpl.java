@@ -3,6 +3,8 @@ package com.dejanristic.blog.service.impl;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.repository.UserRepository;
 import com.dejanristic.blog.service.UserService;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,8 @@ public class UserServiceImpl implements UserService {
         if (localUser != null) {
             log.info("user {} already exists. Nothing will be done.", user.getUsername());
         } else {
+            user.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
+            user.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
             localUser = userRepository.save(user);
         }
 
