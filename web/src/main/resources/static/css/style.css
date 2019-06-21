@@ -11,3 +11,26 @@ li.nav-item.active > a {
         color: #333;
     }
 }
+
+.modal-content .modal-header {
+    border: none;
+}
+
+.modal-content.success {
+    background-color: #5dcc76;
+    border: 1px solid #155724;
+    color: #155724;
+}
+
+
+.modal-content.error {
+    background-color: #da6671;
+    border: 1px solid #7d1922;
+    color: #7d1922;
+}
+
+.modal-content.info {
+    background-color: #70a9e6;
+    border: 1px solid #004085;
+    color: #004085;
+}

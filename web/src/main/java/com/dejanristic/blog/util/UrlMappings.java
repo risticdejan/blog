@@ -9,6 +9,7 @@ public class UrlMappings {
     public static final String POST = "/post";
     public static final String LOGIN = "/login";
     public static final String REGISTER = "/register";
+    public static final String REDIRECT_REGISTRER = "redirect:" + REGISTER;
 
     private UrlMappings() {
     }

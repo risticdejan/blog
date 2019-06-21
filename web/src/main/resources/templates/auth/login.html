@@ -8,6 +8,10 @@
         <!-- Navigation -->
         <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'login'})}"></nav>
 
+        <div th:if="${flashMessage}">
+            <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
+        </div>
+
         <!-- Page Header -->
         <header class="masthead" style="background-image: url('img/contact-bg.jpg')">
             <div class="overlay"></div>
