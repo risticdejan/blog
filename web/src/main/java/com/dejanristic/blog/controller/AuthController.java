@@ -71,7 +71,7 @@ public class AuthController {
 
         User newUser = userService.createUser(user);
 
-        if (newUser != null) {
+        if (newUser == null) {
             flashMessageService.flash(
                     FlashNames.SUCCESS_TYPE,
                     "Thank you, You are registered successfully",
@@ -80,7 +80,7 @@ public class AuthController {
         } else {
             flashMessageService.flash(
                     FlashNames.ERROR_TYPE,
-                    "Sorry, some problem has happened",
+                    "Unfortunately, there was a problem, please try again later",
                     redirectAttributes
             );
         }
