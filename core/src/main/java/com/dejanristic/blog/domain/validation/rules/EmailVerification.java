@@ -1,4 +1,4 @@
-package com.dejanristic.blog.validation;
+package com.dejanristic.blog.domain.validation.rules;
 
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.FIELD;

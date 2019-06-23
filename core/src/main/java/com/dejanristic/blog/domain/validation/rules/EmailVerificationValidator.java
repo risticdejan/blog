@@ -1,4 +1,4 @@
-package com.dejanristic.blog.validation;
+package com.dejanristic.blog.domain.validation.rules;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

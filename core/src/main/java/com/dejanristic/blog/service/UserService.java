@@ -12,5 +12,7 @@ public interface UserService {
 
     User createUser(User user);
 
+    User createAdmin(User admin);
+
     User save(User user);
 }

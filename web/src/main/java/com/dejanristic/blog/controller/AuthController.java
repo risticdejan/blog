@@ -1,18 +1,20 @@
 package com.dejanristic.blog.controller;
 
 import com.dejanristic.blog.domain.User;
+import com.dejanristic.blog.domain.validation.FormValidationGroup;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.FlashNames;
+import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +53,7 @@ public class AuthController {
 
     @PostMapping(UrlMappings.REGISTER)
     public String register(
-            @Valid @ModelAttribute(AttributeNames.NEW_USER) User user,
+            @Validated(FormValidationGroup.class) @ModelAttribute(AttributeNames.NEW_USER) User user,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
@@ -69,9 +71,12 @@ public class AuthController {
             return UrlMappings.REDIRECT_REGISTRER;
         }
 
-        User newUser = userService.createUser(user);
+        user.setPassword(
+                SecurityUtility.passwordEncoder().encode(user.getPassword())
+        );
 
-        if (newUser == null) {
+        User newUser = userService.createUser(user);
+        if (newUser != null) {
             flashMessageService.flash(
                     FlashNames.SUCCESS_TYPE,
                     "Thank you, You are registered successfully",
@@ -84,7 +89,6 @@ public class AuthController {
                     redirectAttributes
             );
         }
-
         return UrlMappings.REDIRECT_HOME;
     }
 
