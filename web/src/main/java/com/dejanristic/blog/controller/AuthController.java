@@ -4,6 +4,7 @@ import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.validation.FormValidationGroup;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
+import com.dejanristic.blog.service.impl.UserSecurityService;
 import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.FlashNames;
 import com.dejanristic.blog.util.SecurityUtility;
@@ -11,6 +12,10 @@ import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,15 +31,25 @@ public class AuthController {
 
     private UserService userService;
 
+    private UserSecurityService userSecurityService;
+
     private FlashMessageService flashMessageService;
 
     @Autowired
     public AuthController(
             UserService userService,
+            UserSecurityService userSecurityService,
             FlashMessageService flashMessageService
     ) {
         this.userService = userService;
+        this.userSecurityService = userSecurityService;
         this.flashMessageService = flashMessageService;
+    }
+
+    @ModelAttribute(AttributeNames.CURRENT_USER)
+    public UserDetails getCurrentUser(Authentication authentication) {
+        return (authentication == null)
+                ? null : (UserDetails) authentication.getPrincipal();
     }
 
     @GetMapping(UrlMappings.LOGIN)
@@ -76,6 +91,18 @@ public class AuthController {
         );
 
         User newUser = userService.createUser(user);
+
+        UserDetails userDetails
+                = userSecurityService.loadUserByUsername(newUser.getUsername());
+
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                userDetails,
+                userDetails.getPassword(),
+                userDetails.getAuthorities()
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         if (newUser != null) {
             flashMessageService.flash(
                     FlashNames.SUCCESS_TYPE,

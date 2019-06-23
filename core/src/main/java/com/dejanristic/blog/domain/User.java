@@ -83,7 +83,7 @@ public class User implements UserDetails {
     private Date updatedAt;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-        CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+        CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = {
         @JoinColumn(name = "user_id")}, inverseJoinColumns = {
         @JoinColumn(name = "role_id")})
@@ -132,7 +132,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return true;
     }
 
     @Override
