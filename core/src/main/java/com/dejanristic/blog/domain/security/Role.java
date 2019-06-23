@@ -1,6 +1,7 @@
 package com.dejanristic.blog.domain.security;
 
 import com.dejanristic.blog.domain.User;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -21,7 +22,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-public class Role {
+public class Role implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

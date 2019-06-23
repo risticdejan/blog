@@ -15,9 +15,6 @@
                     <li class="nav-item" th:classappend="${activeTab == 'about' ? 'active':''}">
                         <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ABOUT}__}">About</a>
                     </li>
-                    <li sec:authorize="isAuthenticated()" class="nav-item" th:classappend="${activeTab == 'post' ? 'active':''}">
-                        <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).POST}__}">Post</a>
-                    </li>
                     <li class="nav-item" th:classappend="${activeTab == 'contact' ? 'active':''}">
                         <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).CONTACT}__}">Contact</a>
                     </li>
@@ -34,7 +31,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#">Released articles</a>
                             <a class="dropdown-item" href="#">Unreleased articles</a>
-                            <a class="dropdown-item" href="#">Add articles</a>
+                            <a class="dropdown-item" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CREATE}__}">Add articles</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).LOGOUT}__}">Logout</a>
                         </div>

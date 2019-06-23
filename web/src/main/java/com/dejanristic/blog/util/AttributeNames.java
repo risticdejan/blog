@@ -6,6 +6,8 @@ public class AttributeNames {
     public static final String FLASH_MESSAGE = "flashMessage";
     public static final String CURRENT_USER = "currentUser";
 
+    public static final String NEW_ARTICLE = "newArticle";
+
     private AttributeNames() {
     }
 }

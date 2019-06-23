@@ -27,8 +27,8 @@ public class DBData {
     }
 
     private void insertRoles() {
-        roleService.createRole(new Role(1L, "ROLE_USER"));
-        roleService.createRole(new Role(2L, "ROLE_ADMIN"));
+        roleService.createRole(new Role("ROLE_USER"));
+        roleService.createRole(new Role("ROLE_ADMIN"));
     }
 
     private void insertUsers() {
