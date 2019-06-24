@@ -86,7 +86,7 @@ public class ArticleController {
         if (article != null) {
             flashMessageService.flash(
                     FlashNames.SUCCESS_TYPE,
-                    "The article was created and as soon as possible "
+                    "The article was created, as soon as possible "
                     + "it will be released",
                     redirectAttributes
             );

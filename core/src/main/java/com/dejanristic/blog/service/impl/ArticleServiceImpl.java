@@ -6,6 +6,8 @@ import com.dejanristic.blog.service.ArticleService;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +29,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article findById(Long id) {
         return this.articleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Page<Article> findAll(Pageable pageable) {
+        return (Page<Article>) this.articleRepository.findAll(pageable);
     }
 
     @Override
