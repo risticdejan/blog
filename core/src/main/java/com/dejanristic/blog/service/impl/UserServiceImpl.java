@@ -79,10 +79,8 @@ public class UserServiceImpl implements UserService {
             log.info("user {} already exists. Nothing will be done.", admin.getUsername());
         } else {
 
-            Role role1 = roleRepository.findByName("ROLE_USER");
-            Role role2 = roleRepository.findByName("ROLE_ADMIN");
-            admin.addRole(role1);
-            admin.addRole(role2);
+            Role role = roleRepository.findByName("ROLE_ADMIN");
+            admin.addRole(role);
 
             admin.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             admin.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));

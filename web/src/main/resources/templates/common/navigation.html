@@ -29,9 +29,20 @@
                             <span style="color: #ffc107;" sec:authentication="name"></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Released articles</a>
-                            <a class="dropdown-item" href="#">Unreleased articles</a>
-                            <a class="dropdown-item" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CREATE}__}">Add articles</a>
+                            <a sec:authorize="hasRole('ROLE_USER')" class="dropdown-item" href="#">
+                                Released articles
+                            </a>
+                            <a sec:authorize="hasRole('ROLE_USER')" class="dropdown-item" href="#">
+                                Unreleased articles
+                            </a>
+                            <a sec:authorize="hasRole('ROLE_USER')" class="dropdown-item"
+                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CREATE}__}">
+                                Add articles
+                            </a>
+                            <a sec:authorize="hasRole('ROLE_ADMIN')" class="dropdown-item"
+                               th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN}__}">
+                                Administration
+                            </a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).LOGOUT}__}">Logout</a>
                         </div>
