@@ -46,12 +46,6 @@ public class AuthController {
         this.flashMessageService = flashMessageService;
     }
 
-    @ModelAttribute(AttributeNames.CURRENT_USER)
-    public UserDetails getCurrentUser(Authentication authentication) {
-        return (authentication == null)
-                ? null : (UserDetails) authentication.getPrincipal();
-    }
-
     @GetMapping(UrlMappings.LOGIN)
     public String loginForm() {
         return ViewNames.LOGIN;

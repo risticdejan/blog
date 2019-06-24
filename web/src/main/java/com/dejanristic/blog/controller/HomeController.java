@@ -2,7 +2,6 @@ package com.dejanristic.blog.controller;
 
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.service.ArticleService;
-import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.PerPage;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
@@ -11,12 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -32,12 +28,6 @@ public class HomeController {
 
     public HomeController(ArticleService articleService) {
         this.articleService = articleService;
-    }
-
-    @ModelAttribute(AttributeNames.CURRENT_USER)
-    public UserDetails getCurrentUser(Authentication authentication) {
-        return (authentication == null)
-                ? null : (UserDetails) authentication.getPrincipal();
     }
 
     @GetMapping("/")

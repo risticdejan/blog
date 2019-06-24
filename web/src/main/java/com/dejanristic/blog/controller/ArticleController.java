@@ -13,8 +13,6 @@ import com.dejanristic.blog.util.ViewNames;
 import java.security.Principal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,12 +41,6 @@ public class ArticleController {
         this.userService = userService;
         this.articleService = articleService;
         this.flashMessageService = flashMessageService;
-    }
-
-    @ModelAttribute(AttributeNames.CURRENT_USER)
-    public UserDetails getCurrentUser(Authentication authentication) {
-        return (authentication == null)
-                ? null : (UserDetails) authentication.getPrincipal();
     }
 
     @GetMapping(UrlMappings.ARTICLE_CREATE)

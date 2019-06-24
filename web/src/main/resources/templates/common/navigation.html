@@ -26,7 +26,7 @@
                     </li>
                     <li id="dropdown-user" sec:authorize="isAuthenticated()" class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span style="color: #ffc107;" th:if="${currentUser}" th:text="${currentUser.getUsername()}"></span>
+                            <span style="color: #ffc107;" sec:authentication="name"></span>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#">Released articles</a>
