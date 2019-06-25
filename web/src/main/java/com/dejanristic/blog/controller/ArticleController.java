@@ -11,9 +11,13 @@ import com.dejanristic.blog.util.FlashNames;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import java.security.Principal;
+import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,19 +26,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
 public class ArticleController {
 
-    private UserService userService;
+    private final UserService userService;
 
-    private ArticleService articleService;
+    private final ArticleService articleService;
 
-    private FlashMessageService flashMessageService;
+    private final FlashMessageService flashMessageService;
+
+    @ModelAttribute(AttributeNames.CURRENT_USER)
+    public User getCurrentUser(Authentication authentication) {
+        return (authentication == null) ? new User() : (User) authentication.getPrincipal();
+    }
 
     @Autowired
     public ArticleController(
@@ -57,7 +64,8 @@ public class ArticleController {
 
     @PostMapping(UrlMappings.ARTICLE_STORE)
     public String store(
-            @Validated(FormValidationGroup.class) @ModelAttribute(AttributeNames.NEW_ARTICLE) Article article,
+            @Validated(FormValidationGroup.class)
+            @ModelAttribute(AttributeNames.NEW_ARTICLE) Article article,
             BindingResult result,
             Principal principal,
             RedirectAttributes redirectAttributes
@@ -65,7 +73,8 @@ public class ArticleController {
 
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult." + AttributeNames.NEW_ARTICLE,
+                    "org.springframework.validation.BindingResult."
+                    + AttributeNames.NEW_ARTICLE,
                     result
             );
             redirectAttributes.addFlashAttribute(AttributeNames.NEW_ARTICLE, article);
@@ -87,21 +96,112 @@ public class ArticleController {
                     redirectAttributes
             );
         } else {
-            flashMessageService.flash(
-                    FlashNames.ERROR_TYPE,
-                    "Unfortunately, there was a problem, please try again later",
-                    redirectAttributes
-            );
+            errorWasHappend(redirectAttributes);
         }
         return UrlMappings.REDIRECT_HOME;
     }
 
-    @GetMapping(UrlMappings.ARTICLE + "/{id}")
-    @ResponseBody
-    public ModelAndView show(
+    @GetMapping(UrlMappings.ARTICLE_SHOW + "/{id}")
+    public String show(
             @PathVariable("id") String id,
-            HttpServletRequest request
+            HttpServletRequest request,
+            Model model,
+            RedirectAttributes redirectAttributes
     ) {
+        Long cleanId = cleanIdParam(id);
+
+        Article article = articleService.findById(cleanId);
+        if (article == null) {
+            articleNotFound(redirectAttributes);
+            return UrlMappings.REDIRECT_HOME;
+        }
+
+        model.addAttribute(AttributeNames.ARTICLE, article);
+        return ViewNames.ARTICLE_SHOW;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping(UrlMappings.ARTICLE_EDIT + "/{id}")
+    public String edit(
+            @PathVariable("id") String id,
+            Model model,
+            HttpServletRequest request,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        Long cleanId = cleanIdParam(id);
+
+        Article article = articleService.findById(cleanId);
+
+        User user = (User) authentication.getPrincipal();
+
+        if (!Objects.equals(article.getUser().getId(), user.getId())) {
+            throw new AccessDeniedException("access forbidden");
+        }
+
+        if (article == null) {
+            articleNotFound(redirectAttributes);
+            return UrlMappings.REDIRECT_HOME;
+        }
+
+        model.addAttribute(AttributeNames.EDIT_ARTICLE, article);
+        model.addAttribute("id", cleanId);
+
+        return ViewNames.EDIT_ARTICLE_FORM;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping(UrlMappings.ARTICLE_UPDATE + "/{id}")
+    public String update(
+            @Validated(FormValidationGroup.class)
+            @ModelAttribute(AttributeNames.EDIT_ARTICLE) Article article,
+            @PathVariable("id") String id,
+            Authentication authentication,
+            BindingResult result,
+            RedirectAttributes redirectAttributes
+    ) {
+        Long cleanId = cleanIdParam(id);
+
+        article = articleService.update(cleanId, article);
+
+        User user = (User) authentication.getPrincipal();
+
+        if (!Objects.equals(article.getUser().getId(), user.getId())) {
+            throw new AccessDeniedException("access forbidden");
+        }
+
+        if (article != null) {
+            flashMessageService.flash(
+                    FlashNames.SUCCESS_TYPE,
+                    "The article was updated",
+                    redirectAttributes
+            );
+        } else {
+            errorWasHappend(redirectAttributes);
+        }
+
+        return UrlMappings.REDIRECT_ARTICLE_SHOW
+                + "/" + cleanId;
+    }
+
+    private void articleNotFound(RedirectAttributes redirectAttributes) {
+        flashMessageService.flash(
+                FlashNames.ERROR_TYPE,
+                "Unfortunately, Article not found",
+                redirectAttributes
+        );
+    }
+
+    private void errorWasHappend(RedirectAttributes redirectAttributes) {
+        flashMessageService.flash(
+                FlashNames.ERROR_TYPE,
+                "Unfortunately, there was a problem, "
+                + "please try again later",
+                redirectAttributes
+        );
+    }
+
+    private Long cleanIdParam(String id) {
         Long cleanId;
         try {
             id = (id == null) ? "1" : id;
@@ -110,15 +210,6 @@ public class ArticleController {
             cleanId = 0L;
         }
 
-        Article article = articleService.findById(cleanId);
-
-        String backUrl = (request.getHeader("Referer") != null)
-                ? request.getHeader("Referer")
-                : UrlMappings.HOME;
-
-        ModelAndView mv = new ModelAndView(ViewNames.ARTICLE_SHOW);
-        mv.addObject(AttributeNames.ARTICLE, article);
-        mv.addObject(AttributeNames.BACK_URL, backUrl);
-        return mv;
+        return cleanId;
     }
 }

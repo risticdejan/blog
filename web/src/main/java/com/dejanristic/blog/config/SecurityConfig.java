@@ -40,7 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         "/",
         "/home",
         "/about",
-        "/contact"
+        "/contact",
+        "/article/**"
     };
 
     @Override

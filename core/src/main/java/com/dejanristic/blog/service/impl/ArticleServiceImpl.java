@@ -57,4 +57,21 @@ public class ArticleServiceImpl implements ArticleService {
         return this.articleRepository.save(article);
     }
 
+    @Override
+    @Transactional
+    public Article update(Long id, Article article) {
+        Article oldArticle = articleRepository.findById(id).orElse(null);
+
+        if (oldArticle == null) {
+            log.info("article don't found");
+            return null;
+        }
+
+        oldArticle.setTitle(article.getTitle());
+        oldArticle.setDescription(article.getDescription());
+        oldArticle.setBody(article.getBody());
+
+        return this.articleRepository.save(oldArticle);
+    }
+
 }

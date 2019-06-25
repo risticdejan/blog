@@ -9,6 +9,7 @@ public class AttributeNames {
     public static final String CURRENT_USER = "currentUser";
 
     public static final String NEW_ARTICLE = "newArticle";
+    public static final String EDIT_ARTICLE = "editArticle";
     public static final String ARTICLE = "article";
 
     private AttributeNames() {

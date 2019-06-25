@@ -38,7 +38,7 @@ public class Article implements Serializable {
 
     @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
     @Size(min = 4, max = 255, groups = {FormValidationGroup.class})
-    @Column(name = "title", unique = true, nullable = false, length = 255)
+    @Column(name = "title", nullable = false, length = 255)
     private String title;
 
     @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
