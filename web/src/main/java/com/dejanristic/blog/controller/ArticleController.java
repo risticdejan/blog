@@ -11,6 +11,7 @@ import com.dejanristic.blog.util.FlashNames;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import java.security.Principal;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -44,7 +48,7 @@ public class ArticleController {
     }
 
     @GetMapping(UrlMappings.ARTICLE_CREATE)
-    public String createForm(Model model) {
+    public String create(Model model) {
         if (!model.containsAttribute(AttributeNames.NEW_ARTICLE)) {
             model.addAttribute(AttributeNames.NEW_ARTICLE, new Article());
         }
@@ -52,7 +56,7 @@ public class ArticleController {
     }
 
     @PostMapping(UrlMappings.ARTICLE_STORE)
-    public String storeArticle(
+    public String store(
             @Validated(FormValidationGroup.class) @ModelAttribute(AttributeNames.NEW_ARTICLE) Article article,
             BindingResult result,
             Principal principal,
@@ -90,5 +94,31 @@ public class ArticleController {
             );
         }
         return UrlMappings.REDIRECT_HOME;
+    }
+
+    @GetMapping(UrlMappings.ARTICLE + "/{id}")
+    @ResponseBody
+    public ModelAndView show(
+            @PathVariable("id") String id,
+            HttpServletRequest request
+    ) {
+        Long cleanId;
+        try {
+            id = (id == null) ? "1" : id;
+            cleanId = Long.parseLong(id);
+        } catch (NumberFormatException ex) {
+            cleanId = 0L;
+        }
+
+        Article article = articleService.findById(cleanId);
+
+        String backUrl = (request.getHeader("Referer") != null)
+                ? request.getHeader("Referer")
+                : UrlMappings.HOME;
+
+        ModelAndView mv = new ModelAndView(ViewNames.ARTICLE_SHOW);
+        mv.addObject(AttributeNames.ARTICLE, article);
+        mv.addObject(AttributeNames.BACK_URL, backUrl);
+        return mv;
     }
 }

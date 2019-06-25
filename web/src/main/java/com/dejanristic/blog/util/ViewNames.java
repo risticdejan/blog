@@ -8,6 +8,7 @@ public class ViewNames {
     public static final String LOGIN = "auth/login";
     public static final String REGISTER = "auth/register";
     public static final String CREATE_ARTICLE_FORM = "article/create";
+    public static final String ARTICLE_SHOW = "article/show";
 
     private ViewNames() {
     }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head th:replace="~{common/head :: headFragment}"></head>
+
+    <body>
+
+        <!-- Navigation -->
+        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'home'})}"></nav>
+
+        <div th:if="${flashMessage}">
+            <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
+        </div>
+
+        <!-- Page Header -->
+        <header class="masthead" th:style="'background-image:url(' + @{/img/post-bg.jpg} + ');'" >
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <div class="post-heading">
+                            <h1 th:text="${article.title}">Man must explore, and this is exploration at its greatest</h1>
+                            <h2 th:text="${article.description}" class="subheading">Problems look mighty small from 150 miles up</h2>
+                            <span class="meta">Posted by
+                                <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
+                                   th:text="${article.user.username}"
+                                   ></a>
+                                on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span></p>
+                            </span>
+                            <a class="btn btn-primary float-left"
+                               th:href="@{__${back}__}">
+                                Back
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div th:utext="${article.body}"></div>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <!-- Footer -->
+        <footer th:replace="~{common/footer :: footerFragment}"></footer>
+
+        <div th:replace="~{common/script :: scriptFragment}"></div>
+
+    </body>
+
+</html>
+

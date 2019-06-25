@@ -33,12 +33,14 @@
                 <div class="col-lg-8 col-md-10 mx-auto">
 
                     <div data-th-each="article : ${articles}" class="post-preview">
-                        <a href="post.html">
+                        <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE + '/' + article.id}__}">
                             <h2 th:text="${article.title}" class="post-title"></h2>
                             <h3 th:text="${article.description}" class="post-subtitle"> </h3>
                         </a>
                         <p class="post-meta">Posted by
-                            <a href="#" th:text="${article.user.username}"></a>
+                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
+                               th:text="${article.user.username}"
+                               ></a>
                             on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span></p>
                         <hr>
                     </div>
