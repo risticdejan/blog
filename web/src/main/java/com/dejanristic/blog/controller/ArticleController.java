@@ -38,11 +38,6 @@ public class ArticleController {
 
     private final FlashMessageService flashMessageService;
 
-    @ModelAttribute(AttributeNames.CURRENT_USER)
-    public User getCurrentUser(Authentication authentication) {
-        return (authentication == null) ? new User() : (User) authentication.getPrincipal();
-    }
-
     @Autowired
     public ArticleController(
             UserService userService,
