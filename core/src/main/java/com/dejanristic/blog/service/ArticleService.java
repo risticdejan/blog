@@ -6,15 +6,17 @@ import org.springframework.data.domain.Pageable;
 
 public interface ArticleService {
 
-    Page<Article> findAll(Pageable pageable);
+    Page<Article> findAllReleasedArticles(Pageable pageable);
+
+    Page<Article> findAllReleasedArticlesByUser(Long id, Pageable pageable);
+
+    Page<Article> findAllUnreleasedArticlesByUser(Long id, Pageable pageable);
 
     Article findByTitle(String title);
 
     Article findById(Long id);
 
     Article createArticle(Article article);
-
-    Article save(Article article);
 
     Article update(Long id, Article article);
 

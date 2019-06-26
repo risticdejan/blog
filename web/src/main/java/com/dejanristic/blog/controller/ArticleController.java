@@ -8,6 +8,7 @@ import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.FlashNames;
+import com.dejanristic.blog.util.PerPage;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import java.security.Principal;
@@ -15,6 +16,9 @@ import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,11 +30,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
 public class ArticleController {
+
+    @Autowired
+    @PerPage
+    private int perPage;
 
     private final UserService userService;
 
@@ -94,6 +103,49 @@ public class ArticleController {
             errorWasHappend(redirectAttributes);
         }
         return UrlMappings.REDIRECT_HOME;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping(UrlMappings.ARTICLE_RELEASED_LIST)
+    public String releasedArticlesList(
+            @RequestParam(required = false) String page,
+            Authentication authentication,
+            Model model
+    ) {
+        int cleanPage = cleanPageParam(page);
+
+        User user = (User) authentication.getPrincipal();
+
+        Page<Article> articles
+                = articleService.findAllReleasedArticlesByUser(
+                        user.getId(),
+                        PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
+                );
+
+        model.addAttribute("articles", articles);
+        return ViewNames.ARTICLE_RELEASED_LIST;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping(UrlMappings.ARTICLE_UNRELEASED_LIST)
+    public String unreleasedArticlesList(
+            @RequestParam(required = false) String page,
+            Authentication authentication,
+            Model model
+    ) {
+        int cleanPage = cleanPageParam(page);
+
+        User user = (User) authentication.getPrincipal();
+
+        Page<Article> articles
+                = articleService.findAllUnreleasedArticlesByUser(
+                        user.getId(),
+                        PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
+                );
+
+        model.addAttribute("articles", articles);
+
+        return ViewNames.ARTICLE_UNRELEASED_LIST;
     }
 
     @GetMapping(UrlMappings.ARTICLE_SHOW + "/{id}")
@@ -175,8 +227,7 @@ public class ArticleController {
             errorWasHappend(redirectAttributes);
         }
 
-        return UrlMappings.REDIRECT_ARTICLE_SHOW
-                + "/" + cleanId;
+        return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
     }
 
     private void articleNotFound(RedirectAttributes redirectAttributes) {
@@ -206,5 +257,17 @@ public class ArticleController {
         }
 
         return cleanId;
+    }
+
+    private int cleanPageParam(String page) {
+        int cleanPage;
+        try {
+            page = (page == null) ? "1" : page;
+            cleanPage = Integer.parseInt(page) - 1;
+        } catch (NumberFormatException ex) {
+            cleanPage = 0;
+        }
+
+        return cleanPage;
     }
 }

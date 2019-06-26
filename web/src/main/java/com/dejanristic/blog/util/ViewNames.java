@@ -10,6 +10,8 @@ public class ViewNames {
     public static final String CREATE_ARTICLE_FORM = "article/create";
     public static final String EDIT_ARTICLE_FORM = "article/edit";
     public static final String ARTICLE_SHOW = "article/show";
+    public static final String ARTICLE_RELEASED_LIST = "/article/released";
+    public static final String ARTICLE_UNRELEASED_LIST = "/article/unreleased";
 
     private ViewNames() {
     }

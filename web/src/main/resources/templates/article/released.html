@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head th:replace="~{common/head :: headFragment}"></head>
+
+    <body class="bg-dark">
+
+        <!-- Navigation -->
+        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'home'})}"></nav>
+
+        <div th:if="${flashMessage}">
+            <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
+        </div>
+
+        <!-- Main Content -->
+        <article style="margin-top: 4rem;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-11 col-md-11 mx-auto" style="color: #fff;">
+                        <h2>Released Articles</h2>
+                        <h4 th:text="'User: ' + ${(__${T(com.dejanristic.blog.util.AttributeNames).CURRENT_USER}__).getUsername()}">User</h4>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Id</th>
+                                        <th scope="col">Title</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-th-each="article : ${articles}">
+                                        <td th:text="${article.id}"></td>
+                                        <td>
+                                            <a th:text="${article.title}" href="#" style="color: #fff;"
+                                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
+                                               ></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pager -->
+                        <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix" >
+                            <a th:if="${articles.getNumber() + 1} neq 1" style="color: #fff;"
+                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST + '?page=' + articles.getNumber()}__}">
+                                Previous
+                            </a>
+                            <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
+                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST + '?page=' + {articles.getNumber() + 2}}__}">
+                                Next
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </article>
+        <hr>
+
+        <!-- Footer -->
+        <footer th:replace="~{common/footer :: footerFragment}"></footer>
+
+        <div th:replace="~{common/script :: scriptFragment}"></div>
+
+    </body>
+
+</html>
+

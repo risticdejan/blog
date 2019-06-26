@@ -27,11 +27,11 @@
                                    ></a>
                                 on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span></p>
                             </span>
-                            <a class="btn btn-primary float-left"
-                               th:if="${article.user.id} eq ${(__${T(com.dejanristic.blog.util.AttributeNames).CURRENT_USER}__).getId()}"
-                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_EDIT + '/' + article.id}__}">
-                                Edit
-                            </a>
+                            <!--                            <a class="btn btn-primary float-left"
+                                                           th:if="${article.user.id} eq ${(__${T(com.dejanristic.blog.util.AttributeNames).CURRENT_USER}__).getId()}"
+                                                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_EDIT + '/' + article.id}__}">
+                                                            Edit
+                                                        </a>-->
                         </div>
                     </div>
                 </div>

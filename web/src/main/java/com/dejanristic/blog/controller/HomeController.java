@@ -49,7 +49,7 @@ public class HomeController {
         }
 
         Page<Article> articles
-                = articleService.findAll(
+                = articleService.findAllReleasedArticles(
                         PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
                 );
 

@@ -32,8 +32,18 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public Page<Article> findAll(Pageable pageable) {
-        return (Page<Article>) this.articleRepository.findAll(pageable);
+    public Page<Article> findAllReleasedArticles(Pageable pageable) {
+        return (Page<Article>) this.articleRepository.findAllReleasedArticles(pageable);
+    }
+
+    @Override
+    public Page<Article> findAllReleasedArticlesByUser(Long id, Pageable pageable) {
+        return (Page<Article>) this.articleRepository.findAllReleasedArticlesByUser(id, pageable);
+    }
+
+    @Override
+    public Page<Article> findAllUnreleasedArticlesByUser(Long id, Pageable pageable) {
+        return (Page<Article>) this.articleRepository.findAllUnreleasedArticlesByUser(id, pageable);
     }
 
     @Override
@@ -45,16 +55,10 @@ public class ArticleServiceImpl implements ArticleService {
             log.info("article {} already exists", article.getTitle());
             return null;
         } else {
-            article.setPublishedAt(Timestamp.valueOf(LocalDateTime.now()));
             article.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             article.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
             return articleRepository.save(article);
         }
-    }
-
-    @Override
-    public Article save(Article article) {
-        return this.articleRepository.save(article);
     }
 
     @Override
@@ -67,6 +71,7 @@ public class ArticleServiceImpl implements ArticleService {
             return null;
         }
 
+        oldArticle.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         oldArticle.setTitle(article.getTitle());
         oldArticle.setDescription(article.getDescription());
         oldArticle.setBody(article.getBody());
