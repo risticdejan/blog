@@ -1,14 +1,27 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <div th:fragment="sidebarFragment (activeTab)" class="bg-dark border-right" id="sidebar-wrapper">
-        <div class="sidebar-heading">USER: dejan</div>
+        <div class="sidebar-heading">ADMIN: <span style="color: #479af3;" sec:authentication="name"></span></div>
         <div class="list-group list-group-flush">
-            <a href="#" class="list-group-item list-group-item-action bg-dark">Dashboard</a>
-            <a href="#" class="list-group-item list-group-item-action bg-dark">Shortcuts</a>
-            <a href="#" class="list-group-item list-group-item-action bg-dark">Overview</a>
-            <a href="#" class="list-group-item list-group-item-action bg-dark">Events</a>
+            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN}__}"
+               class="list-group-item list-group-item-action bg-dark"
+               th:classappend="${activeTab == 'admin' ? 'active':''}"
+               >
+                Dashboard
+            </a>
+            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLES_LIST}__}"
+               class="list-group-item list-group-item-action bg-dark"
+               th:classappend="${activeTab == 'article.list' ? 'active':''}"
+               >
+                Articles List
+            </a>
+            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLES_UNRELEASED_LIST}__}"
+               class="list-group-item list-group-item-action bg-dark"
+               th:classappend="${activeTab == 'article.releasing' ? 'active':''}"
+               >
+                Article releasing
+            </a>
             <a href="#" class="list-group-item list-group-item-action bg-dark">Profile</a>
-            <a href="#" class="list-group-item list-group-item-action bg-dark">Status</a>
             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).LOGOUT}__}"
                class="list-group-item list-group-item-action bg-dark"
                >

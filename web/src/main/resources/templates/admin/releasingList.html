@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head th:replace="~{common/adminHead :: headFragment}"></head>
+
+    <body>
+
+        <div class="d-flex" id="wrapper">
+
+            <!-- Sidebar -->
+            <nav th:replace="~{common/adminSidebar :: sidebarFragment (activeTab=${'article.releasing'})}"></nav>
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+
+                <nav th:replace="~{common/adminNavbar :: navbarFragment}"></nav>
+
+                <div th:if="${flashMessage}">
+                    <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
+                </div>
+
+                <div class="container-fluid">
+                    <h2 class="mt-4">List of unreleased articles</h2>
+
+                    <div class="table-responsive">
+                        <table class="table table-dark table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Title</th>
+                                    <th scope="col">Author</th>
+                                    <th scope="col">Action</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-th-each="article : ${articles}">
+                                    <td th:text="${article.id}"></td>
+                                    <td>
+                                        <a th:text="${article.title}" href="#" style="color: #fff;"
+                                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
+                                           ></a>
+                                    </td>
+                                    <td>
+                                        <a th:text="${article.user.username}" style="color: #fff;"
+                                           href="#"
+                                           ></a>
+                                    </td>
+                                    <td>
+                                        <a href="#"
+                                           style="color: #34ce57;">
+                                            release
+                                        </a>
+                                        <a href="#"
+                                           class="ml-2"
+                                           style="color: #bd2130;">
+                                            delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pager -->
+                    <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix" >
+                        <a th:if="${articles.getNumber() + 1} neq 1" style="color: #fff;"
+                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLES_LIST + '?page=' + articles.getNumber()}__}">
+                            Previous
+                        </a>
+                        <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
+                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLES_LIST + '?page=' + {articles.getNumber() + 2}}__}">
+                            Next
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div th:replace="~{common/adminFooter :: footerFragment}"></div>
+
+    </body>
+
+</html>

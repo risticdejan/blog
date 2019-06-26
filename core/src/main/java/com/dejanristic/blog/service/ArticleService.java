@@ -8,6 +8,8 @@ public interface ArticleService {
 
     Page<Article> findAllReleasedArticles(Pageable pageable);
 
+    Page<Article> findAllUnreleasedArticles(Pageable pageable);
+
     Page<Article> findAllReleasedArticlesByUser(Long id, Pageable pageable);
 
     Page<Article> findAllUnreleasedArticlesByUser(Long id, Pageable pageable);

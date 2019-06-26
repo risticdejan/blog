@@ -14,6 +14,9 @@ public interface ArticleRepository extends PagingAndSortingRepository<Article, L
     @Query(value = "SELECT a FROM Article a WHERE a.publishedAt IS NOT NULL")
     Page<Article> findAllReleasedArticles(Pageable pageable);
 
+    @Query(value = "SELECT a FROM Article a WHERE a.publishedAt IS NULL")
+    Page<Article> findAllUnreleasedArticles(Pageable pageable);
+
     @Query(value = "SELECT a FROM Article a WHERE a.publishedAt IS NOT NULL AND a.user.id = :id")
     Page<Article> findAllReleasedArticlesByUser(@Param("id") Long id, Pageable pageable);
 

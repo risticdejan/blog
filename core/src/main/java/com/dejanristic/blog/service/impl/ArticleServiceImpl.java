@@ -37,6 +37,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Page<Article> findAllUnreleasedArticles(Pageable pageable) {
+        return (Page<Article>) this.articleRepository.findAllUnreleasedArticles(pageable);
+    }
+
+    @Override
     public Page<Article> findAllReleasedArticlesByUser(Long id, Pageable pageable) {
         return (Page<Article>) this.articleRepository.findAllReleasedArticlesByUser(id, pageable);
     }
