@@ -6,7 +6,7 @@
     <body class="bg-dark">
 
         <!-- Navigation -->
-        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'home'})}"></nav>
+        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'article.released'})}"></nav>
 
         <div th:if="${flashMessage}">
             <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>

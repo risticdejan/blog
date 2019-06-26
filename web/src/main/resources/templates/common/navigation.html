@@ -30,14 +30,17 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a sec:authorize="hasRole('ROLE_USER')" class="dropdown-item"
+                               th:classappend="${activeTab == 'article.released' ? 'active':''}"
                                th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST}__}">
                                 Released articles
                             </a>
                             <a sec:authorize="hasRole('ROLE_USER')" class="dropdown-item"
+                               th:classappend="${activeTab == 'article.unreleased' ? 'active':''}"
                                th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_UNRELEASED_LIST}__}">
                                 Unreleased articles
                             </a>
                             <a sec:authorize="hasRole('ROLE_USER')" class="dropdown-item"
+                               th:classappend="${activeTab == 'article.create' ? 'active':''}"
                                th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CREATE}__}">
                                 Add articles
                             </a>

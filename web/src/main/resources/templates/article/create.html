@@ -3,7 +3,7 @@
 
     <head th:replace="~{common/head :: headFragment}"></head>
 
-    <body>
+    <body class="bg-dark">
 
         <!-- Navigation -->
         <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'article.create'})}"></nav>
@@ -12,48 +12,38 @@
             <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
         </div>
 
-        <!-- Page Header -->
-        <header class="masthead" th:style="'background-image:url(' + @{/img/home-bg.jpg} + ');'" >
-            <div class="overlay"></div>
+
+        <!-- Main Content -->
+        <article style="margin-top: 4rem;">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-8 col-md-10 mx-auto">
-                        <div class="post-heading">
-                            <h1>Write a new article</h1>
-                        </div>
+                    <div class="col-lg-11 col-md-11 mx-auto" style="color: #fff;">
+                        <h2>Write a new article</h2>
+                        <form action="#" th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_STORE}__}" th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_ARTICLE}__}" method="post">
+                            <div class="form-group">
+                                <label for="inputTitle">Title: </label>
+                                <input type="text" class="form-control" id="inputTitle" th:field="*{title}">
+                                <small th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="form-text text-danger"></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputDescription">Description: </label>
+                                <textarea class="form-control" id="inputDescription" th:field="*{description}"></textarea>
+                                <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="form-text text-danger"></small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputBody">Body: </label>
+                                <textarea class="form-control" rows="5" id="inputBody" th:field="*{body}"></textarea>
+                                <small th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="form-text text-danger"></small>
+                            </div>
+                            <br/>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
                     </div>
                 </div>
             </div>
-        </header>
-
-        <!-- Main Content -->
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-md-10 mx-auto">
-                    <form action="#" th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_STORE}__}" th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_ARTICLE}__}" method="post">
-                        <div class="form-group">
-                            <label for="inputTitle">Title: </label>
-                            <input type="text" class="form-control" id="inputTitle" th:field="*{title}">
-                            <small th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="form-text text-danger"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="inputDescription">Description: </label>
-                            <textarea class="form-control" id="inputDescription" th:field="*{description}"></textarea>
-                            <small th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="form-text text-danger"></small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="inputBody">Body: </label>
-                            <textarea class="form-control" rows="5" id="inputBody" th:field="*{body}"></textarea>
-                            <small th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="form-text text-danger"></small>
-                        </div>
-                        <br/>
-                        <button type="submit" class="btn btn-primary">Send</button>
-                    </form>
-                </div>
-            </div>
-        </div>
+        </article>
 
         <hr>
 
