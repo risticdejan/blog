@@ -182,13 +182,13 @@ public class ArticleController {
 
         User user = (User) authentication.getPrincipal();
 
-        if (!Objects.equals(article.getUser().getId(), user.getId())) {
-            throw new AccessDeniedException("access forbidden");
-        }
-
-        if (article == null) {
+        if (article == null || article.getPublishedAt() != null) {
             articleNotFound(redirectAttributes);
             return UrlMappings.REDIRECT_HOME;
+        }
+
+        if (!Objects.equals(article.getUser().getId(), user.getId())) {
+            throw new AccessDeniedException("access forbidden");
         }
 
         model.addAttribute(AttributeNames.EDIT_ARTICLE, article);
@@ -210,6 +210,11 @@ public class ArticleController {
         Long cleanId = cleanIdParam(id);
 
         article = articleService.update(cleanId, article);
+
+        if (article == null || article.getPublishedAt() != null) {
+            articleNotFound(redirectAttributes);
+            return UrlMappings.REDIRECT_HOME;
+        }
 
         User user = (User) authentication.getPrincipal();
 

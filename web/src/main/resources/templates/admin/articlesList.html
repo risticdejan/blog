@@ -22,7 +22,7 @@
                 <div class="container-fluid">
                     <h2 class="mt-4">List of released articles</h2>
 
-                    <div class="table-responsive">
+                    <div th:if="${!articles.isEmpty()}" class="table-responsive">
                         <table class="table table-dark table-sm table-hover">
                             <thead>
                                 <tr>
@@ -55,6 +55,10 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+
+                    <div th:if="${articles.isEmpty()}" class="post-preview">
+                        <p class="post-title">There are no articles</p>
                     </div>
 
                     <!-- Pager -->
