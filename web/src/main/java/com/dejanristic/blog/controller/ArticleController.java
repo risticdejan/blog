@@ -90,7 +90,7 @@ public class ArticleController {
 
         article.setUser(user);
 
-        article = articleService.createArticle(article);
+        article = articleService.create(article);
 
         if (article != null) {
             flashMessageService.flash(
@@ -140,7 +140,7 @@ public class ArticleController {
         Page<Article> articles
                 = articleService.findAllUnreleasedArticlesByUser(
                         user.getId(),
-                        PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
+                        PageRequest.of(cleanPage, perPage, Sort.by("id").descending())
                 );
 
         model.addAttribute("articles", articles);
@@ -221,6 +221,37 @@ public class ArticleController {
             flashMessageService.flash(
                     FlashNames.SUCCESS_TYPE,
                     "The article was updated",
+                    redirectAttributes
+            );
+        } else {
+            errorWasHappend(redirectAttributes);
+        }
+
+        return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
+    }
+
+    @GetMapping(UrlMappings.ARTICLE_DELETE + "/{id}")
+    public String delete(
+            @PathVariable("id") String id,
+            Authentication authentication,
+            RedirectAttributes redirectAttributes
+    ) {
+        Long cleanId = cleanIdParam(id);
+
+        Article article = articleService.findById(cleanId);
+
+        if (article != null) {
+            User user = (User) authentication.getPrincipal();
+
+            if (!Objects.equals(article.getUser().getId(), user.getId())) {
+                throw new AccessDeniedException("access forbidden");
+            }
+
+            articleService.delete(article);
+
+            flashMessageService.flash(
+                    FlashNames.SUCCESS_TYPE,
+                    "The article was deleted",
                     redirectAttributes
             );
         } else {

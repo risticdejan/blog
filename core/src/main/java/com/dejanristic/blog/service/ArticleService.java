@@ -16,8 +16,10 @@ public interface ArticleService {
 
     Article findById(Long id);
 
-    Article createArticle(Article article);
+    Article create(Article article);
 
     Article update(Long id, Article article);
+
+    void delete(Article article);
 
 }

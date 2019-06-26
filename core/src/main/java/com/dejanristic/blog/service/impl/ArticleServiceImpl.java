@@ -48,7 +48,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article createArticle(Article article) {
+    public Article create(Article article) {
         Article oldArticle = articleRepository.findByTitle(article.getTitle());
 
         if (oldArticle != null) {
@@ -77,6 +77,11 @@ public class ArticleServiceImpl implements ArticleService {
         oldArticle.setBody(article.getBody());
 
         return this.articleRepository.save(oldArticle);
+    }
+
+    @Override
+    public void delete(Article article) {
+        this.articleRepository.delete(article);
     }
 
 }
