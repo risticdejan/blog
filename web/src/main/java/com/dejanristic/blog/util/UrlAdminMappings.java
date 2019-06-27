@@ -9,6 +9,7 @@ public class UrlAdminMappings {
     public static final String ADMIN_ARTICLE_SHOW = "/admin/article/show";
     public static final String ADMIN_ARTICLE_DELETE = "/admin/article/delete";
     public static final String ADMIN_ARTICLE_RELEASE = "/admin/article/release";
+    public static final String ADMIN_USER_LIST = "/admin/user";
 
     public UrlAdminMappings() {
     }

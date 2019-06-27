@@ -21,6 +21,12 @@
                >
                 Unreleased Articles
             </a>
+            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_USER_LIST}__}"
+               class="list-group-item list-group-item-action bg-dark"
+               th:classappend="${activeTab == 'user.list' ? 'active':''}"
+               >
+                Users
+            </a>
             <a href="#" class="list-group-item list-group-item-action bg-dark">Profile</a>
             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).LOGOUT}__}"
                class="list-group-item list-group-item-action bg-dark"
