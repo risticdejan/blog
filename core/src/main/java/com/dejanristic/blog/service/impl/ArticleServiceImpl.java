@@ -94,4 +94,10 @@ public class ArticleServiceImpl implements ArticleService {
         this.articleRepository.delete(article);
     }
 
+    @Override
+    public void release(Article article) {
+        article.setPublishedAt(Timestamp.valueOf(LocalDateTime.now()));
+        this.articleRepository.save(article);
+    }
+
 }

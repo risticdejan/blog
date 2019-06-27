@@ -37,25 +37,32 @@
                                 <tr data-th-each="article : ${articles}">
                                     <td th:text="${article.id}"></td>
                                     <td>
-                                        <a th:text="${article.title}" href="#" style="color: #fff;"
+                                        <a th:text="${article.title}" class="text-ellipsis title" style="color: #fff;"
                                            th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
                                            ></a>
                                     </td>
                                     <td>
-                                        <a th:text="${article.user.username}" style="color: #fff;"
+                                        <a th:text="${article.user.username}" class="text-ellipsis user"style="color: #fff;"
                                            href="#"
                                            ></a>
                                     </td>
                                     <td>
-                                        <a href="#"
-                                           style="color: #34ce57;">
-                                            release
-                                        </a>
-                                        <a href="#"
-                                           class="ml-2"
-                                           style="color: #bd2130;">
-                                            delete
-                                        </a>
+                                        <span class="text-ellipsis action2">
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
+                                               style="color: #cecc34;">
+                                                check
+                                            </a>
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_RELEASE + '/' + article.id}__}"
+                                               class="ml-2"
+                                               style="color: #34ce57;">
+                                                release
+                                            </a>
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
+                                               style="color: #bd2130;"
+                                               class="ml-2">
+                                                delete
+                                            </a>
+                                        </span>
                                     </td>
                                 </tr>
                             </tbody>
@@ -73,7 +80,8 @@
                             Previous
                         </a>
                         <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LISTT + '?page=' + {articles.getNumber() + 2}}__}">
+                           class="ml-2"
+                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST + '?page=' + {articles.getNumber() + 2}}__}">
                             Next
                         </a>
                     </div>

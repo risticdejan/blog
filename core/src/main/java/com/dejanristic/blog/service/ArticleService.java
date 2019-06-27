@@ -29,4 +29,6 @@ public interface ArticleService {
 
     void delete(Article article);
 
+    void release(Article article);
+
 }

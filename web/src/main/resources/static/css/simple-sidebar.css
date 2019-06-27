@@ -86,3 +86,71 @@ body {
     color: #ffffff;
 }
 
+.modal-content .modal-header {
+    border: none;
+}
+
+.modal-content.success {
+    background-color: #5dcc76;
+    border: 1px solid #155724;
+    color: #155724;
+}
+
+
+.modal-content.error {
+    background-color: #da6671;
+    border: 1px solid #7d1922;
+    color: #7d1922;
+}
+
+.modal-content.info {
+    background-color: #70a9e6;
+    border: 1px solid #004085;
+    color: #004085;
+}
+
+.user-heading {
+    padding: 35px 0;
+}
+
+.user-heading h1{
+    color: #fff;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #007bff;
+    border-color: rgba(0,0,0,.35);
+}
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+
+    display: block;
+
+    /* Required for text-overflow to do anything */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.text-ellipsis.title{
+    width: 400px;
+}
+
+.text-ellipsis.action{
+    width: 150px;
+}
+
+.text-ellipsis.action2{
+    width: 200px;
+}
+
+.text-ellipsis.user{
+    width: 150px;
+}
+
+@media only screen and (max-width: 992px){
+    .text-ellipsis.title {
+        width: 200px;
+    }
+}

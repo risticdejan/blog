@@ -18,6 +18,8 @@ public interface FlashMessageService {
 
     public void articleWasReleased(RedirectAttributes redirectAttributes);
 
+    public void articleHasReleased(RedirectAttributes redirectAttributes);
+
     public void articleAlreadyExists(RedirectAttributes redirectAttributes);
 
     public void articleWasCreated(RedirectAttributes redirectAttributes);

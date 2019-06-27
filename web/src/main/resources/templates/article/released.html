@@ -59,6 +59,7 @@
                                 Previous
                             </a>
                             <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
+                               class="ml-2"
                                th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST + '?page=' + {articles.getNumber() + 2}}__}">
                                 Next
                             </a>

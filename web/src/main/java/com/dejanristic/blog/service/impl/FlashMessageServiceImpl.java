@@ -51,6 +51,15 @@ public class FlashMessageServiceImpl implements FlashMessageService {
     }
 
     @Override
+    public void articleHasReleased(RedirectAttributes redirectAttributes) {
+        flash(
+                FlashNames.SUCCESS_TYPE,
+                "Article has released",
+                redirectAttributes
+        );
+    }
+
+    @Override
     public void errorWasHappend(RedirectAttributes redirectAttributes) {
         flash(
                 FlashNames.ERROR_TYPE,

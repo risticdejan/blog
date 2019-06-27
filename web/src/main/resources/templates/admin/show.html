@@ -20,8 +20,14 @@
                 </div>
 
                 <div class="container-fluid">
-                    <h2 class="mt-4">Check the article</h2>
+                    <div class="clearfix mb-2">
+                        <h2 class="mt-4">Check the article</h2>
 
+                        <a class="btn btn-primary float-left"
+                           th:href="@{__${back}__}">
+                            Back
+                        </a>
+                    </div>
                     <div th:if="${article} neq null">
                         <h4>title: </h4>
                         <div style="color: #fff;" th:text="${article.title}"></div>
