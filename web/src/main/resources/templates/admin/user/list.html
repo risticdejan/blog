@@ -38,12 +38,12 @@
                                     <td th:text="${user.id}"></td>
                                     <td>
                                         <a th:text="${user.username}" style="color: #fff;"
-                                           href="#"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id}__}"
                                            ></a>
                                     </td>
                                     <td>
                                         <a th:text="${user.email}" style="color: #fff;"
-                                           href="#"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id}__}"
                                            ></a>
                                     </td>
                                     <td>

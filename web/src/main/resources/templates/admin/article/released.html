@@ -38,12 +38,12 @@
                                     <td th:text="${article.id}"></td>
                                     <td>
                                         <a th:text="${article.title}" class="text-ellipsis title"style="color: #fff;"
-                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
+                                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
                                            ></a>
                                     </td>
                                     <td>
                                         <a th:text="${article.user.username}" class="text-ellipsis user" style="color: #fff;"
-                                           href="#"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + article.user.id}__}"
                                            ></a>
                                     </td>
                                     <td>

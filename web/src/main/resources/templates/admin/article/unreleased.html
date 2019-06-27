@@ -1,4 +1,4 @@
-admin.<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
     <head th:replace="~{common/adminHead :: headFragment}"></head>
@@ -42,8 +42,8 @@ admin.<!DOCTYPE html>
                                            ></a>
                                     </td>
                                     <td>
-                                        <a th:text="${article.user.username}" class="text-ellipsis user"style="color: #fff;"
-                                           href="#"
+                                        <a th:text="${article.user.username}" class="text-ellipsis user" style="color: #fff;"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + article.user.id}__}"
                                            ></a>
                                     </td>
                                     <td>
@@ -57,7 +57,7 @@ admin.<!DOCTYPE html>
                                                style="color: #34ce57;">
                                                 release
                                             </a>
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
                                                style="color: #bd2130;"
                                                class="ml-2">
                                                 delete

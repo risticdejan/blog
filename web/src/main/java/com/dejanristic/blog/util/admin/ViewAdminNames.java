@@ -7,6 +7,7 @@ public class ViewAdminNames {
     public static final String ADMIN_ARTICLES_LIST = "/admin/article/released";
     public static final String ADMIN_ARTICLES_UNRELEASED_LIST = "/admin/article/unreleased";
     public static final String ADMIN_USER_LIST = "admin/user/list";
+    public static final String ADMIN_USER_SHOW = "admin/user/show";
 
     public ViewAdminNames() {
     }

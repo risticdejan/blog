@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head th:replace="~{common/adminHead :: headFragment}"></head>
+
+    <body>
+
+        <div class="d-flex" id="wrapper">
+
+            <!-- Sidebar -->
+            <nav th:replace="~{common/adminSidebar :: sidebarFragment (activeTab=${'article.list'})}"></nav>
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+
+                <nav th:replace="~{common/adminNavbar :: navbarFragment}"></nav>
+
+                <div th:if="${flashMessage}">
+                    <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
+                </div>
+
+                <div class="container-fluid">
+                    <div class="clearfix mb-4">
+                        <h2 class="mt-4">User Details</h2>
+
+                        <a class="btn btn-primary float-left"
+                           th:href="@{__${back}__}">
+                            Back
+                        </a>
+                    </div>
+                    <div th:if="${user} neq null">
+                        <div>
+                            <p><strong>Id</strong> : <span th:text="${user.id}"></span></p>
+                            <p><strong>Username</strong> : <span th:text="${user.username}"></span></p>
+                            <p><strong>Email</strong> : <span th:text="${user.email}"></span></p>
+                            <p><strong>Enabled</strong> : <span th:text="${user.enabled}"></span></p>
+                            <p><strong>Created</strong> : <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></p>
+                            <p><strong>Updated</strong> : <span th:text="${#dates.format(user.updatedAt, 'MMMM dd, yyyy (HH:MM:SS)')}"></span></p>
+                        </div>
+                        <div class="clearfix">
+                            <a th:if="${user.isEnabled()}"
+                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_BANNED + '/' + user.id}__}"
+                               class="btn btn-danger" >
+                                ban
+                            </a>
+                            <a th:if="${!user.isEnabled()}"
+                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_UNBANNED + '/' + user.id}__}"
+                               class="btn btn-success" >
+                                unban
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div th:if="${user} eq null" class="post-preview">
+                        <p class="post-title">There is no user</p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div th:replace="~{common/adminFooter :: footerFragment}"></div>
+
+    </body>
+
+</html>

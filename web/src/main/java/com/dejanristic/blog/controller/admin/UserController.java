@@ -4,6 +4,7 @@ import com.dejanristic.blog.annotation.PerPageAdmin;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
+import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.admin.UrlAdminMappings;
 import com.dejanristic.blog.util.admin.ViewAdminNames;
@@ -55,6 +56,27 @@ public class UserController {
 
         model.addAttribute("users", users);
         return ViewAdminNames.ADMIN_USER_LIST;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(UrlAdminMappings.ADMIN_USER_SHOW + "/{id}")
+    public String show(
+            @PathVariable("id") String id,
+            HttpServletRequest request,
+            Model model
+    ) {
+
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
+        User user = userService.findById(cleanId);
+
+        String backUrl = (request.getHeader("Referer") != null)
+                ? request.getHeader("Referer")
+                : UrlAdminMappings.ADMIN_USER_LIST;
+
+        model.addAttribute(AttributeNames.BACK_URL, backUrl);
+        model.addAttribute("user", user);
+        return ViewAdminNames.ADMIN_USER_SHOW;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
