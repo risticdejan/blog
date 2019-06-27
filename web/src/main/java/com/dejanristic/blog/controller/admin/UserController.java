@@ -1,12 +1,13 @@
 package com.dejanristic.blog.controller.admin;
 
+import com.dejanristic.blog.annotation.PerPageAdmin;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
-import com.dejanristic.blog.annotation.PerPageAdmin;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.admin.UrlAdminMappings;
 import com.dejanristic.blog.util.admin.ViewAdminNames;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Slf4j
@@ -55,4 +57,37 @@ public class UserController {
         return ViewAdminNames.ADMIN_USER_LIST;
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(UrlAdminMappings.ADMIN_USER_BANNED + "/{id}")
+    public String banned(
+            @PathVariable("id") String id,
+            HttpServletRequest request
+    ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
+        userService.banned(cleanId);
+
+        String backUrl = (request.getHeader("Referer") != null)
+                ? request.getHeader("Referer")
+                : UrlAdminMappings.ADMIN_USER_LIST;
+
+        return "redirect:" + backUrl;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(UrlAdminMappings.ADMIN_USER_UNBANNED + "/{id}")
+    public String unbanned(
+            @PathVariable("id") String id,
+            HttpServletRequest request
+    ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
+        userService.unbanned(cleanId);
+
+        String backUrl = (request.getHeader("Referer") != null)
+                ? request.getHeader("Referer")
+                : UrlAdminMappings.ADMIN_USER_LIST;
+
+        return "redirect:" + backUrl;
+    }
 }

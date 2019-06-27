@@ -21,4 +21,8 @@ public interface UserService {
     User createAdmin(User admin);
 
     User save(User user);
+
+    User banned(Long id);
+
+    User unbanned(Long id);
 }

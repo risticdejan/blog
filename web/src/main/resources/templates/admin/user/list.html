@@ -48,9 +48,15 @@
                                     </td>
                                     <td>
                                         <span class="text-ellipsis action">
-                                            <a href="#"
+                                            <a th:if="${user.isEnabled()}"
+                                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_BANNED + '/' + user.id}__}"
                                                style="color: #bd2130;" >
-                                                delete
+                                                ban
+                                            </a>
+                                            <a th:if="${!user.isEnabled()}"
+                                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_UNBANNED + '/' + user.id}__}"
+                                               style="color: #34ce57;" >
+                                                unban
                                             </a>
                                         </span>
                                     </td>

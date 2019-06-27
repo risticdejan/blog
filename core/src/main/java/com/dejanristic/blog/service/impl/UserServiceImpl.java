@@ -102,4 +102,26 @@ public class UserServiceImpl implements UserService {
 
         return localUser;
     }
+
+    @Override
+    public User banned(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user != null) {
+            user.setEnabled(false);
+            return userRepository.save(user);
+        }
+        return user;
+    }
+
+    @Override
+    public User unbanned(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user != null) {
+            user.setEnabled(true);
+            return userRepository.save(user);
+        }
+        return user;
+    }
 }
