@@ -8,7 +8,7 @@ import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.AttributeNames;
-import com.dejanristic.blog.util.PerPage;
+import com.dejanristic.blog.annotation.PerPage;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;

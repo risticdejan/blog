@@ -38,7 +38,7 @@
                                     <td th:text="${article.id}"></td>
                                     <td>
                                         <a th:text="${article.title}" class="text-ellipsis title"style="color: #fff;"
-                                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
                                            ></a>
                                     </td>
                                     <td>
@@ -48,7 +48,7 @@
                                     </td>
                                     <td>
                                         <span class="text-ellipsis action">
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
                                                style="color: #bd2130;" >
                                                 delete
                                             </a>
@@ -66,12 +66,12 @@
                     <!-- Pager -->
                     <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix" >
                         <a th:if="${articles.getNumber() + 1} neq 1" style="color: #fff;"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_RELEASED_ARTICLES_LIST + '?page=' + articles.getNumber()}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_RELEASED_ARTICLES_LIST + '?page=' + articles.getNumber()}__}">
                             Previous
                         </a>
                         <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
                            class="ml-2"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_RELEASED_ARTICLES_LIST + '?page=' + {articles.getNumber() + 2}}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_RELEASED_ARTICLES_LIST + '?page=' + {articles.getNumber() + 2}}__}">
                             Next
                         </a>
                     </div>

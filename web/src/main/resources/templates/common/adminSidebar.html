@@ -1,27 +1,27 @@
-<!DOCTYPE html>
+admin.<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <div th:fragment="sidebarFragment (activeTab)" class="bg-dark border-right" id="sidebar-wrapper">
         <div class="sidebar-heading">ADMIN: <span style="color: #479af3;" sec:authentication="name"></span></div>
         <div class="list-group list-group-flush">
-            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN}__}"
+            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN}__}"
                class="list-group-item list-group-item-action bg-dark"
                th:classappend="${activeTab == 'admin' ? 'active':''}"
                >
                 Dashboard
             </a>
-            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_RELEASED_ARTICLES_LIST}__}"
+            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_RELEASED_ARTICLES_LIST}__}"
                class="list-group-item list-group-item-action bg-dark"
                th:classappend="${activeTab == 'article.list' ? 'active':''}"
                >
                 Released Articles
             </a>
-            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST}__}"
+            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST}__}"
                class="list-group-item list-group-item-action bg-dark"
                th:classappend="${activeTab == 'article.releasing' ? 'active':''}"
                >
                 Unreleased Articles
             </a>
-            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_USER_LIST}__}"
+            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_LIST}__}"
                class="list-group-item list-group-item-action bg-dark"
                th:classappend="${activeTab == 'user.list' ? 'active':''}"
                >

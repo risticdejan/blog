@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+admin.<!DOCTYPE html>
 <html lang="en">
 
     <head th:replace="~{common/adminHead :: headFragment}"></head>
@@ -38,7 +38,7 @@
                                     <td th:text="${article.id}"></td>
                                     <td>
                                         <a th:text="${article.title}" class="text-ellipsis title" style="color: #fff;"
-                                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
                                            ></a>
                                     </td>
                                     <td>
@@ -48,11 +48,11 @@
                                     </td>
                                     <td>
                                         <span class="text-ellipsis action2">
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
                                                style="color: #cecc34;">
                                                 check
                                             </a>
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLE_RELEASE + '/' + article.id}__}"
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_RELEASE + '/' + article.id}__}"
                                                class="ml-2"
                                                style="color: #34ce57;">
                                                 release
@@ -76,12 +76,12 @@
                     <!-- Pager -->
                     <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix" >
                         <a th:if="${articles.getNumber() + 1} neq 1" style="color: #fff;"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST + '?page=' + articles.getNumber()}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST + '?page=' + articles.getNumber()}__}">
                             Previous
                         </a>
                         <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
                            class="ml-2"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST + '?page=' + {articles.getNumber() + 2}}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST + '?page=' + {articles.getNumber() + 2}}__}">
                             Next
                         </a>
                     </div>

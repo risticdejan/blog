@@ -1,7 +1,7 @@
 package com.dejanristic.blog.controller.admin;
 
-import com.dejanristic.blog.util.UrlAdminMappings;
-import com.dejanristic.blog.util.ViewAdminNames;
+import com.dejanristic.blog.util.admin.UrlAdminMappings;
+import com.dejanristic.blog.util.admin.ViewAdminNames;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

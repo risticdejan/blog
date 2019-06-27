@@ -1,4 +1,4 @@
-package com.dejanristic.blog.util;
+package com.dejanristic.blog.util.admin;
 
 public class UrlAdminMappings {
 

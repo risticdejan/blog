@@ -1,8 +1,8 @@
 package com.dejanristic.blog.config;
 
 import com.dejanristic.blog.interceptor.RequestInterceptor;
-import com.dejanristic.blog.util.PerPage;
-import com.dejanristic.blog.util.PerPageAdmin;
+import com.dejanristic.blog.annotation.PerPage;
+import com.dejanristic.blog.annotation.PerPageAdmin;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -66,12 +66,12 @@
                     <!-- Pager -->
                     <div th:if="${users.getNumber()} &lt; ${users.getTotalPages()}" class="clearfix" >
                         <a th:if="${users.getNumber() + 1} neq 1" style="color: #fff;"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_USER_LIST + '?page=' + users.getNumber()}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_LIST + '?page=' + users.getNumber()}__}">
                             Previous
                         </a>
                         <a th:if="${users.getNumber() + 1} neq ${users.getTotalPages()}" style="color: #fff;"
                            class="ml-2"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_USER_LIST + '?page=' + {users.getNumber() + 2}}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_LIST + '?page=' + {users.getNumber() + 2}}__}">
                             Next
                         </a>
                     </div>
