@@ -37,17 +37,21 @@ public class Article implements Serializable {
     private User user;
 
     @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 4, max = 255, groups = {FormValidationGroup.class})
-    @Column(name = "title", nullable = false, length = 255)
+    @Size(min = 4, max = 155, groups = {FormValidationGroup.class})
+    @Pattern(
+            regexp = "^[A-Za-z0-9.,_\\-'\"\\s!?]+$",
+            message = "Description cannot contain special characters",
+            groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
+    @Column(name = "title", unique = true, nullable = false, length = 155)
     private String title;
 
     @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 4, max = 511, groups = {FormValidationGroup.class})
+    @Size(min = 4, max = 255, groups = {FormValidationGroup.class})
     @Pattern(
-            regexp = "^[A-Za-z0-9._\\-'\"\\s!?]+$",
+            regexp = "^[A-Za-z0-9.,_\\-\\'\"\\s!?]+$",
             message = "Description cannot contain special characters",
             groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Column(name = "description", nullable = false, length = 511)
+    @Column(name = "description", nullable = false, length = 255)
     private String description;
 
     @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})

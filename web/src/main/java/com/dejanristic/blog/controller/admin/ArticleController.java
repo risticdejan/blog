@@ -4,7 +4,9 @@ import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
+import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.PerPage;
+import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlAdminMappings;
 import com.dejanristic.blog.util.ViewAdminNames;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller("admin.article")
@@ -44,12 +48,27 @@ public class ArticleController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(UrlAdminMappings.ADMIN_ARTICLES_LIST)
-    public String articles(
+    @GetMapping(UrlAdminMappings.ADMIN_ARTICLE_SHOW + "/{id}")
+    public String show(
+            @PathVariable("id") String id,
+            RedirectAttributes redirectAttributes,
+            Model model
+    ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
+        Article article = articleService.findById(cleanId);
+
+        model.addAttribute(AttributeNames.ARTICLE, article);
+        return ViewAdminNames.ADMIN_ARTICLE_SHOW;
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping(UrlAdminMappings.ADMIN_RELEASED_ARTICLES_LIST)
+    public String releasedArticlesList(
             @RequestParam(required = false) String page,
             Model model
     ) {
-        int cleanPage = cleanPageParam(page);
+        int cleanPage = SecurityUtility.cleanPageParam(page);
 
         Page<Article> articles
                 = articleService.findAllReleasedArticles(
@@ -62,12 +81,12 @@ public class ArticleController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping(UrlAdminMappings.ADMIN_ARTICLES_UNRELEASED_LIST)
-    public String releasingList(
+    @GetMapping(UrlAdminMappings.ADMIN_UNRELEASED_ARTICLES_LIST)
+    public String unreleasedArticlesList(
             @RequestParam(required = false) String page,
             Model model
     ) {
-        int cleanPage = cleanPageParam(page);
+        int cleanPage = SecurityUtility.cleanPageParam(page);
 
         Page<Article> articles
                 = articleService.findAllUnreleasedArticles(
@@ -79,15 +98,4 @@ public class ArticleController {
         return ViewAdminNames.ADMIN_ARTICLES_UNRELEASED_LIST;
     }
 
-    private int cleanPageParam(String page) {
-        int cleanPage;
-        try {
-            page = (page == null) ? "1" : page;
-            cleanPage = Integer.parseInt(page) - 1;
-        } catch (NumberFormatException ex) {
-            cleanPage = 0;
-        }
-
-        return cleanPage;
-    }
 }

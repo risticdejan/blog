@@ -21,6 +21,7 @@ public class UrlMappings {
     public static final String ARTICLE_SHOW = "/article";
     public static final String REDIRECT_ARTICLE_SHOW = "redirect:" + ARTICLE_SHOW;
     public static final String ARTICLE_EDIT = "/article/edit";
+    public static final String REDIRECT_ARTICLE_EDIT = "redirect:" + ARTICLE_EDIT;
     public static final String ARTICLE_UPDATE = "/article/update";
     public static final String ARTICLE_DELETE = "/article/delete";
 

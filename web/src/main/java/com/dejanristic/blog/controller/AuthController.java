@@ -6,7 +6,6 @@ import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.service.impl.UserSecurityService;
 import com.dejanristic.blog.util.AttributeNames;
-import com.dejanristic.blog.util.FlashNames;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
@@ -97,18 +96,12 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        if (newUser != null) {
-            flashMessageService.flash(
-                    FlashNames.SUCCESS_TYPE,
-                    "Thank you, You are registered successfully",
-                    redirectAttributes
-            );
+        if (userService.isItExists(newUser)) {
+            flashMessageService
+                    .userWasCreated(redirectAttributes);
         } else {
-            flashMessageService.flash(
-                    FlashNames.ERROR_TYPE,
-                    "Unfortunately, there was a problem, please try again later",
-                    redirectAttributes
-            );
+            flashMessageService
+                    .errorWasHappend(redirectAttributes);
         }
         return UrlMappings.REDIRECT_HOME;
     }

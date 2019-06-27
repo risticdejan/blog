@@ -31,22 +31,21 @@
                                 <tbody>
                                     <tr data-th-each="article : ${articles}">
                                         <td th:text="${article.id}"></td>
-                                        <td>
-                                            <a th:text="${article.title}" href="#" style="color: #fff;"
-                                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
-                                               ></a>
+                                        <td >
+                                            <span class="text-ellipsis title" th:text="${article.title}" href="#" style="color: #fff;"></span>
                                         </td>
                                         <td>
-
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_EDIT + '/' + article.id}__}"
-                                               style="color: #007bff;">
-                                                edit
-                                            </a>
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DELETE + '/' + article.id}__}"
-                                               style="color: #bd2130;"
-                                               class="ml-2">
-                                                delete
-                                            </a>
+                                            <span class="text-ellipsis action">
+                                                <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_EDIT + '/' + article.id}__}"
+                                                   style="color: #007bff;">
+                                                    edit
+                                                </a>
+                                                <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DELETE + '/' + article.id}__}"
+                                                   style="color: #bd2130;"
+                                                   class="ml-2">
+                                                    delete
+                                                </a>
+                                                </a>
                                         </td>
                                     </tr>
                                 </tbody>

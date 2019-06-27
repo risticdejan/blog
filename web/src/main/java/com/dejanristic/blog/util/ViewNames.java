@@ -2,6 +2,9 @@ package com.dejanristic.blog.util;
 
 public class ViewNames {
 
+    public static final String ERROR = "error/index";
+    public static final String ERROR_403 = "error/403";
+    public static final String ERROR_404 = "error/404";
     public static final String HOME = "home";
     public static final String ABOUT = "about";
     public static final String CONTACT = "contact";

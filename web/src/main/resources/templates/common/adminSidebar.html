@@ -9,17 +9,17 @@
                >
                 Dashboard
             </a>
-            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLES_LIST}__}"
+            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_RELEASED_ARTICLES_LIST}__}"
                class="list-group-item list-group-item-action bg-dark"
                th:classappend="${activeTab == 'article.list' ? 'active':''}"
                >
-                Articles List
+                Released Articles
             </a>
-            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_ARTICLES_UNRELEASED_LIST}__}"
+            <a th:href="@{__${T(com.dejanristic.blog.util.UrlAdminMappings).ADMIN_UNRELEASED_ARTICLES_LIST}__}"
                class="list-group-item list-group-item-action bg-dark"
                th:classappend="${activeTab == 'article.releasing' ? 'active':''}"
                >
-                Article releasing
+                Unreleased Articles
             </a>
             <a href="#" class="list-group-item list-group-item-action bg-dark">Profile</a>
             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).LOGOUT}__}"

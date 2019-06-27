@@ -25,15 +25,23 @@
                                     <tr>
                                         <th scope="col">Id</th>
                                         <th scope="col">Title</th>
+                                        <th scope="col">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr data-th-each="article : ${articles}">
                                         <td th:text="${article.id}"></td>
                                         <td>
-                                            <a th:text="${article.title}" href="#" style="color: #fff;"
+                                            <a class="text-ellipsis title" th:text="${article.title}" style="color: #fff;"
                                                th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
                                                ></a>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DELETE + '/' + article.id}__}"
+                                               style="color: #bd2130;"
+                                               class="ml-2">
+                                                delete
+                                            </a>
                                         </td>
                                     </tr>
                                 </tbody>

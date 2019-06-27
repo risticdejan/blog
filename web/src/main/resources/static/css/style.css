@@ -42,3 +42,31 @@ li.nav-item.active > a {
 .user-heading h1{
     color: #fff;
 }
+
+.text-ellipsis {
+    text-overflow: ellipsis;
+
+    display: block;
+
+    /* Required for text-overflow to do anything */
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.text-ellipsis.title{
+    width: 400px;
+}
+
+.text-ellipsis.action{
+    width: 150px;
+}
+
+.text-ellipsis.user{
+    width: 150px;
+}
+
+@media only screen and (max-width: 992px){
+    .text-ellipsis.title {
+        width: 200px;
+    }
+}

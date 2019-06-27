@@ -3,12 +3,13 @@ package com.dejanristic.blog.controller;
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.validation.FormValidationGroup;
+import com.dejanristic.blog.execpion.ArticleAlreadyExists;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.AttributeNames;
-import com.dejanristic.blog.util.FlashNames;
 import com.dejanristic.blog.util.PerPage;
+import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import java.security.Principal;
@@ -68,8 +69,7 @@ public class ArticleController {
 
     @PostMapping(UrlMappings.ARTICLE_STORE)
     public String store(
-            @Validated(FormValidationGroup.class)
-            @ModelAttribute(AttributeNames.NEW_ARTICLE) Article article,
+            @Validated(FormValidationGroup.class) @ModelAttribute(AttributeNames.NEW_ARTICLE) Article article,
             BindingResult result,
             Principal principal,
             RedirectAttributes redirectAttributes
@@ -90,19 +90,24 @@ public class ArticleController {
 
         article.setUser(user);
 
-        article = articleService.create(article);
+        try {
 
-        if (article != null) {
-            flashMessageService.flash(
-                    FlashNames.SUCCESS_TYPE,
-                    "The article was created, as soon as possible "
-                    + "it will be released",
-                    redirectAttributes
-            );
-        } else {
-            errorWasHappend(redirectAttributes);
+            article = articleService.create(article);
+
+            if (articleService.isItExists(article)) {
+                flashMessageService
+                        .articleWasCreated(redirectAttributes);
+            } else {
+                flashMessageService
+                        .errorWasHappend(redirectAttributes);
+            }
+            return UrlMappings.REDIRECT_HOME;
+
+        } catch (ArticleAlreadyExists ex) {
+            flashMessageService
+                    .articleAlreadyExists(redirectAttributes);
+            return UrlMappings.REDIRECT_ARTICLE_CREATE;
         }
-        return UrlMappings.REDIRECT_HOME;
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -112,7 +117,7 @@ public class ArticleController {
             Authentication authentication,
             Model model
     ) {
-        int cleanPage = cleanPageParam(page);
+        int cleanPage = SecurityUtility.cleanPageParam(page);
 
         User user = (User) authentication.getPrincipal();
 
@@ -133,7 +138,7 @@ public class ArticleController {
             Authentication authentication,
             Model model
     ) {
-        int cleanPage = cleanPageParam(page);
+        int cleanPage = SecurityUtility.cleanPageParam(page);
 
         User user = (User) authentication.getPrincipal();
 
@@ -151,15 +156,22 @@ public class ArticleController {
     @GetMapping(UrlMappings.ARTICLE_SHOW + "/{id}")
     public String show(
             @PathVariable("id") String id,
-            HttpServletRequest request,
             Model model,
             RedirectAttributes redirectAttributes
     ) {
-        Long cleanId = cleanIdParam(id);
+        Long cleanId = SecurityUtility.cleanIdParam(id);
 
         Article article = articleService.findById(cleanId);
-        if (article == null) {
-            articleNotFound(redirectAttributes);
+
+        if (!articleService.isItExists(article)) {
+            flashMessageService
+                    .articleNotFound(redirectAttributes);
+            return UrlMappings.REDIRECT_HOME;
+        }
+
+        if (!articleService.isItReleased(article)) {
+            flashMessageService
+                    .articleNotReleased(redirectAttributes);
             return UrlMappings.REDIRECT_HOME;
         }
 
@@ -176,15 +188,22 @@ public class ArticleController {
             Authentication authentication,
             RedirectAttributes redirectAttributes
     ) {
-        Long cleanId = cleanIdParam(id);
+        Long cleanId = SecurityUtility.cleanIdParam(id);
 
         Article article = articleService.findById(cleanId);
 
         User user = (User) authentication.getPrincipal();
 
-        if (article == null || article.getPublishedAt() != null) {
-            articleNotFound(redirectAttributes);
-            return UrlMappings.REDIRECT_HOME;
+        if (!articleService.isItExists(article)) {
+            flashMessageService
+                    .articleNotFound(redirectAttributes);
+            return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
+        }
+
+        if (articleService.isItReleased(article)) {
+            flashMessageService
+                    .articleWasReleased(redirectAttributes);
+            return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
         }
 
         if (!Objects.equals(article.getUser().getId(), user.getId())) {
@@ -200,36 +219,53 @@ public class ArticleController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(UrlMappings.ARTICLE_UPDATE + "/{id}")
     public String update(
-            @Validated(FormValidationGroup.class)
-            @ModelAttribute(AttributeNames.EDIT_ARTICLE) Article article,
+            @Validated(FormValidationGroup.class) @ModelAttribute(AttributeNames.EDIT_ARTICLE) Article article,
             @PathVariable("id") String id,
             Authentication authentication,
             BindingResult result,
             RedirectAttributes redirectAttributes
     ) {
-        Long cleanId = cleanIdParam(id);
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult."
+                    + AttributeNames.EDIT_ARTICLE,
+                    result
+            );
+            redirectAttributes.addFlashAttribute(AttributeNames.EDIT_ARTICLE, article);
 
-        article = articleService.update(cleanId, article);
+            return UrlMappings.REDIRECT_ARTICLE_EDIT;
+        }
 
-        if (article == null || article.getPublishedAt() != null) {
-            articleNotFound(redirectAttributes);
-            return UrlMappings.REDIRECT_HOME;
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
+        Article oldArticle = articleService.findById(cleanId);
+
+        if (!articleService.isItExists(oldArticle)) {
+            flashMessageService
+                    .articleNotFound(redirectAttributes);
+            return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
+        }
+
+        if (articleService.isItReleased(oldArticle)) {
+            flashMessageService
+                    .articleWasReleased(redirectAttributes);
+            return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
         }
 
         User user = (User) authentication.getPrincipal();
 
-        if (!Objects.equals(article.getUser().getId(), user.getId())) {
+        if (!Objects.equals(oldArticle.getUser().getId(), user.getId())) {
             throw new AccessDeniedException("access forbidden");
         }
 
-        if (article != null) {
-            flashMessageService.flash(
-                    FlashNames.SUCCESS_TYPE,
-                    "The article was updated",
-                    redirectAttributes
-            );
+        article = articleService.update(oldArticle, article);
+
+        if (articleService.isItExists(article)) {
+            flashMessageService
+                    .articleWasUpdate(redirectAttributes);
         } else {
-            errorWasHappend(redirectAttributes);
+            flashMessageService.
+                    errorWasHappend(redirectAttributes);
         }
 
         return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
@@ -241,11 +277,11 @@ public class ArticleController {
             Authentication authentication,
             RedirectAttributes redirectAttributes
     ) {
-        Long cleanId = cleanIdParam(id);
+        Long cleanId = SecurityUtility.cleanIdParam(id);
 
         Article article = articleService.findById(cleanId);
 
-        if (article != null) {
+        if (articleService.isItExists(article)) {
             User user = (User) authentication.getPrincipal();
 
             if (!Objects.equals(article.getUser().getId(), user.getId())) {
@@ -254,56 +290,13 @@ public class ArticleController {
 
             articleService.delete(article);
 
-            flashMessageService.flash(
-                    FlashNames.SUCCESS_TYPE,
-                    "The article was deleted",
-                    redirectAttributes
-            );
+            flashMessageService
+                    .articleWasDeleted(redirectAttributes);
         } else {
-            errorWasHappend(redirectAttributes);
+            flashMessageService
+                    .errorWasHappend(redirectAttributes);
         }
 
         return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
-    }
-
-    private void articleNotFound(RedirectAttributes redirectAttributes) {
-        flashMessageService.flash(
-                FlashNames.ERROR_TYPE,
-                "Unfortunately, Article not found",
-                redirectAttributes
-        );
-    }
-
-    private void errorWasHappend(RedirectAttributes redirectAttributes) {
-        flashMessageService.flash(
-                FlashNames.ERROR_TYPE,
-                "Unfortunately, there was a problem, "
-                + "please try again later",
-                redirectAttributes
-        );
-    }
-
-    private Long cleanIdParam(String id) {
-        Long cleanId;
-        try {
-            id = (id == null) ? "1" : id;
-            cleanId = Long.parseLong(id);
-        } catch (NumberFormatException ex) {
-            cleanId = 0L;
-        }
-
-        return cleanId;
-    }
-
-    private int cleanPageParam(String page) {
-        int cleanPage;
-        try {
-            page = (page == null) ? "1" : page;
-            cleanPage = Integer.parseInt(page) - 1;
-        } catch (NumberFormatException ex) {
-            cleanPage = 0;
-        }
-
-        return cleanPage;
     }
 }

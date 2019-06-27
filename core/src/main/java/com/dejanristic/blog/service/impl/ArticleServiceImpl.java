@@ -1,6 +1,7 @@
 package com.dejanristic.blog.service.impl;
 
 import com.dejanristic.blog.domain.Article;
+import com.dejanristic.blog.execpion.ArticleAlreadyExists;
 import com.dejanristic.blog.repository.ArticleRepository;
 import com.dejanristic.blog.service.ArticleService;
 import java.sql.Timestamp;
@@ -19,6 +20,16 @@ public class ArticleServiceImpl implements ArticleService {
 
     public ArticleServiceImpl(ArticleRepository articleRepository) {
         this.articleRepository = articleRepository;
+    }
+
+    @Override
+    public boolean isItExists(Article article) {
+        return article != null;
+    }
+
+    @Override
+    public boolean isItReleased(Article article) {
+        return article != null && article.getPublishedAt() != null;
     }
 
     @Override
@@ -53,12 +64,12 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article create(Article article) {
+    public Article create(Article article) throws ArticleAlreadyExists {
         Article oldArticle = articleRepository.findByTitle(article.getTitle());
 
         if (oldArticle != null) {
             log.info("article {} already exists", article.getTitle());
-            return null;
+            throw new ArticleAlreadyExists("article alredy exists");
         } else {
             article.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             article.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
@@ -68,13 +79,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article update(Long id, Article article) {
-        Article oldArticle = articleRepository.findById(id).orElse(null);
-
-        if (oldArticle == null) {
-            log.info("article don't found");
-            return null;
-        }
+    public Article update(Article oldArticle, Article article) {
 
         oldArticle.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         oldArticle.setTitle(article.getTitle());

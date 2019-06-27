@@ -4,6 +4,8 @@ import com.dejanristic.blog.domain.User;
 
 public interface UserService {
 
+    boolean isItExists(User user);
+
     User findByUsername(String username);
 
     User findByEmail(String email);

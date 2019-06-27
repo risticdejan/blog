@@ -3,6 +3,7 @@ package com.dejanristic.blog.controller;
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.util.PerPage;
+import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import lombok.extern.slf4j.Slf4j;
@@ -40,13 +41,7 @@ public class HomeController {
             @RequestParam(required = false) String page,
             Model model
     ) {
-        int cleanPage;
-        try {
-            page = (page == null) ? "1" : page;
-            cleanPage = Integer.parseInt(page) - 1;
-        } catch (NumberFormatException ex) {
-            cleanPage = 0;
-        }
+        int cleanPage = SecurityUtility.cleanPageParam(page);
 
         Page<Article> articles
                 = articleService.findAllReleasedArticles(
@@ -59,6 +54,6 @@ public class HomeController {
 
     @RequestMapping("*")
     public String notFoundPage() {
-        return "error/404";
+        return ViewNames.ERROR_404;
     }
 }
