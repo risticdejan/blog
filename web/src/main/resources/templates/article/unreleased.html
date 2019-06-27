@@ -45,7 +45,7 @@
                                                    class="ml-2">
                                                     delete
                                                 </a>
-                                                </a>
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -57,14 +57,14 @@
                         </div>
 
                         <!-- Pager -->
-                        <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix" style="color: #fff;">
-                            <a th:if="${articles.getNumber() + 1} neq 1"
-                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST + '?page=' + articles.getNumber()}__}">
+                        <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix" >
+                            <a th:if="${articles.getNumber() + 1} neq 1" style="color: #fff;"
+                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_UNRELEASED_LIST + '?page=' + articles.getNumber()}__}">
                                 Previous
                             </a>
-                            <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}"
+                            <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
                                class="ml-2"
-                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST + '?page=' + {articles.getNumber() + 2}}__}">
+                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_UNRELEASED_LIST + '?page=' + {articles.getNumber() + 2}}__}">
                                 Next
                             </a>
                         </div>

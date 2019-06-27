@@ -154,3 +154,7 @@ body {
         width: 200px;
     }
 }
+
+.bg-card {
+    background: rgba(0,0,0,.15);
+}
