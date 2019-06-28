@@ -3,8 +3,6 @@ package com.dejanristic.blog.domain;
 import com.dejanristic.blog.domain.security.Authority;
 import com.dejanristic.blog.domain.security.Role;
 import com.dejanristic.blog.domain.validation.FormValidationGroup;
-import com.dejanristic.blog.domain.validation.PersistenceValidationGroup;
-import com.dejanristic.blog.domain.validation.rules.EmailVerification;
 import com.dejanristic.blog.domain.validation.rules.FieldsVerification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
@@ -26,16 +24,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
+@ToString
 @Entity
 @FieldsVerification.List({
     @FieldsVerification(
@@ -52,26 +49,15 @@ public class User implements UserDetails, Serializable {
     @Column(name = "id", unique = true, nullable = false)
     private Long id;
 
-    @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 4, max = 45, groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Pattern(
-            regexp = "^[A-Za-z0-9._\\-]+$",
-            message = "Username can contain characters, digits, underscore and/or dash",
-            groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
     @Column(name = "username", unique = true, nullable = false, length = 45)
     private String username;
 
-    @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 6, max = 25, groups = {FormValidationGroup.class})
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @Transient
     private String confirmPassword;
 
-    @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 4, max = 255, groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @EmailVerification(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
     @Column(name = "email", nullable = false, length = 255)
     private String email;
 
@@ -152,15 +138,4 @@ public class User implements UserDetails, Serializable {
     public boolean isEnabled() {
         return enabled;
     }
-
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id
-                + ", username=" + username
-                + ", email=" + email
-                + ", createdAt=" + createdAt
-                + ", updatedAt=" + updatedAt
-                + ", enabled=" + enabled + '}';
-    }
-
 }
