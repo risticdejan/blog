@@ -1,7 +1,7 @@
 package com.dejanristic.blog.service.impl;
 
 import com.dejanristic.blog.domain.Article;
-import com.dejanristic.blog.execpion.ArticleAlreadyExists;
+import com.dejanristic.blog.exception.ArticleAlreadyExists;
 import com.dejanristic.blog.repository.ArticleRepository;
 import com.dejanristic.blog.service.ArticleService;
 import java.sql.Timestamp;
@@ -85,6 +85,7 @@ public class ArticleServiceImpl implements ArticleService {
         oldArticle.setTitle(article.getTitle());
         oldArticle.setDescription(article.getDescription());
         oldArticle.setBody(article.getBody());
+        oldArticle.setCategory(article.getCategory());
 
         return this.articleRepository.save(oldArticle);
     }

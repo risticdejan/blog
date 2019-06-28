@@ -1,20 +1,24 @@
 package com.dejanristic.blog.controller;
 
+import com.dejanristic.blog.annotation.PerPage;
 import com.dejanristic.blog.domain.Article;
+import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
-import com.dejanristic.blog.domain.validation.FormValidationGroup;
-import com.dejanristic.blog.execpion.ArticleAlreadyExists;
+import com.dejanristic.blog.domain.form.ArticleForm;
+import com.dejanristic.blog.exception.ArticleAlreadyExists;
 import com.dejanristic.blog.service.ArticleService;
+import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.AttributeNames;
-import com.dejanristic.blog.annotation.PerPage;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import java.security.Principal;
+import java.util.List;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,7 +30,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,8 +46,8 @@ public class ArticleController {
     private int perPage;
 
     private final UserService userService;
-
     private final ArticleService articleService;
+    private final CategoryService categoryService;
 
     private final FlashMessageService flashMessageService;
 
@@ -52,43 +55,51 @@ public class ArticleController {
     public ArticleController(
             UserService userService,
             ArticleService articleService,
+            CategoryService categoryService,
             FlashMessageService flashMessageService
     ) {
         this.userService = userService;
         this.articleService = articleService;
+        this.categoryService = categoryService;
         this.flashMessageService = flashMessageService;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(UrlMappings.ARTICLE_CREATE)
     public String create(Model model) {
         if (!model.containsAttribute(AttributeNames.NEW_ARTICLE)) {
-            model.addAttribute(AttributeNames.NEW_ARTICLE, new Article());
+            model.addAttribute(AttributeNames.NEW_ARTICLE, new ArticleForm());
         }
+        List<Category> categories = categoryService.findAll();
+
+        model.addAttribute("categories", categories);
+
         return ViewNames.CREATE_ARTICLE_FORM;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(UrlMappings.ARTICLE_STORE)
     public String store(
-            @Validated(FormValidationGroup.class) @ModelAttribute(AttributeNames.NEW_ARTICLE) Article article,
+            @Valid @ModelAttribute(AttributeNames.NEW_ARTICLE) ArticleForm formData,
             BindingResult result,
             Principal principal,
             RedirectAttributes redirectAttributes
     ) {
-
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "org.springframework.validation.BindingResult."
                     + AttributeNames.NEW_ARTICLE,
                     result
             );
-            redirectAttributes.addFlashAttribute(AttributeNames.NEW_ARTICLE, article);
+            redirectAttributes.addFlashAttribute(AttributeNames.NEW_ARTICLE, formData);
 
             return UrlMappings.REDIRECT_ARTICLE_CREATE;
         }
 
-        User user = userService.findByUsername(principal.getName());
-
-        article.setUser(user);
+        Article article
+                = new Article(formData.getTitle(), formData.getDescription(), formData.getBody());
+        article.setUser(userService.findByUsername(principal.getName()));
+        article.setCategory(categoryService.findById(formData.getCategoryId()));
 
         try {
 
@@ -210,7 +221,17 @@ public class ArticleController {
             throw new AccessDeniedException("access forbidden");
         }
 
-        model.addAttribute(AttributeNames.EDIT_ARTICLE, article);
+        List<Category> categories = categoryService.findAll();
+
+        model.addAttribute("categories", categories);
+        if (!model.containsAttribute(AttributeNames.EDIT_ARTICLE)) {
+            model.addAttribute(AttributeNames.EDIT_ARTICLE, new ArticleForm(
+                    article.getTitle(),
+                    article.getDescription(),
+                    article.getBody(),
+                    article.getCategory().getId()
+            ));
+        }
         model.addAttribute("id", cleanId);
 
         return ViewNames.EDIT_ARTICLE_FORM;
@@ -219,24 +240,24 @@ public class ArticleController {
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(UrlMappings.ARTICLE_UPDATE + "/{id}")
     public String update(
-            @Validated(FormValidationGroup.class) @ModelAttribute(AttributeNames.EDIT_ARTICLE) Article article,
             @PathVariable("id") String id,
-            Authentication authentication,
+            @Valid @ModelAttribute(AttributeNames.EDIT_ARTICLE) ArticleForm formData,
             BindingResult result,
+            Authentication authentication,
             RedirectAttributes redirectAttributes
     ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute(
                     "org.springframework.validation.BindingResult."
                     + AttributeNames.EDIT_ARTICLE,
                     result
             );
-            redirectAttributes.addFlashAttribute(AttributeNames.EDIT_ARTICLE, article);
+            redirectAttributes.addFlashAttribute(AttributeNames.EDIT_ARTICLE, formData);
 
-            return UrlMappings.REDIRECT_ARTICLE_EDIT;
+            return UrlMappings.REDIRECT_ARTICLE_EDIT + "/" + cleanId;
         }
-
-        Long cleanId = SecurityUtility.cleanIdParam(id);
 
         Article oldArticle = articleService.findById(cleanId);
 
@@ -257,6 +278,9 @@ public class ArticleController {
         if (!Objects.equals(oldArticle.getUser().getId(), user.getId())) {
             throw new AccessDeniedException("access forbidden");
         }
+        Article article
+                = new Article(formData.getTitle(), formData.getDescription(), formData.getBody());
+        article.setCategory(categoryService.findById(formData.getCategoryId()));
 
         article = articleService.update(oldArticle, article);
 

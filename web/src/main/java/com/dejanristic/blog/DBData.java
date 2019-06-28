@@ -1,7 +1,9 @@
 package com.dejanristic.blog;
 
+import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.security.Role;
+import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.RoleService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.SecurityUtility;
@@ -15,15 +17,23 @@ public class DBData {
 
     private RoleService roleService;
 
+    private CategoryService categoryService;
+
     @Autowired
-    public DBData(UserService userService, RoleService roleService) {
+    public DBData(
+            UserService userService,
+            RoleService roleService,
+            CategoryService categoryService
+    ) {
         this.userService = userService;
         this.roleService = roleService;
+        this.categoryService = categoryService;
     }
 
     public void load() {
         insertRoles();
         insertUsers();
+        insertCategory();
     }
 
     private void insertRoles() {
@@ -40,5 +50,12 @@ public class DBData {
                 SecurityUtility.passwordEncoder().encode("admin"),
                 "admin@test.com"
         ));
+    }
+
+    private void insertCategory() {
+        categoryService.create(new Category("PHP"));
+        categoryService.create(new Category("JAVA"));
+        categoryService.create(new Category("JAVASCRIPT"));
+        categoryService.create(new Category("SQL"));
     }
 }

@@ -25,7 +25,8 @@
                                 <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
                                    th:text="${article.user.username}"
                                    ></a>
-                                on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span></p>
+                                on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br><br>
+                                <span>category: <a href="#" th:text="${article.category.name}"></a></span></p>
                             </span>
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 package com.dejanristic.blog.domain.security;
 
 import com.dejanristic.blog.domain.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +38,7 @@ public class Role implements Serializable {
     @JoinTable(name = "user_role", joinColumns = {
         @JoinColumn(name = "role_id")}, inverseJoinColumns = {
         @JoinColumn(name = "user_id")})
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 
     public Role() {

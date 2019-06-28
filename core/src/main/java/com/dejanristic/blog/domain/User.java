@@ -6,6 +6,7 @@ import com.dejanristic.blog.domain.validation.FormValidationGroup;
 import com.dejanristic.blog.domain.validation.PersistenceValidationGroup;
 import com.dejanristic.blog.domain.validation.rules.EmailVerification;
 import com.dejanristic.blog.domain.validation.rules.FieldsVerification;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
@@ -90,6 +91,7 @@ public class User implements UserDetails, Serializable {
     private Set<Role> roles = new HashSet<Role>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonIgnore
     private Set<Article> articles = new HashSet<>();
 
     private boolean enabled = true;

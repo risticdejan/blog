@@ -1,7 +1,7 @@
 package com.dejanristic.blog.service;
 
 import com.dejanristic.blog.domain.Article;
-import com.dejanristic.blog.execpion.ArticleAlreadyExists;
+import com.dejanristic.blog.exception.ArticleAlreadyExists;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -1,4 +1,4 @@
-package com.dejanristic.blog.execpion;
+package com.dejanristic.blog.exception;
 
 public class ArticleAlreadyExists extends Exception {
 

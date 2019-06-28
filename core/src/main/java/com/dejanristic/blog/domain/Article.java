@@ -1,7 +1,5 @@
 package com.dejanristic.blog.domain;
 
-import com.dejanristic.blog.domain.validation.FormValidationGroup;
-import com.dejanristic.blog.domain.validation.PersistenceValidationGroup;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
@@ -14,9 +12,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -36,26 +31,16 @@ public class Article implements Serializable {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 4, max = 155, groups = {FormValidationGroup.class})
-    @Pattern(
-            regexp = "^[A-Za-z0-9.,_\\-'\"\\s!?]+$",
-            message = "Description cannot contain special characters",
-            groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @Column(name = "title", unique = true, nullable = false, length = 155)
     private String title;
 
-    @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 4, max = 255, groups = {FormValidationGroup.class})
-    @Pattern(
-            regexp = "^[A-Za-z0-9.,_\\-\\'\"\\s!?]+$",
-            message = "Description cannot contain special characters",
-            groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
     @Column(name = "description", nullable = false, length = 255)
     private String description;
 
-    @NotBlank(groups = {PersistenceValidationGroup.class, FormValidationGroup.class})
-    @Size(min = 4, max = 65535, groups = {FormValidationGroup.class})
     @Column(columnDefinition = "TEXT", name = "body", nullable = false)
     private String body;
 
@@ -79,18 +64,4 @@ public class Article implements Serializable {
         this.description = description;
         this.body = body;
     }
-
-    public Article(
-            Long id, String title, String description, String body,
-            Date publishedAt, Date createdAt, Date updatedAt
-    ) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.body = body;
-        this.publishedAt = publishedAt;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
 }
