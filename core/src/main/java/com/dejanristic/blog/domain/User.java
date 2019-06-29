@@ -80,6 +80,10 @@ public class User implements UserDetails, Serializable {
     @JsonIgnore
     private Set<Article> articles = new HashSet<>();
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonIgnore
+    private Set<Comment> comments = new HashSet<>();
+
     private boolean enabled = true;
 
     public User() {

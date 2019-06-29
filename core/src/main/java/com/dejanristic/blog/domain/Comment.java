@@ -1,9 +1,6 @@
 package com.dejanristic.blog.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,8 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import lombok.Getter;
@@ -24,7 +19,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-public class Article implements Serializable {
+public class Comment implements java.io.Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,26 +31,11 @@ public class Article implements Serializable {
     private User user;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @JoinColumn(name = "article_id", nullable = false)
+    private Article article;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "article")
-    @OrderBy(value = "createdAt DESC")
-    @JsonIgnore
-    private Set<Comment> comments;
-
-    @Column(name = "title", unique = true, nullable = false, length = 155)
-    private String title;
-
-    @Column(name = "description", nullable = false, length = 255)
-    private String description;
-
-    @Column(columnDefinition = "TEXT", name = "body", nullable = false)
+    @Column(name = "body", nullable = false, length = 511)
     private String body;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "published_at", length = 19)
-    private Date publishedAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", length = 19)
@@ -65,12 +45,11 @@ public class Article implements Serializable {
     @Column(name = "updated_at", length = 19)
     private Date updatedAt;
 
-    public Article() {
+    public Comment() {
     }
 
-    public Article(String title, String description, String body) {
-        this.title = title;
-        this.description = description;
+    public Comment(String body) {
         this.body = body;
     }
+
 }

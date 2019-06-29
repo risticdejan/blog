@@ -5,6 +5,7 @@ import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.ArticleForm;
+import com.dejanristic.blog.domain.form.CommentForm;
 import com.dejanristic.blog.exception.ArticleAlreadyExists;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.CategoryService;
@@ -192,6 +193,9 @@ public class ArticleController {
                 ? request.getHeader("Referer")
                 : UrlMappings.HOME;
 
+        if (!model.containsAttribute(AttributeNames.NEW_COMMENT)) {
+            model.addAttribute(AttributeNames.NEW_COMMENT, new CommentForm());
+        }
         model.addAttribute(AttributeNames.BACK_URL, backUrl);
         model.addAttribute(AttributeNames.ARTICLE, article);
 
@@ -300,6 +304,7 @@ public class ArticleController {
         return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(UrlMappings.ARTICLE_DELETE + "/{id}")
     public String delete(
             @PathVariable("id") String id,

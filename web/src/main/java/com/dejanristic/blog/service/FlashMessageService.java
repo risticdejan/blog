@@ -29,4 +29,6 @@ public interface FlashMessageService {
     public void articleWasUpdate(RedirectAttributes redirectAttributes);
 
     public void userWasCreated(RedirectAttributes redirectAttributes);
+
+    public void commentWasDeleted(RedirectAttributes redirectAttributes);
 }

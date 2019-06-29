@@ -37,7 +37,7 @@
                             <h2 th:text="${article.title}" class="post-title"></h2>
                             <h3 th:text="${article.description}" class="post-subtitle"> </h3>
                         </a>
-                        <p class="post-meta">Posted by 
+                        <p class="post-meta">Posted by
                             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
                                th:text="${article.user.username}"
                                ></a>

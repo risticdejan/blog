@@ -25,10 +25,10 @@
                                 <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
                                    th:text="${article.user.username}"
                                    ></a>
-                                on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br><br>
+                                on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br>
                                 <span>category: <a href="#" th:text="${article.category.name}"></a></span></p>
                             </span>
-                            <a class="btn btn-primary float-left"
+                            <a class="backButton float-left"
                                th:href="@{${__${T(com.dejanristic.blog.util.AttributeNames).BACK_URL}__}}">
                                 Back
                             </a>
@@ -43,7 +43,52 @@
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
                     <div th:utext="${article.body}"></div>
+
+                    <div class="comment-wrapper" id="comment-area">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <form id="comment-add" sec:authorize="isAuthenticated()"
+                                      th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).COMMENT_STORE + '/' + article.id}__}"
+                                      th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_COMMENT}__}"
+                                      method="post"
+                                      >
+                                    <div class="form-group">
+                                        <textarea class="form-control" placeholder="write a comment..." rows="3" th:field="*{body}"></textarea>
+                                        <small th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="form-text text-danger"></small>
+                                    </div>
+                                    <button type="submit" class="commentButton">Send</button>
+                                </form>
+                                <hr>
+                                <ul class="media-list">
+                                    <li class="media comment-item"
+                                        data-th-each="comment : ${article.comments}"
+                                        >
+
+                                        <img src="#" alt="">
+
+                                        <div class="media-body">
+                                            <div>
+                                                <strong class="text-success"
+                                                        th:text="'@' + ${comment.user.username}"
+                                                        ></strong>
+                                                <small class="text-muted"
+                                                       th:text="${#dates.format(comment.createdAt, 'MMMM dd, yyyy HH:mm')}"
+                                                       ></small>
+                                            </div>
+
+                                            <p th:text="${comment.body}"></p>
+                                            <p><a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).COMMENT_REMOVE + '/' + comment.id + '/' + article.id}__}"
+                                                  class="text-danger">remove</a></p>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
         </div>
 

@@ -25,6 +25,8 @@ public class UrlMappings {
     public static final String ARTICLE_UPDATE = "/article/update";
     public static final String ARTICLE_DELETE = "/article/delete";
     public static final String ARTICLE_CATEGORY_LIST = "/article/category";
+    public static final String COMMENT_STORE = "/article/comment";
+    public static final String COMMENT_REMOVE = "/article/comment/remove";
 
     private UrlMappings() {
     }

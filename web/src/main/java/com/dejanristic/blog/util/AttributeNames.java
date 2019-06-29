@@ -13,6 +13,8 @@ public class AttributeNames {
     public static final String ARTICLE = "article";
     public static final String CATEGORIES = "categories";
 
+    public static final String NEW_COMMENT = "newCommnent";
+
     private AttributeNames() {
     }
 }

@@ -115,4 +115,13 @@ public class FlashMessageServiceImpl implements FlashMessageService {
         );
     }
 
+    @Override
+    public void commentWasDeleted(RedirectAttributes redirectAttributes) {
+        flash(
+                FlashNames.SUCCESS_TYPE,
+                "Comment was remove successfully",
+                redirectAttributes
+        );
+    }
+
 }
