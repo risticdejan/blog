@@ -1,11 +1,15 @@
 package com.dejanristic.blog.controller;
 
-import com.dejanristic.blog.domain.Article;
-import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.annotation.PerPage;
+import com.dejanristic.blog.domain.Article;
+import com.dejanristic.blog.domain.Category;
+import com.dejanristic.blog.service.ArticleService;
+import com.dejanristic.blog.service.CategoryService;
+import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -26,9 +31,18 @@ public class HomeController {
     private int perPage;
 
     private ArticleService articleService;
+    private final CategoryService categoryService;
 
-    public HomeController(ArticleService articleService) {
+    @Autowired
+    public HomeController(ArticleService articleService, CategoryService categoryService) {
         this.articleService = articleService;
+        this.categoryService = categoryService;
+    }
+
+    @ModelAttribute(AttributeNames.CATEGORIES)
+    public List<Category> getCategories() {
+        List<Category> categories = categoryService.findAll();
+        return categories;
     }
 
     @GetMapping("/")

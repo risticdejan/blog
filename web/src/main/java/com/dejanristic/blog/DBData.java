@@ -53,9 +53,9 @@ public class DBData {
     }
 
     private void insertCategory() {
-        categoryService.create(new Category("PHP"));
-        categoryService.create(new Category("JAVA"));
-        categoryService.create(new Category("JAVASCRIPT"));
-        categoryService.create(new Category("SQL"));
+        categoryService.create(new Category("php"));
+        categoryService.create(new Category("java"));
+        categoryService.create(new Category("javascript"));
+        categoryService.create(new Category("sql"));
     }
 }

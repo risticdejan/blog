@@ -15,6 +15,7 @@ public class ViewNames {
     public static final String ARTICLE_SHOW = "article/show";
     public static final String ARTICLE_RELEASED_LIST = "/article/released";
     public static final String ARTICLE_UNRELEASED_LIST = "/article/unreleased";
+    public static final String ARTICLE_CATEGORY_LIST = "/article/category";
 
     private ViewNames() {
     }

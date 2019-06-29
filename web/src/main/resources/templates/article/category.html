@@ -6,21 +6,21 @@
     <body>
 
         <!-- Navigation -->
-        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'home'})}"></nav>
+        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${category.id})}"></nav>
 
         <div th:if="${flashMessage}">
             <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
         </div>
 
         <!-- Page Header -->
-        <header class="masthead" th:style="'background-image:url(' + @{/img/home-bg.jpg} + ');'" >
+        <header class="masthead" th:style="'background-image:url(' + @{__${'/img/category'+ category.id +'-bg.jpg'}__} + ');'" >
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-10 mx-auto">
                         <div class="site-heading">
-                            <h1>Clean Blog</h1>
-                            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                            <h1 class="d-none">Category</h1>
+                            <span class="subheading d-none" th:text="${category.name}"></span>
                         </div>
                     </div>
                 </div>
@@ -37,13 +37,11 @@
                             <h2 th:text="${article.title}" class="post-title"></h2>
                             <h3 th:text="${article.description}" class="post-subtitle"> </h3>
                         </a>
-                        <p class="post-meta">Posted by 
+                        <p class="post-meta">Posted by
                             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
                                th:text="${article.user.username}"
                                ></a>
-                            on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br>
-                            <span>category: <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CATEGORY_LIST  + '/' + article.category.id}__}"
-                                               th:text="${article.category.name}"></a></span>
+                            on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>
                         </p>
                         <hr>
                     </div>

@@ -12,6 +12,21 @@
                     <li class="nav-item" th:classappend="${activeTab == 'home' ? 'active':''}">
                         <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).HOME}__}">Home</a>
                     </li>
+                    <li id="dropdown-user" class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="categoryDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                           >
+                            Category
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="categoryDropdown">
+                            <a class="dropdown-item"
+                               data-th-each="category : ${__${T(com.dejanristic.blog.util.AttributeNames).CATEGORIES}__}"
+                               th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CATEGORY_LIST+ '/' + category.id}__}"
+                               th:text="${category.name}"
+                               th:classappend="${activeTab == category.id ? 'active':''}"
+                               ></a>
+                        </div>
+                    </li>
                     <li class="nav-item" th:classappend="${activeTab == 'about' ? 'active':''}">
                         <a class="nav-link" th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ABOUT}__}">About</a>
                     </li>

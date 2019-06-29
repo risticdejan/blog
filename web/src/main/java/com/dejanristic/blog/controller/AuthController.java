@@ -1,7 +1,9 @@
 package com.dejanristic.blog.controller;
 
+import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.UserForm;
+import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.service.impl.UserSecurityService;
@@ -9,6 +11,7 @@ import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +34,25 @@ public class AuthController {
     private final UserService userService;
     private final UserSecurityService userSecurityService;
     private final FlashMessageService flashMessageService;
+    private final CategoryService categoryService;
 
     @Autowired
     public AuthController(
             UserService userService,
             UserSecurityService userSecurityService,
-            FlashMessageService flashMessageService
+            FlashMessageService flashMessageService,
+            CategoryService categoryService
     ) {
         this.userService = userService;
         this.userSecurityService = userSecurityService;
         this.flashMessageService = flashMessageService;
+        this.categoryService = categoryService;
+    }
+
+    @ModelAttribute(AttributeNames.CATEGORIES)
+    public List<Category> getCategories() {
+        List<Category> categories = categoryService.findAll();
+        return categories;
     }
 
     @GetMapping(UrlMappings.LOGIN)

@@ -11,6 +11,7 @@ public class AttributeNames {
     public static final String NEW_ARTICLE = "newArticle";
     public static final String EDIT_ARTICLE = "editArticle";
     public static final String ARTICLE = "article";
+    public static final String CATEGORIES = "categories";
 
     private AttributeNames() {
     }

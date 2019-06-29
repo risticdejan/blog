@@ -28,6 +28,10 @@
                                 on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br><br>
                                 <span>category: <a href="#" th:text="${article.category.name}"></a></span></p>
                             </span>
+                            <a class="btn btn-primary float-left"
+                               th:href="@{${__${T(com.dejanristic.blog.util.AttributeNames).BACK_URL}__}}">
+                                Back
+                            </a>
                         </div>
                     </div>
                 </div>

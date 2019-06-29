@@ -48,7 +48,6 @@ public class ArticleController {
     private final UserService userService;
     private final ArticleService articleService;
     private final CategoryService categoryService;
-
     private final FlashMessageService flashMessageService;
 
     @Autowired
@@ -64,16 +63,18 @@ public class ArticleController {
         this.flashMessageService = flashMessageService;
     }
 
+    @ModelAttribute(AttributeNames.CATEGORIES)
+    public List<Category> getCategories() {
+        List<Category> categories = categoryService.findAll();
+        return categories;
+    }
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping(UrlMappings.ARTICLE_CREATE)
     public String create(Model model) {
         if (!model.containsAttribute(AttributeNames.NEW_ARTICLE)) {
             model.addAttribute(AttributeNames.NEW_ARTICLE, new ArticleForm());
         }
-        List<Category> categories = categoryService.findAll();
-
-        model.addAttribute("categories", categories);
-
         return ViewNames.CREATE_ARTICLE_FORM;
     }
 
@@ -168,6 +169,7 @@ public class ArticleController {
     public String show(
             @PathVariable("id") String id,
             Model model,
+            HttpServletRequest request,
             RedirectAttributes redirectAttributes
     ) {
         Long cleanId = SecurityUtility.cleanIdParam(id);
@@ -186,7 +188,13 @@ public class ArticleController {
             return UrlMappings.REDIRECT_HOME;
         }
 
+        String backUrl = (request.getHeader("Referer") != null)
+                ? request.getHeader("Referer")
+                : UrlMappings.HOME;
+
+        model.addAttribute(AttributeNames.BACK_URL, backUrl);
         model.addAttribute(AttributeNames.ARTICLE, article);
+
         return ViewNames.ARTICLE_SHOW;
     }
 
@@ -221,9 +229,6 @@ public class ArticleController {
             throw new AccessDeniedException("access forbidden");
         }
 
-        List<Category> categories = categoryService.findAll();
-
-        model.addAttribute("categories", categories);
         if (!model.containsAttribute(AttributeNames.EDIT_ARTICLE)) {
             model.addAttribute(AttributeNames.EDIT_ARTICLE, new ArticleForm(
                     article.getTitle(),
@@ -322,5 +327,28 @@ public class ArticleController {
         }
 
         return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
+    }
+
+    @GetMapping(UrlMappings.ARTICLE_CATEGORY_LIST + "/{id}")
+    public String category(
+            @PathVariable("id") String id,
+            @RequestParam(required = false) String page,
+            Model model
+    ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+        int cleanPage = SecurityUtility.cleanPageParam(page);
+
+        Page<Article> articles
+                = articleService.findByCategoryId(
+                        cleanId,
+                        PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
+                );
+
+        Category category = categoryService.findById(cleanId);
+
+        model.addAttribute("articles", articles);
+        model.addAttribute("category", category);
+
+        return ViewNames.ARTICLE_CATEGORY_LIST;
     }
 }

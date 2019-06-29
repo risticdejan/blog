@@ -33,6 +33,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Page<Article> findByCategoryId(Long id, Pageable pageable) {
+        return this.articleRepository.findByCategoryId(id, pageable);
+    }
+
+    @Override
     public Article findByTitle(String title) {
         return this.articleRepository.findByTitle(title);
     }

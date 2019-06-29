@@ -11,6 +11,8 @@ public interface ArticleService {
 
     boolean isItReleased(Article article);
 
+    Page<Article> findByCategoryId(Long id, Pageable pageable);
+
     Page<Article> findAllReleasedArticles(Pageable pageable);
 
     Page<Article> findAllUnreleasedArticles(Pageable pageable);

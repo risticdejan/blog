@@ -25,6 +25,7 @@
                                     <tr>
                                         <th scope="col">Id</th>
                                         <th scope="col">Title</th>
+                                        <th scope="col">Category</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -34,6 +35,7 @@
                                         <td >
                                             <span class="text-ellipsis title" th:text="${article.title}" href="#" style="color: #fff;"></span>
                                         </td>
+                                        <td th:text="${article.category.name}"></td>
                                         <td>
                                             <span class="text-ellipsis action">
                                                 <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_EDIT + '/' + article.id}__}"

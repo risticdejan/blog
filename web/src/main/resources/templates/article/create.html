@@ -36,7 +36,7 @@
                                 <label for="selectCategory">Select Category</label>
                                 <select class="form-control" id="selectCategory" th:field="*{categoryId}">
                                     <option th:value="NULL" th:text="---Select---"></option>
-                                    <option data-th-each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                    <option data-th-each="category : ${__${T(com.dejanristic.blog.util.AttributeNames).CATEGORIES}__}" th:value="${category.id}" th:text="${category.name}"></option>
                                 </select>
                                 <small th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" class="form-text text-danger"></small>
                             </div>
