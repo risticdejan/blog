@@ -28,7 +28,7 @@
                                 on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br>
                                 <span>category: <a href="#" th:text="${article.category.name}"></a></span></p>
                             </span>
-                            <a class="backButton float-left"
+                            <a class="btn btn-light float-left"
                                th:href="@{${__${T(com.dejanristic.blog.util.AttributeNames).BACK_URL}__}}">
                                 Back
                             </a>
@@ -53,13 +53,12 @@
                                       method="post"
                                       >
                                     <div class="form-group">
-                                        <textarea class="form-control" placeholder="write a comment..." rows="3" th:field="*{body}"></textarea>
-                                        <small th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="form-text text-danger"></small>
+                                        <textarea id="body" class="form-control" placeholder="write a comment..." rows="3" th:field="*{body}"></textarea>
                                     </div>
                                     <button type="submit" class="commentButton">Send</button>
                                 </form>
                                 <hr>
-                                <ul class="media-list">
+                                <ul class="media-list" id="comment-list">
                                     <li class="media comment-item"
                                         data-th-each="comment : ${article.comments}"
                                         >
@@ -72,13 +71,12 @@
                                                         th:text="'@' + ${comment.user.username}"
                                                         ></strong>
                                                 <small class="text-muted"
-                                                       th:text="${#dates.format(comment.createdAt, 'MMMM dd, yyyy HH:mm')}"
+                                                       th:text="${#dates.format(comment.createdAt, 'MMMM dd, yyyy  HH:mm')}"
                                                        ></small>
                                             </div>
 
                                             <p th:text="${comment.body}"></p>
-                                            <p><a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).COMMENT_REMOVE + '/' + comment.id + '/' + article.id}__}"
-                                                  class="text-danger">remove</a></p>
+
                                         </div>
                                     </li>
 

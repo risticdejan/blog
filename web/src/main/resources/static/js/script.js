@@ -8,6 +8,10 @@ $(document).ready(function () {
     });
 });
 
+$.validator.addMethod("noSpecialCharacters", function (value, element) {
+    return this.optional(element) || /^[a-z0-9\s.,_\\-\\'\"!?]+$/i.test(value);
+}, "The field cannot contain special characters");
+
 
 var getImg = function (name, size) {
 
@@ -55,54 +59,218 @@ var getImg = function (name, size) {
     return dataURI;
 };
 
-$(".comment-item").each(function (index) {
-    var $this = $(this),
-            img = $this.find("img"),
-            name = $this.find("strong").text().slice(1);
+var date_format = function (d) {
+    var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var date = month[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+    var time = d.getHours() + ":" + d.getMinutes();
+    return (date + " " + time);
+};
 
-    img.attr("src", getImg(name, "30"));
-});
 
-/*
- var Comment = {
- config: {
- form: '#comment-add'
- },
 
- init: function (config) {
- $.extend(this.config, config);
+var Template = {
+    comment: function (data) {
+        var imgUri = getImg(data.user.username, 30);
+        var date = date_format(new Date(data.createdAt));
+        var temp = "";
+        temp += "<li class='media comment-item'>";
+        temp += "<img src='" + imgUri + "' alt=''>";
+        temp += "<div class='media-body'>";
+        temp += "<div>";
+        temp += "<strong class='text-success'>@" + data.user.username + " </strong>";
+        temp += "<small class='text-muted'> " + date + "</small>";
+        temp += "</div>";
+        temp += "<p>" + data.body + "</p>";
+        temp += "</div>";
+        temp += "</li>";
 
- this.bindEvents();
- },
+        return temp;
+    },
+    errorField: function (error) {
+        var temp = "";
+        temp += "<div class='invalid-feedback' style='display: block;'>";
+        temp += error;
+        temp += "</div>";
+        return temp;
+    }
+};
+//var Article = {
+//    config: {
+//        form: '#article-form'
+//    },
+//
+//    init: function (config) {
+//        $.extend(this.config, config);
+//
+//        this.bindEvents();
+//    },
+//
+//    bindEvents: function () {
+//        var config = this.config,
+//                form = config.form;
+//
+//        $(form).find('button').on('click', $.proxy(this.addArticle, this));
+//    },
+//
+//    addArticle: function (e) {
+//        var config = this.config,
+//                $form = $(config.form),
+//                url = $form.attr('action'),
+//                data = $form.serialize();
+//
+//        console.log("test");
+//
+//        validator = this.validateForm(config.form);
+//
+//        if (validator.form()) {
+//            $.ajax({
+//                url: url,
+//                data: data,
+//                type: 'POST',
+//                dataType: 'JSON'
+//            }).done(function (data) {
+//                if (data.status === "success") {
+//                    console.log(data);
+//                }
+//            });
+//        }
+//
+//        e.preventDefault();
+//        e.stopPropagation();
+//    },
+//
+//    validateForm: function (form) {
+//        return $(form).validate({
+//            lang: 'en',
+//            rules: {
+//                body: {
+//                    required: true,
+//                    noSpecialCharacters: true,
+//                    minlength: 4,
+//                    maxlength: 511
+//                }
+//            },
+//            highlight: function (element) {
+//                $(element).closest('.form-group').addClass('has-error');
+//            },
+//            unhighlight: function (element) {
+//                $(element).closest('.form-group').removeClass('has-error');
+//            },
+//            errorElement: 'div',
+//            errorClass: 'invalid-feedback',
+//            errorPlacement: function (error, element) {
+//                if (element.parent('.input-group').length) {
+//                    error.insertAfter(element.parent());
+//                } else {
+//                    error.insertAfter(element);
+//                }
+//            }
+//        });
+//    }
+//};
 
- bindEvents: function () {
- var config = this.config,
- form = config.form;
+var Comment = {
+    config: {
+        form: '#comment-add',
+        list: '#comment-list',
+        listItem: '.comment-item'
+    },
 
- $(form).find('button').on('click', $.proxy(this.addComment, this));
+    init: function (config) {
+        $.extend(this.config, config);
 
- },
+        this.setImages();
 
- addComment: function (e) {
- var config = this.config,
- $form = $(config.form),
- url = $form.attr('action'),
- data = $form.serialize();
+        this.bindEvents();
+    },
 
- console.log("test add comment");
+    bindEvents: function () {
+        var config = this.config,
+                form = config.form;
 
- $.ajax({
- url: url,
- data: data,
- type: 'POST',
- dataType: 'JSON'
- }).done(function (data) {
- console.log(data);
- });
- e.preventDefault();
- e.stopPropagation();
- }
- };
+        $(form).find('button').on('click', $.proxy(this.addComment, this));
+        $(form).on('focus', 'textarea', this.removeError);
+    },
 
- Comment.init();
- */
+    setImages: function () {
+        var config = this.config,
+                $commentItem = $(config.listItem);
+
+        $commentItem.each(function (index) {
+            var $el = $(this),
+                    img = $el.find("img"),
+                    name = $el.find("strong").text().slice(1);
+
+            img.attr("src", getImg(name, "30"));
+        });
+    },
+
+    addComment: function (e) {
+        var config = this.config,
+                $list = $(config.list),
+                $form = $(config.form),
+                url = $form.attr('action'),
+                data = $form.serialize();
+
+        validator = this.validateForm(config.form);
+
+        if (validator.form()) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                dataType: 'JSON'
+            }).done(function (data) {
+                if (data.status === "success") {
+                    $list.prepend(Template.comment(data.body));
+                } else if (data.status === "failed") {
+                    $("#body").closest('div')
+                            .append(
+                                    Template.errorField(data.body.body)
+                                    );
+                }
+            });
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+    },
+
+    removeError: function () {
+        var $this = $(this);
+
+        $('div.invalid-feedback').remove();
+    },
+
+    validateForm: function (form) {
+        return $(form).validate({
+            lang: 'en',
+            rules: {
+                body: {
+                    required: true,
+                    noSpecialCharacters: true,
+                    minlength: 4,
+                    maxlength: 511
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    }
+};
+
+Comment.init();
+//Article.init();

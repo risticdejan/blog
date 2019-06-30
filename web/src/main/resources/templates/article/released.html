@@ -40,8 +40,7 @@
                                         <td th:text="${article.category.name}"></td>
                                         <td>
                                             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DELETE + '/' + article.id}__}"
-                                               style="color: #bd2130;"
-                                               class="ml-2">
+                                               class="ml-2 deleteButton">
                                                 delete
                                             </a>
                                         </td>
@@ -56,12 +55,12 @@
 
                         <!-- Pager -->
                         <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix" >
-                            <a th:if="${articles.getNumber() + 1} neq 1" style="color: #fff;"
+                            <a th:if="${articles.getNumber() + 1} neq 1" class="backButton"
                                th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST + '?page=' + articles.getNumber()}__}">
                                 Previous
                             </a>
                             <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" style="color: #fff;"
-                               class="ml-2"
+                               class="ml-2 commentButton"
                                th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_RELEASED_LIST + '?page=' + {articles.getNumber() + 2}}__}">
                                 Next
                             </a>

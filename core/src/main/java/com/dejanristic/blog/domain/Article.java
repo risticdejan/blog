@@ -59,10 +59,12 @@ public class Article implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", length = 19)
+    @JsonIgnore
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", length = 19)
+    @JsonIgnore
     private Date updatedAt;
 
     public Article() {

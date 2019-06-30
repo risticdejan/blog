@@ -1,6 +1,7 @@
 package com.dejanristic.blog.controller.admin;
 
 import com.dejanristic.blog.domain.User;
+import com.dejanristic.blog.service.impl.UserDetailsImpl;
 import com.dejanristic.blog.util.admin.UrlAdminMappings;
 import com.dejanristic.blog.util.admin.ViewAdminNames;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +20,7 @@ public class HomeController {
             Model model
     ) {
 
-        User user = (User) authentication.getPrincipal();
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
         model.addAttribute("user", user);
         return ViewAdminNames.ADMIN;
     }

@@ -1,12 +1,10 @@
 package com.dejanristic.blog.domain;
 
-import com.dejanristic.blog.domain.security.Authority;
 import com.dejanristic.blog.domain.security.Role;
 import com.dejanristic.blog.domain.validation.FormValidationGroup;
 import com.dejanristic.blog.domain.validation.rules.FieldsVerification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,8 +25,6 @@ import javax.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
 @Setter
@@ -42,7 +38,7 @@ import org.springframework.security.core.userdetails.UserDetails;
             groups = {FormValidationGroup.class}
     )
 })
-public class User implements UserDetails, Serializable {
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,9 +49,11 @@ public class User implements UserDetails, Serializable {
     private String username;
 
     @Column(name = "password", nullable = false, length = 255)
+    @JsonIgnore
     private String password;
 
     @Transient
+    @JsonIgnore
     private String confirmPassword;
 
     @Column(name = "email", nullable = false, length = 255)
@@ -63,10 +61,12 @@ public class User implements UserDetails, Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", length = 19)
+    @JsonIgnore
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", length = 19)
+    @JsonIgnore
     private Date updatedAt;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE,
@@ -74,6 +74,7 @@ public class User implements UserDetails, Serializable {
     @JoinTable(name = "user_role", joinColumns = {
         @JoinColumn(name = "user_id")}, inverseJoinColumns = {
         @JoinColumn(name = "role_id")})
+    @JsonIgnore
     private Set<Role> roles = new HashSet<Role>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -84,6 +85,7 @@ public class User implements UserDetails, Serializable {
     @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
 
+    @JsonIgnore
     private boolean enabled = true;
 
     public User() {
@@ -113,33 +115,5 @@ public class User implements UserDetails, Serializable {
             return;
         }
         roles.add(role);
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<GrantedAuthority> authorites = new HashSet<>();
-        roles.forEach(r -> authorites.add(new Authority(r.getName())));
-
-        return authorites;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
     }
 }

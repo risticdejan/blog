@@ -1,5 +1,6 @@
 package com.dejanristic.blog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,6 +33,7 @@ public class Comment implements java.io.Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "article_id", nullable = false)
+    @JsonIgnore
     private Article article;
 
     @Column(name = "body", nullable = false, length = 511)
@@ -43,6 +45,7 @@ public class Comment implements java.io.Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated_at", length = 19)
+    @JsonIgnore
     private Date updatedAt;
 
     public Comment() {

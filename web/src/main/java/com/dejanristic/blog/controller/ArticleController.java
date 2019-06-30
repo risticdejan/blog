@@ -11,6 +11,7 @@ import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
+import com.dejanristic.blog.service.impl.UserDetailsImpl;
 import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
@@ -132,7 +133,7 @@ public class ArticleController {
     ) {
         int cleanPage = SecurityUtility.cleanPageParam(page);
 
-        User user = (User) authentication.getPrincipal();
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
         Page<Article> articles
                 = articleService.findAllReleasedArticlesByUser(
@@ -153,7 +154,7 @@ public class ArticleController {
     ) {
         int cleanPage = SecurityUtility.cleanPageParam(page);
 
-        User user = (User) authentication.getPrincipal();
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
         Page<Article> articles
                 = articleService.findAllUnreleasedArticlesByUser(
@@ -215,7 +216,7 @@ public class ArticleController {
 
         Article article = articleService.findById(cleanId);
 
-        User user = (User) authentication.getPrincipal();
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
         if (!articleService.isItExists(article)) {
             flashMessageService
@@ -282,7 +283,7 @@ public class ArticleController {
             return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
         }
 
-        User user = (User) authentication.getPrincipal();
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
         if (!Objects.equals(oldArticle.getUser().getId(), user.getId())) {
             throw new AccessDeniedException("access forbidden");
@@ -316,7 +317,7 @@ public class ArticleController {
         Article article = articleService.findById(cleanId);
 
         if (articleService.isItExists(article)) {
-            User user = (User) authentication.getPrincipal();
+            User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
             if (!Objects.equals(article.getUser().getId(), user.getId())) {
                 throw new AccessDeniedException("access forbidden");
