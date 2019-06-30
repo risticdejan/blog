@@ -224,7 +224,8 @@ var Comment = {
                 if (data.status === "success") {
                     $list.prepend(Template.comment(data.body));
                 } else if (data.status === "failed") {
-                    $("#body").closest('div')
+                    $("#body")
+                            .closest('div')
                             .append(
                                     Template.errorField(data.body.body)
                                     );

@@ -52,9 +52,14 @@ public class CommentController {
             Authentication authentication
     ) {
         if (result.hasErrors()) {
-            FieldError first = result.getFieldErrors().get(0);
+
             Map<String, String> errors = new HashMap();
-            errors.put(first.getField(), first.getDefaultMessage());
+            for (FieldError fe : result.getFieldErrors()) {
+                if (!errors.containsKey(fe.getField())) {
+                    errors.put(fe.getField(), fe.getDefaultMessage());
+                }
+                System.out.println(fe.getDefaultMessage());
+            }
 
             return new ResponseEntity(
                     new JsonRespone("failed", errors),
