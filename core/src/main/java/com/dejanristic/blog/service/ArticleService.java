@@ -27,7 +27,7 @@ public interface ArticleService {
 
     Article create(Article article) throws ArticleAlreadyExists;
 
-    Article update(Article odlArticle, Article article);
+    Article update(Article odlArticle, Article article) throws ArticleAlreadyExists;
 
     void delete(Article article);
 

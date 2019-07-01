@@ -84,15 +84,20 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article update(Article oldArticle, Article article) {
+    public Article update(Article oldArticle, Article article) throws ArticleAlreadyExists {
+        if (oldArticle != null) {
+            log.info("article {} already exists", article.getTitle());
+            throw new ArticleAlreadyExists("article alredy exists");
+        } else {
 
-        oldArticle.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
-        oldArticle.setTitle(article.getTitle());
-        oldArticle.setDescription(article.getDescription());
-        oldArticle.setBody(article.getBody());
-        oldArticle.setCategory(article.getCategory());
+            oldArticle.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+            oldArticle.setTitle(article.getTitle());
+            oldArticle.setDescription(article.getDescription());
+            oldArticle.setBody(article.getBody());
+            oldArticle.setCategory(article.getCategory());
 
-        return this.articleRepository.save(oldArticle);
+            return this.articleRepository.save(oldArticle);
+        }
     }
 
     @Override

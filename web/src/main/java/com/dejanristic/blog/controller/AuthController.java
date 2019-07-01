@@ -4,7 +4,7 @@ import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.UserForm;
 import com.dejanristic.blog.service.CategoryService;
-import com.dejanristic.blog.service.FlashMessageService;
+import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.service.impl.UserSecurityService;
 import com.dejanristic.blog.util.AttributeNames;
@@ -33,20 +33,20 @@ public class AuthController {
 
     private final UserService userService;
     private final UserSecurityService userSecurityService;
-    private final FlashMessageService flashMessageService;
     private final CategoryService categoryService;
+    private final Flash flash;
 
     @Autowired
     public AuthController(
             UserService userService,
             UserSecurityService userSecurityService,
-            FlashMessageService flashMessageService,
-            CategoryService categoryService
+            CategoryService categoryService,
+            Flash flash
     ) {
         this.userService = userService;
         this.userSecurityService = userSecurityService;
-        this.flashMessageService = flashMessageService;
         this.categoryService = categoryService;
+        this.flash = flash;
     }
 
     @ModelAttribute(AttributeNames.CATEGORIES)
@@ -110,11 +110,11 @@ public class AuthController {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            flashMessageService
-                    .userWasCreated(redirectAttributes);
+            flash.success("Thank you, "
+                    + "You are registered successfully");
         } else {
-            flashMessageService
-                    .errorWasHappend(redirectAttributes);
+            flash.error("Unfortunately, there was a problem, "
+                    + "please try again later");
         }
         return UrlMappings.REDIRECT_HOME;
     }

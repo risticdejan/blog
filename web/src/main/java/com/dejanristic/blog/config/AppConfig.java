@@ -1,8 +1,10 @@
 package com.dejanristic.blog.config;
 
-import com.dejanristic.blog.interceptor.RequestInterceptor;
 import com.dejanristic.blog.annotation.PerPage;
 import com.dejanristic.blog.annotation.PerPageAdmin;
+import com.dejanristic.blog.interceptor.FlashInterceptor;
+import com.dejanristic.blog.interceptor.RequestInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,8 +35,15 @@ public class AppConfig implements WebMvcConfigurer {
         return perPageAdmin;
     }
 
+    @Autowired
+    private RequestInterceptor requestInterceptor;
+
+    @Autowired
+    private FlashInterceptor flashInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new RequestInterceptor());
+        registry.addInterceptor(requestInterceptor);
+        registry.addInterceptor(flashInterceptor);
     }
 }

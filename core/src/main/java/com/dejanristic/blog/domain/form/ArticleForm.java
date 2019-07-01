@@ -20,7 +20,7 @@ public class ArticleForm {
     @Size(min = 4, max = 155)
     @Pattern(
             regexp = "^[A-Za-z0-9.,_\\-'\"\\s!?]+$",
-            message = "Description cannot contain special characters")
+            message = "Title cannot contain special characters")
     private String title;
 
     @NotBlank

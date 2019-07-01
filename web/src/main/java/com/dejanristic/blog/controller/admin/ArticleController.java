@@ -1,10 +1,10 @@
 package com.dejanristic.blog.controller.admin;
 
+import com.dejanristic.blog.annotation.PerPageAdmin;
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.service.ArticleService;
-import com.dejanristic.blog.service.FlashMessageService;
+import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.util.AttributeNames;
-import com.dejanristic.blog.annotation.PerPageAdmin;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.admin.UrlAdminMappings;
 import com.dejanristic.blog.util.admin.ViewAdminNames;
@@ -32,16 +32,15 @@ public class ArticleController {
     private int perPage;
 
     private final ArticleService articleService;
-
-    private final FlashMessageService flashMessageService;
+    private final Flash flash;
 
     @Autowired
     public ArticleController(
             ArticleService articleService,
-            FlashMessageService flashMessageService
+            Flash flash
     ) {
         this.articleService = articleService;
-        this.flashMessageService = flashMessageService;
+        this.flash = flash;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -115,11 +114,10 @@ public class ArticleController {
         if (articleService.isItExists(article)) {
             articleService.delete(article);
 
-            flashMessageService
-                    .articleWasDeleted(redirectAttributes);
+            flash.success("The article was deleted");
         } else {
-            flashMessageService
-                    .errorWasHappend(redirectAttributes);
+            flash.error("Unfortunately, there was a problem, "
+                    + "please try again later");
         }
 
         return UrlAdminMappings.REDIRECT_ADMIN_UNRELEASED_ARTICLES_LIST;
@@ -140,11 +138,10 @@ public class ArticleController {
         if (articleService.isItExists(article)) {
             articleService.release(article);
 
-            flashMessageService
-                    .articleHasReleased(redirectAttributes);
+            flash.success("Article has released");
         } else {
-            flashMessageService
-                    .errorWasHappend(redirectAttributes);
+            flash.error("Unfortunately, there was a problem, "
+                    + "please try again later");
         }
 
         String backUrl = (request.getHeader("Referer") != null)

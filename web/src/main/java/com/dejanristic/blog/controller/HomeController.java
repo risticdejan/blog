@@ -34,7 +34,10 @@ public class HomeController {
     private final CategoryService categoryService;
 
     @Autowired
-    public HomeController(ArticleService articleService, CategoryService categoryService) {
+    public HomeController(
+            ArticleService articleService,
+            CategoryService categoryService
+    ) {
         this.articleService = articleService;
         this.categoryService = categoryService;
     }

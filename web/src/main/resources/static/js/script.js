@@ -12,7 +12,6 @@ $.validator.addMethod("noSpecialCharacters", function (value, element) {
     return this.optional(element) || /^[a-z0-9\s.,_\\-\\'\"!?]+$/i.test(value);
 }, "The field cannot contain special characters");
 
-
 var getImg = function (name, size) {
 
     name = name || '';
@@ -66,8 +65,6 @@ var date_format = function (d) {
     return (date + " " + time);
 };
 
-
-
 var Template = {
     comment: function (data) {
         var imgUri = getImg(data.user.username, 30);
@@ -94,86 +91,131 @@ var Template = {
         return temp;
     }
 };
-//var Article = {
-//    config: {
-//        form: '#article-form'
-//    },
-//
-//    init: function (config) {
-//        $.extend(this.config, config);
-//
-//        this.bindEvents();
-//    },
-//
-//    bindEvents: function () {
-//        var config = this.config,
-//                form = config.form;
-//
-//        $(form).find('button').on('click', $.proxy(this.addArticle, this));
-//    },
-//
-//    addArticle: function (e) {
-//        var config = this.config,
-//                $form = $(config.form),
-//                url = $form.attr('action'),
-//                data = $form.serialize();
-//
-//        console.log("test");
-//
-//        validator = this.validateForm(config.form);
-//
-//        if (validator.form()) {
-//            $.ajax({
-//                url: url,
-//                data: data,
-//                type: 'POST',
-//                dataType: 'JSON'
-//            }).done(function (data) {
-//                if (data.status === "success") {
-//                    console.log(data);
-//                }
-//            });
-//        }
-//
-//        e.preventDefault();
-//        e.stopPropagation();
-//    },
-//
-//    validateForm: function (form) {
-//        return $(form).validate({
-//            lang: 'en',
-//            rules: {
-//                body: {
-//                    required: true,
-//                    noSpecialCharacters: true,
-//                    minlength: 4,
-//                    maxlength: 511
-//                }
-//            },
-//            highlight: function (element) {
-//                $(element).closest('.form-group').addClass('has-error');
-//            },
-//            unhighlight: function (element) {
-//                $(element).closest('.form-group').removeClass('has-error');
-//            },
-//            errorElement: 'div',
-//            errorClass: 'invalid-feedback',
-//            errorPlacement: function (error, element) {
-//                if (element.parent('.input-group').length) {
-//                    error.insertAfter(element.parent());
-//                } else {
-//                    error.insertAfter(element);
-//                }
-//            }
-//        });
-//    }
-//};
+
+var Article = {
+    config: {
+        form: '#article-form',
+        body: '#body',
+        title: '#title',
+        description: '#description',
+        category: '#categoryId'
+    },
+
+    init: function (config) {
+        $.extend(this.config, config);
+
+        this.bindEvents();
+    },
+
+    bindEvents: function () {
+        var config = this.config,
+                form = config.form;
+
+        $(form).find('button').on('click', $.proxy(this.save, this));
+        $(form).on('focus', 'textarea', this.removeError);
+        $(form).on('focus', 'input', this.removeError);
+    },
+
+    save: function (e) {
+        var config = this.config,
+                $form = $(config.form),
+                url = $form.attr('action'),
+                data = $form.serialize();
+
+        console.log("test");
+
+        validator = this.validateForm(config.form);
+
+        if (validator.form()) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                dataType: 'JSON'
+            }).done(function (data) {
+                if (data.status === "success") {
+                    window.location = data.body.url;
+                } else if (data.status === "failed") {
+                    if (data.body.bod) {
+                        $(config.body).closest('div')
+                                .append(Template.errorField(data.body.body));
+                    }
+                    if (data.body.title) {
+                        $(config.title).closest('div')
+                                .append(Template.errorField(data.body.title));
+                    }
+                    if (data.body.description) {
+                        $(config.description).closest('div')
+                                .append(Template.errorField(data.body.description));
+                    }
+                    if (data.body.categoryId) {
+                        $(config.category).closest('div')
+                                .append(Template.errorField(data.body.categoryId));
+                    }
+                    console.log(data);
+                }
+            });
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+    },
+
+    removeError: function () {
+        var $this = $(this);
+
+        $('div.invalid-feedback').remove();
+    },
+
+    validateForm: function (form) {
+        return $(form).validate({
+            lang: 'en',
+            rules: {
+                body: {
+                    required: true,
+                    minlength: 4
+                },
+                title: {
+                    required: true,
+                    noSpecialCharacters: true,
+                    minlength: 4,
+                    maxlength: 155
+                },
+                description: {
+                    required: true,
+                    noSpecialCharacters: true,
+                    minlength: 4,
+                    maxlength: 255
+                },
+                categoryId: {
+                    required: true
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    }
+};
 
 var Comment = {
     config: {
         form: '#comment-add',
         list: '#comment-list',
-        listItem: '.comment-item'
+        listItem: '.comment-item',
+        body: "#body"
     },
 
     init: function (config) {
@@ -224,11 +266,8 @@ var Comment = {
                 if (data.status === "success") {
                     $list.prepend(Template.comment(data.body));
                 } else if (data.status === "failed") {
-                    $("#body")
-                            .closest('div')
-                            .append(
-                                    Template.errorField(data.body.body)
-                                    );
+                    $(config.body).closest('div')
+                            .append(Template.errorField(data.body.body));
                 }
             });
         }
@@ -274,4 +313,4 @@ var Comment = {
 };
 
 Comment.init();
-//Article.init();
+Article.init();

@@ -2,7 +2,6 @@ package com.dejanristic.blog.controller.admin;
 
 import com.dejanristic.blog.annotation.PerPageAdmin;
 import com.dejanristic.blog.domain.User;
-import com.dejanristic.blog.service.FlashMessageService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.SecurityUtility;
@@ -31,12 +30,9 @@ public class UserController {
 
     private final UserService userService;
 
-    private final FlashMessageService flashMessageService;
-
     @Autowired
-    public UserController(UserService userService, FlashMessageService flashMessageService) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.flashMessageService = flashMessageService;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

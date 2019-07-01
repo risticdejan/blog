@@ -3,13 +3,14 @@ package com.dejanristic.blog.controller;
 import com.dejanristic.blog.annotation.PerPage;
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.domain.Category;
+import com.dejanristic.blog.domain.JsonRespone;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.ArticleForm;
 import com.dejanristic.blog.domain.form.CommentForm;
 import com.dejanristic.blog.exception.ArticleAlreadyExists;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.CategoryService;
-import com.dejanristic.blog.service.FlashMessageService;
+import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.service.impl.UserDetailsImpl;
 import com.dejanristic.blog.util.AttributeNames;
@@ -17,7 +18,9 @@ import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,17 +29,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -50,19 +57,19 @@ public class ArticleController {
     private final UserService userService;
     private final ArticleService articleService;
     private final CategoryService categoryService;
-    private final FlashMessageService flashMessageService;
+    private final Flash flash;
 
     @Autowired
     public ArticleController(
             UserService userService,
             ArticleService articleService,
             CategoryService categoryService,
-            FlashMessageService flashMessageService
+            Flash flash
     ) {
         this.userService = userService;
         this.articleService = articleService;
         this.categoryService = categoryService;
-        this.flashMessageService = flashMessageService;
+        this.flash = flash;
     }
 
     @ModelAttribute(AttributeNames.CATEGORIES)
@@ -82,21 +89,28 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(UrlMappings.ARTICLE_STORE)
-    public String store(
+    @ResponseBody
+    public ResponseEntity<?> store(
             @Valid @ModelAttribute(AttributeNames.NEW_ARTICLE) ArticleForm formData,
             BindingResult result,
             Principal principal,
-            RedirectAttributes redirectAttributes
+            HttpServletRequest request,
+            Model model
     ) {
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult."
-                    + AttributeNames.NEW_ARTICLE,
-                    result
-            );
-            redirectAttributes.addFlashAttribute(AttributeNames.NEW_ARTICLE, formData);
+        String path = request.getContextPath();
 
-            return UrlMappings.REDIRECT_ARTICLE_CREATE;
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap();
+            for (FieldError fe : result.getFieldErrors()) {
+                if (!errors.containsKey(fe.getField())) {
+                    errors.put(fe.getField(), fe.getDefaultMessage());
+                }
+            }
+
+            return new ResponseEntity(
+                    new JsonRespone("failed", errors),
+                    HttpStatus.OK
+            );
         }
 
         Article article
@@ -104,23 +118,34 @@ public class ArticleController {
         article.setUser(userService.findByUsername(principal.getName()));
         article.setCategory(categoryService.findById(formData.getCategoryId()));
 
+        Map<String, Object> data = new HashMap();
         try {
 
             article = articleService.create(article);
 
             if (articleService.isItExists(article)) {
-                flashMessageService
-                        .articleWasCreated(redirectAttributes);
+                flash.success("The article was created, as soon as possible "
+                        + "it will be released");
             } else {
-                flashMessageService
-                        .errorWasHappend(redirectAttributes);
+                flash.error("Unfortunately, there was a problem, "
+                        + "please try again later");
             }
-            return UrlMappings.REDIRECT_HOME;
+            data.put("url", path + UrlMappings.HOME);
+
+            return new ResponseEntity(
+                    new JsonRespone("success", data),
+                    HttpStatus.OK
+            );
 
         } catch (ArticleAlreadyExists ex) {
-            flashMessageService
-                    .articleAlreadyExists(redirectAttributes);
-            return UrlMappings.REDIRECT_ARTICLE_CREATE;
+            flash.info("Article already exists");
+
+            data.put("url", path + UrlMappings.ARTICLE_CREATE);
+
+            return new ResponseEntity(
+                    new JsonRespone("success", data),
+                    HttpStatus.OK
+            );
         }
     }
 
@@ -179,14 +204,12 @@ public class ArticleController {
         Article article = articleService.findById(cleanId);
 
         if (!articleService.isItExists(article)) {
-            flashMessageService
-                    .articleNotFound(redirectAttributes);
+            flash.error("Unfortunately, Article not found");
             return UrlMappings.REDIRECT_HOME;
         }
 
         if (!articleService.isItReleased(article)) {
-            flashMessageService
-                    .articleNotReleased(redirectAttributes);
+            flash.info("Unfortunately, Article not released");
             return UrlMappings.REDIRECT_HOME;
         }
 
@@ -219,14 +242,12 @@ public class ArticleController {
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
         if (!articleService.isItExists(article)) {
-            flashMessageService
-                    .articleNotFound(redirectAttributes);
+            flash.error("Unfortunately, Article not found");
             return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
         }
 
         if (articleService.isItReleased(article)) {
-            flashMessageService
-                    .articleWasReleased(redirectAttributes);
+            flash.info("Unfortunately, Article not released");
             return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
         }
 
@@ -249,60 +270,81 @@ public class ArticleController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(UrlMappings.ARTICLE_UPDATE + "/{id}")
-    public String update(
+    @ResponseBody
+    public ResponseEntity<?> update(
             @PathVariable("id") String id,
             @Valid @ModelAttribute(AttributeNames.EDIT_ARTICLE) ArticleForm formData,
             BindingResult result,
             Authentication authentication,
-            RedirectAttributes redirectAttributes
+            HttpServletRequest request
     ) {
         Long cleanId = SecurityUtility.cleanIdParam(id);
 
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult."
-                    + AttributeNames.EDIT_ARTICLE,
-                    result
-            );
-            redirectAttributes.addFlashAttribute(AttributeNames.EDIT_ARTICLE, formData);
+        String path = request.getContextPath();
 
-            return UrlMappings.REDIRECT_ARTICLE_EDIT + "/" + cleanId;
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap();
+            for (FieldError fe : result.getFieldErrors()) {
+                if (!errors.containsKey(fe.getField())) {
+                    errors.put(fe.getField(), fe.getDefaultMessage());
+                }
+            }
+
+            return new ResponseEntity(
+                    new JsonRespone("failed", errors),
+                    HttpStatus.OK
+            );
         }
 
         Article oldArticle = articleService.findById(cleanId);
-
-        if (!articleService.isItExists(oldArticle)) {
-            flashMessageService
-                    .articleNotFound(redirectAttributes);
-            return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
-        }
-
-        if (articleService.isItReleased(oldArticle)) {
-            flashMessageService
-                    .articleWasReleased(redirectAttributes);
-            return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
-        }
-
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
 
-        if (!Objects.equals(oldArticle.getUser().getId(), user.getId())) {
-            throw new AccessDeniedException("access forbidden");
+        if (articleService.isItReleased(oldArticle)) {
+            return new ResponseEntity(
+                    "bad request",
+                    HttpStatus.BAD_REQUEST
+            );
         }
+
+        if (!Objects.equals(oldArticle.getUser().getId(), user.getId())) {
+            return new ResponseEntity(
+                    "access forbidden",
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
         Article article
                 = new Article(formData.getTitle(), formData.getDescription(), formData.getBody());
         article.setCategory(categoryService.findById(formData.getCategoryId()));
 
-        article = articleService.update(oldArticle, article);
+        Map<String, Object> data = new HashMap();
+        try {
+            article = articleService.update(oldArticle, article);
 
-        if (articleService.isItExists(article)) {
-            flashMessageService
-                    .articleWasUpdate(redirectAttributes);
-        } else {
-            flashMessageService.
-                    errorWasHappend(redirectAttributes);
+            if (articleService.isItExists(article)) {
+                flash.success("The article was updated");
+
+            } else {
+                flash.error("Unfortunately, there was a problem, "
+                        + "please try again later");
+            }
+
+            data.put("url", path + UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST);
+
+            return new ResponseEntity(
+                    new JsonRespone("success", article),
+                    HttpStatus.OK
+            );
+        } catch (ArticleAlreadyExists ex) {
+            flash.info("Article already exists");
+
+            data.put("url", path + UrlMappings.ARTICLE_EDIT + "/" + cleanId);
+
+            return new ResponseEntity(
+                    new JsonRespone("success", data),
+                    HttpStatus.OK
+            );
         }
-
-        return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -325,11 +367,10 @@ public class ArticleController {
 
             articleService.delete(article);
 
-            flashMessageService
-                    .articleWasDeleted(redirectAttributes);
+            flash.success("The article was deleted");
         } else {
-            flashMessageService
-                    .errorWasHappend(redirectAttributes);
+            flash.error("Unfortunately, there was a problem, "
+                    + "please try again later");
         }
 
         return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
