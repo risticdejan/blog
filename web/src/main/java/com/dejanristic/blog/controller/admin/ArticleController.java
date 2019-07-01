@@ -56,7 +56,7 @@ public class ArticleController {
 
         String backUrl = (request.getHeader("Referer") != null)
                 ? request.getHeader("Referer")
-                : UrlAdminMappings.ADMIN_UNRELEASED_ARTICLES_LIST;
+                : UrlAdminMappings.ADMIN;
 
         model.addAttribute(AttributeNames.ARTICLE, article);
         model.addAttribute(AttributeNames.BACK_URL, backUrl);
@@ -77,6 +77,10 @@ public class ArticleController {
                         PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
                 );
 
+        if (articles.isEmpty()) {
+            return UrlAdminMappings.REDIRECT_ADMIN_RELEASED_ARTICLES_LIST;
+        }
+
         model.addAttribute("articles", articles);
 
         return ViewAdminNames.ADMIN_ARTICLES_LIST;
@@ -94,6 +98,9 @@ public class ArticleController {
                 = articleService.findAllUnreleasedArticles(
                         PageRequest.of(cleanPage, perPage, Sort.by("id").descending())
                 );
+        if (articles.isEmpty()) {
+            return UrlAdminMappings.REDIRECT_ADMIN_UNRELEASED_ARTICLES_LIST;
+        }
 
         model.addAttribute("articles", articles);
 
@@ -105,6 +112,7 @@ public class ArticleController {
     public String delete(
             @PathVariable("id") String id,
             Authentication authentication,
+            HttpServletRequest request,
             RedirectAttributes redirectAttributes
     ) {
         Long cleanId = SecurityUtility.cleanIdParam(id);
@@ -120,7 +128,11 @@ public class ArticleController {
                     + "please try again later");
         }
 
-        return UrlAdminMappings.REDIRECT_ADMIN_UNRELEASED_ARTICLES_LIST;
+        String backUrl = (request.getHeader("Referer") != null)
+                ? request.getHeader("Referer")
+                : UrlAdminMappings.ADMIN;
+
+        return "redirect:" + backUrl;
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -146,7 +158,7 @@ public class ArticleController {
 
         String backUrl = (request.getHeader("Referer") != null)
                 ? request.getHeader("Referer")
-                : UrlAdminMappings.ADMIN_UNRELEASED_ARTICLES_LIST;
+                : UrlAdminMappings.ADMIN;
 
         return "redirect:" + backUrl;
     }

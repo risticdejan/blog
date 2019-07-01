@@ -23,32 +23,32 @@
                     <div class="clearfix mb-2">
                         <h2 class="mt-4">Check the article</h2>
 
-                        <a class="btn btn-primary float-left"
+                        <a class="btn btn-primary btn-sm float-left"
                            th:href="@{__${back}__}">
                             Back
                         </a>
                     </div>
-                    <div th:if="${article} neq null">
+                    <div id="check-article-area" th:if="${article} neq null">
                         <h4>title: </h4>
-                        <div style="color: #fff;" th:text="${article.title}"></div>
+                        <div  class="check-article-item"  th:text="${article.title}"></div>
 
                         <h4>User: </h4>
-                        <a th:text="${article.user.username}" style="color: #479af3;"
-                           href="#"
-                           ></a>
+                        <div class="check-article-item">
+                            <a th:text="${article.user.username}" style="color: #479af3;"
+                               href="#"
+                               ></a>
+                        </div>
+                        <h4>body: </h4>
+                        <div class="check-article-item"  th:text="${article.description}"></div>
 
                         <h4>body: </h4>
-                        <div style="color: #fff;" th:text="${article.description}"></div>
-
-                        <h4>body: </h4>
-                        <div style="color: #fff;" th:text="${article.body}"></div>
+                        <div class="check-article-item" th:text="${article.body}"></div>
                     </div>
 
 
                     <div th:if="${article} eq null" class="post-preview">
                         <p class="post-title">There is no article</p>
                     </div>
-
 
                 </div>
             </div>

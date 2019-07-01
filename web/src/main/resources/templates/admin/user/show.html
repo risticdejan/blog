@@ -23,7 +23,7 @@
                     <div class="clearfix mb-4">
                         <h2 class="mt-4">User Details</h2>
 
-                        <a class="btn btn-primary btn-sm float-left"
+                        <a id="back-button" class="btn btn-primary btn-sm float-left"
                            th:href="@{__${back}__}">
                             Back
                         </a>
@@ -38,16 +38,26 @@
                             <div><strong>Updated</strong> : <span th:text="${#dates.format(user.updatedAt, 'MMMM dd, yyyy (HH:MM:SS)')}"></span></div>
                         </div>
                         <div class="clearfix">
-                            <a th:if="${user.isEnabled()}"
-                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_BANNED + '/' + user.id}__}"
-                               class="btn btn-danger btn-sm" >
-                                ban
-                            </a>
-                            <a th:if="${!user.isEnabled()}"
-                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_UNBANNED + '/' + user.id}__}"
-                               class="btn btn-success btn-sm" >
-                                unban
-                            </a>
+                            <form  id="ban-user"
+                                   th:if="${user.isEnabled()}"
+                                   th:action="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_BANNED + '/' + user.id}__}"
+                                   method="post">
+                                <button
+                                    type="submit"
+                                    class="btn btn-danger btn-sm" >
+                                    ban
+                                </button>
+                            </form>
+                            <form  id="ban-user"
+                                   th:if="${!user.isEnabled()}"
+                                   th:action="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_UNBANNED + '/' + user.id}__}"
+                                   method="post">
+                                <button
+                                    type="submit"
+                                    class="btn btn-success btn-sm">
+                                    unban
+                                </button>
+                            </form>
                         </div>
                     </div>
 

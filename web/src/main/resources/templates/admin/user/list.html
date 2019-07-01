@@ -29,7 +29,7 @@
                                     <th scope="col">Id</th>
                                     <th scope="col">Username</th>
                                     <th scope="col">Email</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Enabled</th>
 
                                 </tr>
                             </thead>
@@ -47,18 +47,7 @@
                                            ></a>
                                     </td>
                                     <td>
-                                        <span class="text-ellipsis action">
-                                            <a th:if="${user.isEnabled()}"
-                                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_BANNED + '/' + user.id}__}"
-                                               style="color: #bd2130;" >
-                                                ban
-                                            </a>
-                                            <a th:if="${!user.isEnabled()}"
-                                               th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_UNBANNED + '/' + user.id}__}"
-                                               style="color: #34ce57;" >
-                                                unban
-                                            </a>
-                                        </span>
+                                        <span th:text="${user.enabled}"></span>
                                     </td>
                                 </tr>
                             </tbody>
