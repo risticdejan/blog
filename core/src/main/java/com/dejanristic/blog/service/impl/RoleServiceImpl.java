@@ -1,6 +1,6 @@
 package com.dejanristic.blog.service.impl;
 
-import com.dejanristic.blog.domain.security.Role;
+import com.dejanristic.blog.domain.Role;
 import com.dejanristic.blog.repository.RoleRepository;
 import com.dejanristic.blog.service.RoleService;
 import lombok.extern.slf4j.Slf4j;

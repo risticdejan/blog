@@ -1,6 +1,6 @@
 package com.dejanristic.blog.service;
 
-import com.dejanristic.blog.domain.Message;
+import com.dejanristic.blog.domain.model.Message;
 import java.util.Map;
 
 public interface Flash {

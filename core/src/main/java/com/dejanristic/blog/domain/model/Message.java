@@ -1,4 +1,4 @@
-package com.dejanristic.blog.domain;
+package com.dejanristic.blog.domain.model;
 
 import lombok.Getter;
 import lombok.Setter;

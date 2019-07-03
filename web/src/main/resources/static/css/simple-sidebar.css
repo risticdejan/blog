@@ -9,6 +9,15 @@ body {
     color: #adb5bd;;
 }
 
+
+button:focus {
+    outline: none;
+}
+
+a:focus {
+    outline: none;
+}
+
 #sidebar-wrapper {
     min-height: 100vh;
     margin-left: -15rem;

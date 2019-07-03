@@ -19,16 +19,36 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-10 mx-auto">
                         <div class="post-heading">
-                            <h1 th:text="${article.title}">Man must explore, and this is exploration at its greatest</h1>
-                            <h2 th:text="${article.description}" class="subheading">Problems look mighty small from 150 miles up</h2>
-                            <span class="meta">Posted by
-                                <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
-                                   th:text="${article.user.username}"
-                                   ></a>
-                                on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br>
-                                <span>category: <a href="#" th:text="${article.category.name}"></a></span></p>
-                            </span>
-                            <a class="btn btn-light float-left"
+                            <div class="post-details">
+                                <h1 th:text="${article.title}">Man must explore, and this is exploration at its greatest</h1>
+                                <h2 th:text="${article.description}" class="subheading">Problems look mighty small from 150 miles up</h2>
+
+                                <span class="meta">Posted by
+                                    <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
+                                       th:text="${article.user.username}"
+                                       ></a>
+                                    on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>,
+                                    <span>category: <a href="#" th:text="${article.category.name}"></a></span>
+                                </span>
+                            </div>
+                            <div class="clearfix mb-4">
+                                <form class="form-like"
+                                      th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_LIKE + '/' + article.id}__}"
+                                      method="post"
+                                      >
+                                    <label class="label-likes" th:text="${article.likesCount}">0</label>
+                                    <button class="btn-like" type="submit"><i class="fas fa-thumbs-up"></i></button>
+                                </form>
+
+                                <form class="form-dislike"
+                                      th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DISLIKE + '/' + article.id}__}"
+                                      method="post"
+                                      >
+                                    <label class="label-dislikes" th:text="${article.dislikesCount}">0</label>
+                                    <button class="btn-dislike" type="submit"><i class="fas fa-thumbs-down"></i></button>
+                                </form>
+                            </div>
+                            <a class="btn btn-light "
                                th:href="@{${__${T(com.dejanristic.blog.util.AttributeNames).BACK_URL}__}}">
                                 Back
                             </a>
@@ -43,7 +63,7 @@
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
                     <div th:utext="${article.body}"></div>
-
+                    <hr>
                     <div class="comment-wrapper" id="comment-area">
                         <div class="panel">
                             <div class="panel-body">
@@ -60,7 +80,7 @@
                                 <hr>
                                 <ul class="media-list" id="comment-list">
                                     <li class="media comment-item"
-                                        data-th-each="comment : ${article.comments}"
+                                        data-th-each="comment : ${comments}"
                                         >
 
                                         <img src="#" alt="">

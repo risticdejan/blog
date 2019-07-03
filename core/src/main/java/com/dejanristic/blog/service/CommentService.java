@@ -9,6 +9,8 @@ public interface CommentService {
 
     Comment findById(Long id);
 
+    List<Comment> findByArticleId(Long articleId);
+
     void delete(Comment commnet);
 
     Comment create(Comment commnet);

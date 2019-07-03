@@ -3,14 +3,19 @@ package com.dejanristic.blog.controller;
 import com.dejanristic.blog.annotation.PerPage;
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.domain.Category;
-import com.dejanristic.blog.domain.JsonRespone;
+import com.dejanristic.blog.domain.DislikeArticle;
+import com.dejanristic.blog.domain.LikeArticle;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.ArticleForm;
 import com.dejanristic.blog.domain.form.CommentForm;
+import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.exception.ArticleAlreadyExists;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.CategoryService;
+import com.dejanristic.blog.service.CommentService;
+import com.dejanristic.blog.service.DislikeArticleService;
 import com.dejanristic.blog.service.Flash;
+import com.dejanristic.blog.service.LikeArticleService;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.service.impl.UserDetailsImpl;
 import com.dejanristic.blog.util.AttributeNames;
@@ -56,19 +61,28 @@ public class ArticleController {
 
     private final UserService userService;
     private final ArticleService articleService;
+    private final CommentService commentService;
     private final CategoryService categoryService;
+    private final LikeArticleService likeArticleService;
+    private final DislikeArticleService dislikeArticleService;
     private final Flash flash;
 
     @Autowired
     public ArticleController(
             UserService userService,
             ArticleService articleService,
+            CommentService commentSerivce,
             CategoryService categoryService,
+            LikeArticleService likeArticleService,
+            DislikeArticleService dislikeArticleService,
             Flash flash
     ) {
         this.userService = userService;
         this.articleService = articleService;
+        this.commentService = commentSerivce;
         this.categoryService = categoryService;
+        this.likeArticleService = likeArticleService;
+        this.dislikeArticleService = dislikeArticleService;
         this.flash = flash;
     }
 
@@ -222,6 +236,7 @@ public class ArticleController {
         }
         model.addAttribute(AttributeNames.BACK_URL, backUrl);
         model.addAttribute(AttributeNames.ARTICLE, article);
+        model.addAttribute("comments", this.commentService.findByArticleId(article.getId()));
 
         return ViewNames.ARTICLE_SHOW;
     }
@@ -397,5 +412,90 @@ public class ArticleController {
         model.addAttribute("category", category);
 
         return ViewNames.ARTICLE_CATEGORY_LIST;
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping(UrlMappings.ARTICLE_LIKE + "/{id}")
+    @ResponseBody
+    public ResponseEntity<?> like(
+            @PathVariable("id") String id,
+            Authentication authentication,
+            HttpServletRequest request
+    ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
+        Article article = articleService.findById(cleanId);
+
+        if (articleService.isItExists(article)) {
+
+            User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+            if (likeArticleService.isLikeUnique(user.getId(), article.getId())) {
+                LikeArticle like = new LikeArticle();
+                like.setArticle(article);
+                like.setUser(user);
+                article.setLikesCount(article.getLikesCount() + 1);
+                likeArticleService.save(like);
+                article = articleService.save(article);
+            } else {
+                LikeArticle like
+                        = likeArticleService.findLike(user.getId(), article.getId());
+                likeArticleService.deleteById(like.getId());
+                article.setLikesCount(article.getLikesCount() - 1);
+                article = articleService.save(article);
+            }
+
+            return new ResponseEntity(
+                    new JsonRespone("success", article),
+                    HttpStatus.OK
+            );
+        } else {
+            return new ResponseEntity(
+                    "bad request",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
+    }
+
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PostMapping(UrlMappings.ARTICLE_DISLIKE + "/{id}")
+    @ResponseBody
+    public ResponseEntity<?> dislike(
+            @PathVariable("id") String id,
+            Authentication authentication,
+            HttpServletRequest request
+    ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+
+        Article article = articleService.findById(cleanId);
+
+        if (articleService.isItExists(article)) {
+
+            User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+            if (dislikeArticleService.isDislikeUnique(user.getId(), article.getId())) {
+                DislikeArticle dislike = new DislikeArticle();
+                dislike.setArticle(article);
+                dislike.setUser(user);
+                dislikeArticleService.save(dislike);
+                article.setDislikesCount(article.getDislikesCount() + 1);
+                article = articleService.save(article);
+            } else {
+                DislikeArticle dislike
+                        = dislikeArticleService.findDislike(user.getId(), article.getId());
+                dislikeArticleService.deleteById(dislike.getId());
+                article.setDislikesCount(article.getDislikesCount() - 1);
+                article = articleService.save(article);
+            }
+
+            return new ResponseEntity(
+                    new JsonRespone("success", article),
+                    HttpStatus.OK
+            );
+        } else {
+            return new ResponseEntity(
+                    "bad request",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
     }
 }

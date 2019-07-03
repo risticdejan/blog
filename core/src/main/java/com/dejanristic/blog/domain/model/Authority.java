@@ -1,4 +1,4 @@
-package com.dejanristic.blog.domain.security;
+package com.dejanristic.blog.domain.model;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -16,13 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
 public class Article implements Serializable {
 
@@ -39,10 +35,24 @@ public class Article implements Serializable {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "article")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
     private Set<Comment> comments;
+
+    @Column(name = "likes_count")
+    private Integer likesCount;
+
+    @Column(name = "dislike_count")
+    private Integer dislikesCount;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+    @JsonIgnore
+    private Set<LikeArticle> likes;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+    @JsonIgnore
+    private Set<DislikeArticle> dislikes;
 
     @Column(name = "title", unique = true, nullable = false, length = 155)
     private String title;

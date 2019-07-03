@@ -77,10 +77,6 @@ public class ArticleController {
                         PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
                 );
 
-        if (articles.isEmpty()) {
-            return UrlAdminMappings.REDIRECT_ADMIN_RELEASED_ARTICLES_LIST;
-        }
-
         model.addAttribute("articles", articles);
 
         return ViewAdminNames.ADMIN_ARTICLES_LIST;
@@ -98,9 +94,6 @@ public class ArticleController {
                 = articleService.findAllUnreleasedArticles(
                         PageRequest.of(cleanPage, perPage, Sort.by("id").descending())
                 );
-        if (articles.isEmpty()) {
-            return UrlAdminMappings.REDIRECT_ADMIN_UNRELEASED_ARTICLES_LIST;
-        }
 
         model.addAttribute("articles", articles);
 

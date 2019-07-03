@@ -30,6 +30,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public List<Comment> findByArticleId(Long articleId) {
+        return commentRepository.findByArticleId(articleId);
+    }
+
+    @Override
     public void delete(Comment commnet) {
         commentRepository.delete(commnet);
     }

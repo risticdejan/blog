@@ -1,7 +1,7 @@
 package com.dejanristic.blog.service.impl;
 
 import com.dejanristic.blog.domain.User;
-import com.dejanristic.blog.domain.security.Role;
+import com.dejanristic.blog.domain.Role;
 import com.dejanristic.blog.repository.RoleRepository;
 import com.dejanristic.blog.repository.UserRepository;
 import com.dejanristic.blog.service.UserService;

@@ -2,7 +2,7 @@ package com.dejanristic.blog;
 
 import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
-import com.dejanristic.blog.domain.security.Role;
+import com.dejanristic.blog.domain.Role;
 import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.RoleService;
 import com.dejanristic.blog.service.UserService;

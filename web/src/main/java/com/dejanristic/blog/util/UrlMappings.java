@@ -12,6 +12,8 @@ public class UrlMappings {
     public static final String REDIRECT_REGISTRER = "redirect:" + REGISTER;
     public static final String USER_ARTICLES = "article/user";
     public static final String ARTICLE = "/article";
+    public static final String ARTICLE_LIKE = "/article/like";
+    public static final String ARTICLE_DISLIKE = "/article/dislike";
     public static final String ARTICLE_RELEASED_LIST = "/article/released";
     public static final String ARTICLE_UNRELEASED_LIST = "/article/unreleased";
     public static final String REDIRECT_ARTICLE_UNRELEASED_LIST = "redirect:" + ARTICLE_UNRELEASED_LIST;

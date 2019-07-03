@@ -1,3 +1,11 @@
+button:focus {
+    outline: none;
+}
+
+a:focus {
+    outline: none;
+}
+
 li.nav-item.active  {
     background: #fff;
 }
@@ -264,3 +272,40 @@ li.nav-item.active > a {
     color:#eeeeee;
     text-decoration: none;
 }
+
+.post-details {
+
+}
+
+header.masthead .post-details .meta a {
+    color: #3d94f6;
+}
+
+.form-like,
+.form-dislike {
+    font-size: 24px;
+    font-weight: bold;
+    float: left;
+    margin-right: 15px;
+}
+
+.form-like.home,
+.form-dislike.home{
+    font-size: 18px;
+}
+
+.form-like .btn-like {
+    color: #3d94f6;
+    background-color: transparent;
+    border: none;
+}
+
+.form-dislike {
+}
+
+.form-dislike .btn-dislike {
+    color: #d02718;
+    background-color: transparent;
+    border: none;
+}
+

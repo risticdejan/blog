@@ -37,14 +37,32 @@
                             <h2 th:text="${article.title}" class="post-title"></h2>
                             <h3 th:text="${article.description}" class="post-subtitle"> </h3>
                         </a>
-                        <p class="post-meta">Posted by
+                        <div class="clearfix form-wrapper">
+                            <form class="form-like home"
+                                  th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_LIKE + '/' + article.id}__}"
+                                  method="post"
+                                  >
+                                <label class="label-likes" th:text="${article.likesCount}">0</label>
+                                <button class="btn-like" type="submit"><i class="fas fa-thumbs-up"></i></button>
+                            </form>
+
+                            <form class="form-dislike home"
+                                  th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DISLIKE + '/' + article.id}__}"
+                                  method="post"
+                                  >
+                                <label class="label-dislikes" th:text="${article.dislikesCount}">0</label>
+                                <button class="btn-dislike" type="submit"><i class="fas fa-thumbs-down"></i></button>
+                            </form>
+                        </div>
+                        <div class="post-meta">Posted by
                             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
                                th:text="${article.user.username}"
                                ></a>
-                            on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span><br>
+                            on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>,
                             <span>category: <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CATEGORY_LIST  + '/' + article.category.id}__}"
                                                th:text="${article.category.name}"></a></span>
-                        </p>
+
+                        </div>
                         <hr>
                     </div>
 

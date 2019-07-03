@@ -3,6 +3,7 @@ package com.dejanristic.blog.util.admin;
 public class UrlAdminMappings {
 
     public static final String ADMIN = "/admin";
+    public static final String REDIRECT_ADMIN = "redirect:" + ADMIN;
     public static final String ADMIN_RELEASED_ARTICLES_LIST = "/admin/released";
     public static final String REDIRECT_ADMIN_RELEASED_ARTICLES_LIST = "redirect:" + ADMIN_RELEASED_ARTICLES_LIST;
     public static final String ADMIN_UNRELEASED_ARTICLES_LIST = "/admin/unreleased";

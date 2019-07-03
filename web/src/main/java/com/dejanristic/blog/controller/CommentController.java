@@ -2,7 +2,7 @@ package com.dejanristic.blog.controller;
 
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.domain.Comment;
-import com.dejanristic.blog.domain.JsonRespone;
+import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.CommentForm;
 import com.dejanristic.blog.service.ArticleService;

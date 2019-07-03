@@ -1,6 +1,6 @@
 package com.dejanristic.blog.interceptor;
 
-import com.dejanristic.blog.domain.Message;
+import com.dejanristic.blog.domain.model.Message;
 import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.util.AttributeNames;
 import java.util.Map;

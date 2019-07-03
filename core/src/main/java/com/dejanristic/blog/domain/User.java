@@ -1,6 +1,5 @@
 package com.dejanristic.blog.domain;
 
-import com.dejanristic.blog.domain.security.Role;
 import com.dejanristic.blog.domain.validation.FormValidationGroup;
 import com.dejanristic.blog.domain.validation.rules.FieldsVerification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -22,13 +21,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
+@Data
 @Entity
 @FieldsVerification.List({
     @FieldsVerification(
@@ -84,6 +79,14 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonIgnore
+    private Set<LikeArticle> likes = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonIgnore
+    private Set<DislikeArticle> dislikes = new HashSet<>();
 
     @JsonIgnore
     private boolean enabled = true;

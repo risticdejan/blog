@@ -1,8 +1,8 @@
 package com.dejanristic.blog.service.impl;
 
 import com.dejanristic.blog.domain.User;
-import com.dejanristic.blog.domain.security.Authority;
-import com.dejanristic.blog.domain.security.Role;
+import com.dejanristic.blog.domain.model.Authority;
+import com.dejanristic.blog.domain.Role;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;

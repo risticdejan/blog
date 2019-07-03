@@ -1,6 +1,6 @@
 package com.dejanristic.blog.service;
 
-import com.dejanristic.blog.domain.security.Role;
+import com.dejanristic.blog.domain.Role;
 
 public interface RoleService {
 

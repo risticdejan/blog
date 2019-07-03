@@ -76,6 +76,8 @@ public class ArticleServiceImpl implements ArticleService {
             log.info("article {} already exists", article.getTitle());
             throw new ArticleAlreadyExists("article alredy exists");
         } else {
+            article.setLikesCount(0);
+            article.setDislikesCount(0);
             article.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             article.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
             return articleRepository.save(article);
@@ -89,7 +91,6 @@ public class ArticleServiceImpl implements ArticleService {
             log.info("article {} already exists", article.getTitle());
             throw new ArticleAlreadyExists("article alredy exists");
         } else {
-
             oldArticle.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
             oldArticle.setTitle(article.getTitle());
             oldArticle.setDescription(article.getDescription());
@@ -109,6 +110,11 @@ public class ArticleServiceImpl implements ArticleService {
     public void release(Article article) {
         article.setPublishedAt(Timestamp.valueOf(LocalDateTime.now()));
         this.articleRepository.save(article);
+    }
+
+    @Override
+    public Article save(Article article) {
+        return this.articleRepository.save(article);
     }
 
 }

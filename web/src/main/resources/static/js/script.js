@@ -98,7 +98,12 @@ var Article = {
         body: '#body',
         title: '#title',
         description: '#description',
-        category: '#categoryId'
+        category: '#categoryId',
+        formLike: '.form-like',
+        formDislike: '.form-dislike',
+        labelLikes: '.label-likes',
+        labelDislikes: '.label-dislikes',
+        navbarDropdown: "#navbarDropdown"
     },
 
     init: function (config) {
@@ -109,11 +114,16 @@ var Article = {
 
     bindEvents: function () {
         var config = this.config,
-                form = config.form;
+                form = config.form,
+                formLike = config.formLike,
+                formDislike = config.formDislike;
 
         $(form).find('button').on('click', $.proxy(this.save, this));
         $(form).on('focus', 'textarea', this.removeError);
         $(form).on('focus', 'input', this.removeError);
+
+        $(formLike).find('button').on('click', this.like);
+        $(formDislike).find('button').on('click', this.dislike);
     },
 
     save: function (e) {
@@ -121,8 +131,6 @@ var Article = {
                 $form = $(config.form),
                 url = $form.attr('action'),
                 data = $form.serialize();
-
-        console.log("test");
 
         validator = this.validateForm(config.form);
 
@@ -207,6 +215,55 @@ var Article = {
                 }
             }
         });
+    },
+
+    like: function (e) {
+        var config = Article.config,
+                $form = $(this).parents("form").eq(0),
+                url = $form.attr('action'),
+                data = $form.serialize(),
+                $parent = $(e.currentTarget).parents("div").eq(0);
+        // checking for if a user logged
+        if ($(config.navbarDropdown).length > 0) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                dataType: 'JSON'
+            }).done(function (data) {
+                if (data.status === "success") {
+                    $parent.find(config.labelLikes).html(data.body.likesCount);
+                    $parent.find(config.labelDislikes).html(data.body.dislikesCount);
+                }
+                console.log(data);
+            });
+        }
+        e.preventDefault();
+        e.stopPropagation();
+    },
+
+    dislike: function (e) {
+        var config = Article.config,
+                $form = $(this).parents("form").eq(0),
+                url = $form.attr('action'),
+                data = $form.serialize(),
+                $parent = $(e.currentTarget).parents("div").eq(0);
+        // checking for if a user logged
+        if ($(config.navbarDropdown).length > 0) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                dataType: 'JSON'
+            }).done(function (data) {
+                if (data.status === "success") {
+                    $parent.find(config.labelLikes).html(data.body.likesCount);
+                    $parent.find(config.labelDislikes).html(data.body.dislikesCount);
+                }
+            });
+        }
+        e.preventDefault();
+        e.stopPropagation();
     }
 };
 

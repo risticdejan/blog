@@ -33,4 +33,6 @@ public interface ArticleService {
 
     void release(Article article);
 
+    Article save(Article article);
+
 }

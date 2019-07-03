@@ -1,4 +1,4 @@
-package com.dejanristic.blog.domain.security;
+package com.dejanristic.blog.domain;
 
 import com.dejanristic.blog.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;

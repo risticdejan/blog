@@ -1,7 +1,7 @@
 package com.dejanristic.blog.controller.admin;
 
 import com.dejanristic.blog.annotation.PerPageAdmin;
-import com.dejanristic.blog.domain.JsonRespone;
+import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.service.UserService;
