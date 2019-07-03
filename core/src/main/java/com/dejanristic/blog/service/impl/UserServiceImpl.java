@@ -1,7 +1,7 @@
 package com.dejanristic.blog.service.impl;
 
-import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.Role;
+import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.repository.RoleRepository;
 import com.dejanristic.blog.repository.UserRepository;
 import com.dejanristic.blog.service.UserService;
@@ -123,5 +123,10 @@ public class UserServiceImpl implements UserService {
             return userRepository.save(user);
         }
         return user;
+    }
+
+    @Override
+    public Long count() {
+        return userRepository.count();
     }
 }

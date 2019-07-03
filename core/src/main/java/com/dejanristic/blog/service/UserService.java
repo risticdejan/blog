@@ -25,4 +25,6 @@ public interface UserService {
     User banned(Long id);
 
     User unbanned(Long id);
+
+    Long count();
 }

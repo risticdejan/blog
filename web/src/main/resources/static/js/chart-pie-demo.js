@@ -2,7 +2,7 @@ Chart.defaults.global.defaultFontFamily = '-apple-system,system-ui,BlinkMacSyste
 Chart.defaults.global.defaultFontColor = '#fff';
 
 var ctx2 = document.getElementById("pieChartLikeRate");
-var pieChartLikeRate = new Chart(ctx2, {
+var configPie = {
     type: 'pie',
     data: {
         labels: ["Like", "Dislike"],
@@ -10,5 +10,10 @@ var pieChartLikeRate = new Chart(ctx2, {
                 data: [likesCount, dislikesCount],
                 backgroundColor: ['#007bff', '#dc3545']
             }]
+    },
+    options: {
+        animation: false
     }
-});
+};
+
+window.pie = new Chart(ctx2, configPie);

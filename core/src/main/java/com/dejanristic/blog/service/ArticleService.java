@@ -39,4 +39,6 @@ public interface ArticleService {
 
     void addView(Article article);
 
+    Long count();
+
 }

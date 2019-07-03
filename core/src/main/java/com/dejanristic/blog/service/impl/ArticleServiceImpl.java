@@ -130,4 +130,8 @@ public class ArticleServiceImpl implements ArticleService {
         this.articleRepository.save(article);
     }
 
+    @Override
+    public Long count() {
+        return this.articleRepository.count();
+    }
 }

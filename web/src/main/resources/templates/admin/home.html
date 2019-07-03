@@ -26,13 +26,36 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-6">
+                        <div class="col-md-12 col-lg-6 col-xl-4">
+                            <div  class="card mb-4 bg-card">
+                                <div class="card-body ">
+                                    <h5 class="card-title">Profile</h5>
+                                    <div class="mb-5" th:if="${user} neq null">
+                                        <div>
+                                            <div><strong>Id</strong> : <span th:text="${user.id}"></span></div>
+                                            <div><strong>Username</strong> : <span id="username" th:text="${user.username}"></span></div>
+                                            <div><strong>Email</strong> : <span  id="email" th:text="${user.email}"></span></div>
+                                            <div><strong>Enabled</strong> : <span th:text="${user.enabled}"></span></div>
+                                            <div><strong>Created</strong> : <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></div>
+                                            <div><strong>Updated</strong> : <span th:text="${#dates.format(user.updatedAt, 'MMMM dd, yyyy (HH:MM:SS)')}"></span></div>
+                                        </div>
+                                    </div>
+                                    <h5 class="card-title">Details</h5>
+                                    <div>
+                                        <div><strong>Number of Users: </strong> <span id="nou" th:text="${userCount}"></span></div>
+                                        <div><strong>Number of Articles: </strong> <span id="noa" th:text="${articleCount}"></span></div>
+                                        <div><strong>Article per User: </strong> <span id="apu" th:text="${articleCount/userCount}"></span></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6 col-xl-4">
                             <div class="card-body mb-4 bg-card">
                                 <h5 class="card-title">Visitors per days</h5>
                                 <canvas id="myBarChart" width="100%" height="50"></canvas>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-md-12 col-lg-6 col-xl-4">
                             <div  class="card mb-4 bg-card">
                                 <div class="card-body ">
                                     <h5 class="card-title">Global Rate</h5>
@@ -40,26 +63,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div  class="card mb-4 bg-card">
-                                <div class="card-body ">
-                                    <h5 class="card-title">Profile</h5>
-                                    <div th:if="${user} neq null">
-                                        <div>
-                                            <div><strong>Id</strong> : <span th:text="${user.id}"></span></div>
-                                            <div><strong>Username</strong> : <span th:text="${user.username}"></span></div>
-                                            <div><strong>Email</strong> : <span th:text="${user.email}"></span></div>
-                                            <div><strong>Enabled</strong> : <span th:text="${user.enabled}"></span></div>
-                                            <div><strong>Created</strong> : <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></div>
-                                            <div><strong>Updated</strong> : <span th:text="${#dates.format(user.updatedAt, 'MMMM dd, yyyy (HH:MM:SS)')}"></span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6"></div>
                     </div>
                 </div>
             </div>
@@ -73,7 +76,7 @@
             var dislikesCount = /*[[${dislikesCount}]]*/ 0;
             var visitorPerDay = /*[[${visitorPerDay}]]*/ {};
             var max = /*[[${max}]]*/ 0;
-
+            var url = /*[[@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN}__}]]*/ "";
 
             /*]]>*/
         </script>
@@ -82,6 +85,7 @@
         <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
         <script th:src="@{/js/chart-pie-demo.js}"></script>
         <script th:src="@{/js/chart-bar-demo.js}"></script>
+        <script th:src="@{/js/admin.js}"></script>
     </body>
 
 </html>

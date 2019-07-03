@@ -4,7 +4,7 @@ Chart.defaults.global.defaultFontColor = '#ffffff';
 
 // Bar Chart Example
 var ctx = document.getElementById("myBarChart");
-var myLineChart = new Chart(ctx, {
+var configLine = {
     type: 'bar',
     data: {
         labels: [
@@ -31,6 +31,7 @@ var myLineChart = new Chart(ctx, {
             }]
     },
     options: {
+        animation: false,
         scales: {
             xAxes: [{
                     time: {
@@ -47,7 +48,7 @@ var myLineChart = new Chart(ctx, {
                     ticks: {
                         min: 0,
                         max: max,
-                        maxTicksLimit: 5
+                        maxTicksLimit: 10
                     },
                     gridLines: {
                         display: true
@@ -58,4 +59,6 @@ var myLineChart = new Chart(ctx, {
             display: false
         }
     }
-});
+};
+
+var line = new Chart(ctx, configLine);
