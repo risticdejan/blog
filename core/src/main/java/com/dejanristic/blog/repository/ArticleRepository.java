@@ -24,4 +24,6 @@ public interface ArticleRepository extends PagingAndSortingRepository<Article, L
     Page<Article> findAllUnreleasedArticlesByUser(@Param("id") Long id, Pageable pageable);
 
     Page<Article> findByCategoryId(Long id, Pageable pageable);
+
+    Page<Article> findByUserId(Long id, Pageable pageable);
 }

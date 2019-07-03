@@ -13,14 +13,14 @@
         </div>
 
         <!-- Page Header -->
-        <header class="masthead" th:style="'background-image:url(' + @{__${'/img/category'+ category.id +'-bg.jpg'}__} + ');'" >
+        <header class="masthead" th:style="'background-image:url(' + @{__${'/img/category-bg.jpg'}__} + ');'" >
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-10 mx-auto">
                         <div class="site-heading">
-                            <h1 class="d-none">Category</h1>
-                            <span class="subheading d-none" th:text="${category.name}"></span>
+                            <h1 th:text="${category.name}"></h1>
+                            <span class="subheading">Category</span>
                         </div>
                     </div>
                 </div>
@@ -37,12 +37,34 @@
                             <h2 th:text="${article.title}" class="post-title"></h2>
                             <h3 th:text="${article.description}" class="post-subtitle"> </h3>
                         </a>
-                        <p class="post-meta">Posted by
-                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
+                        <div class="clearfix form-wrapper">
+                            <form class="form-like home"
+                                  th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_LIKE + '/' + article.id}__}"
+                                  method="post"
+                                  >
+                                <label class="label-likes" th:text="${article.likesCount}">0</label>
+                                <button class="btn-like" type="submit"><i class="fas fa-thumbs-up"></i></button>
+                            </form>
+
+                            <form class="form-dislike home"
+                                  th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DISLIKE + '/' + article.id}__}"
+                                  method="post"
+                                  >
+                                <label class="label-dislikes" th:text="${article.dislikesCount}">0</label>
+                                <button class="btn-dislike" type="submit"><i class="fas fa-thumbs-down"></i></button>
+                            </form>
+
+                            <span class="float-right"> views: <b th:text="${article.viewsCount}"></b></span>
+                        </div>
+                        <div class="post-meta">Posted by
+                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_USER_LIST + '/' + article.user.id}__}"
                                th:text="${article.user.username}"
                                ></a>
-                            on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>
-                        </p>
+                            on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>,
+                            <span>category: <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CATEGORY_LIST  + '/' + article.category.id}__}"
+                                               th:text="${article.category.name}"></a></span>
+
+                        </div>
                         <hr>
                     </div>
 
@@ -54,11 +76,11 @@
                     <!-- Pager -->
                     <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix">
                         <a th:if="${articles.getNumber() + 1} neq 1"  class="btn btn-primary float-left"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).HOME + '?page=' + articles.getNumber()}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CATEGORY_LIST + '/' + category.id + '?page=' + articles.getNumber()}__}">
                             &larr; Newer Posts
                         </a>
                         <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" class="btn btn-primary float-right"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).HOME + '?page=' + {articles.getNumber() + 2}}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CATEGORY_LIST + '/' + category.id + '?page=' + {articles.getNumber() + 2}}__}">
                             Older Posts &rarr;
                         </a>
                     </div>

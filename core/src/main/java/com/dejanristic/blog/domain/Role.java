@@ -1,6 +1,5 @@
 package com.dejanristic.blog.domain;
 
-import com.dejanristic.blog.domain.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.HashSet;

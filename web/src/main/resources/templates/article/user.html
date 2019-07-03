@@ -6,21 +6,21 @@
     <body>
 
         <!-- Navigation -->
-        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'home'})}"></nav>
+        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'user'})}"></nav>
 
         <div th:if="${flashMessage}">
             <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
         </div>
 
         <!-- Page Header -->
-        <header class="masthead" th:style="'background-image:url(' + @{/img/home-bg.jpg} + ');'" >
+        <header class="masthead" th:style="'background-image:url(' + @{__${'/img/user-bg.jpg'}__} + ');'" >
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 col-md-10 mx-auto">
                         <div class="site-heading">
-                            <h1>Clean Blog</h1>
-                            <span class="subheading">A Blog Theme by Start Bootstrap</span>
+                            <h1 >Articles</h1>
+                            <span class="subheading" th:text="'written by ' + ${user.username}">User</span>
                         </div>
                     </div>
                 </div>
@@ -57,9 +57,9 @@
                             <span class="float-right"> views: <b th:text="${article.viewsCount}"></b></span>
                         </div>
                         <div class="post-meta">Posted by
-                            <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_USER_LIST + '/' + article.user.id}__}"
-                               th:text="${article.user.username}"
-                               ></a>
+                            <span
+                                th:text="${article.user.username}"
+                                ></span>
                             on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>,
                             <span>category: <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_CATEGORY_LIST  + '/' + article.category.id}__}"
                                                th:text="${article.category.name}"></a></span>
@@ -76,11 +76,11 @@
                     <!-- Pager -->
                     <div th:if="${articles.getNumber()} &lt; ${articles.getTotalPages()}" class="clearfix">
                         <a th:if="${articles.getNumber() + 1} neq 1"  class="btn btn-primary float-left"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).HOME + '?page=' + articles.getNumber()}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_USER_LIST +'/'+ user.id +'?page=' + articles.getNumber()}__}">
                             &larr; Newer Posts
                         </a>
                         <a th:if="${articles.getNumber() + 1} neq ${articles.getTotalPages()}" class="btn btn-primary float-right"
-                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).HOME + '?page=' + {articles.getNumber() + 2}}__}">
+                           th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_USER_LIST + '/'+ user.id +'?page=' + {articles.getNumber() + 2}}__}">
                             Older Posts &rarr;
                         </a>
                     </div>

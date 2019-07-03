@@ -10,7 +10,6 @@ public class UrlMappings {
     public static final String LOGOUT = "/logout";
     public static final String REGISTER = "/register";
     public static final String REDIRECT_REGISTRER = "redirect:" + REGISTER;
-    public static final String USER_ARTICLES = "article/user";
     public static final String ARTICLE = "/article";
     public static final String ARTICLE_LIKE = "/article/like";
     public static final String ARTICLE_DISLIKE = "/article/dislike";
@@ -27,6 +26,7 @@ public class UrlMappings {
     public static final String ARTICLE_UPDATE = "/article/update";
     public static final String ARTICLE_DELETE = "/article/delete";
     public static final String ARTICLE_CATEGORY_LIST = "/article/category";
+    public static final String ARTICLE_USER_LIST = "/article/user";
     public static final String COMMENT_STORE = "/article/comment";
     public static final String COMMENT_REMOVE = "/article/comment/remove";
 

@@ -6,7 +6,7 @@
     <body>
 
         <!-- Navigation -->
-        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'home'})}"></nav>
+        <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'show'})}"></nav>
 
         <div th:if="${flashMessage}">
             <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
@@ -24,7 +24,7 @@
                                 <h2 th:text="${article.description}" class="subheading">Problems look mighty small from 150 miles up</h2>
 
                                 <span class="meta">Posted by
-                                    <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"
+                                    <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_USER_LIST + '/' + article.user.id}__}"
                                        th:text="${article.user.username}"
                                        ></a>
                                     on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>,
@@ -77,8 +77,9 @@
                                         <textarea id="body" class="form-control" placeholder="write a comment..." rows="3" th:field="*{body}"></textarea>
                                     </div>
                                     <button type="submit" class="commentButton">Send</button>
+                                    <hr>
                                 </form>
-                                <hr>
+
                                 <ul class="media-list" id="comment-list">
                                     <li class="media comment-item"
                                         data-th-each="comment : ${comments}"

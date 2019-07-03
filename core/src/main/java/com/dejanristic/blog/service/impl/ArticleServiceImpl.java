@@ -38,6 +38,12 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Page<Article> findByUserId(Long id, Pageable pageable) {
+        return this.articleRepository.findByUserId(id, pageable);
+//        return this.articleRepository.findAllReleasedArticlesByUser(id, pageable);
+    }
+
+    @Override
     public Article findByTitle(String title) {
         return this.articleRepository.findByTitle(title);
     }

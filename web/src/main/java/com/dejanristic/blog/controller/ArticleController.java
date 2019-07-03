@@ -416,6 +416,29 @@ public class ArticleController {
         return ViewNames.ARTICLE_CATEGORY_LIST;
     }
 
+    @GetMapping(UrlMappings.ARTICLE_USER_LIST + "/{id}")
+    public String articleByUser(
+            @PathVariable("id") String id,
+            @RequestParam(required = false) String page,
+            Model model
+    ) {
+        Long cleanId = SecurityUtility.cleanIdParam(id);
+        int cleanPage = SecurityUtility.cleanPageParam(page);
+
+        User user = userService.findById(cleanId);
+
+        Page<Article> articles
+                = articleService.findByUserId(
+                        user.getId(),
+                        PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
+                );
+
+        model.addAttribute("articles", articles);
+        model.addAttribute("user", user);
+
+        return ViewNames.ARTICLE_USER_LIST;
+    }
+
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping(UrlMappings.ARTICLE_LIKE + "/{id}")
     @ResponseBody
