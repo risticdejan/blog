@@ -66,6 +66,15 @@
         </div>
         <!-- Footer -->
         <div th:replace="~{common/adminFooter :: footerFragment}"></div>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+
+            var likesCount = /*[[${likesCount}]]*/ 0;
+            var dislikesCount = /*[[${dislikesCount}]]*/ 0;
+            console.log(likesCount);
+
+            /*]]>*/
+        </script>
 
         <!-- Page level plugin JavaScript-->
         <script th:src="@{/vendor/chart.js/Chart.min.js}"></script>
