@@ -7,12 +7,27 @@ var ctx = document.getElementById("myBarChart");
 var myLineChart = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+        labels: [
+            visitorPerDay[0].day.toLowerCase(),
+            visitorPerDay[1].day.toLowerCase(),
+            visitorPerDay[2].day.toLowerCase(),
+            visitorPerDay[3].day.toLowerCase(),
+            visitorPerDay[4].day.toLowerCase(),
+            visitorPerDay[5].day.toLowerCase(),
+            visitorPerDay[6].day.toLowerCase()],
         datasets: [{
-                label: "Revenue",
+                label: "Visitor",
                 backgroundColor: "rgba(255,255,255,1)",
                 borderColor: "rgba(0,0,0,1)",
-                data: [4215, 5312, 6251, 7841, 9821, 14984, 6445]
+                data: [
+                    visitorPerDay[0].count,
+                    visitorPerDay[1].count,
+                    visitorPerDay[2].count,
+                    visitorPerDay[3].count,
+                    visitorPerDay[4].count,
+                    visitorPerDay[5].count,
+                    visitorPerDay[6].count
+                ]
             }]
     },
     options: {
@@ -31,7 +46,7 @@ var myLineChart = new Chart(ctx, {
             yAxes: [{
                     ticks: {
                         min: 0,
-                        max: 15000,
+                        max: max,
                         maxTicksLimit: 5
                     },
                     gridLines: {
