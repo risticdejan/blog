@@ -58,6 +58,7 @@ public class HomeController {
             @RequestParam(required = false) String page,
             Model model
     ) {
+        System.out.println("home test");
         int cleanPage = SecurityUtility.cleanPageParam(page);
 
         Page<Article> articles

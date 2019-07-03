@@ -210,9 +210,9 @@ public class ArticleController {
     public String show(
             @PathVariable("id") String id,
             Model model,
-            HttpServletRequest request,
-            RedirectAttributes redirectAttributes
+            HttpServletRequest request
     ) {
+        System.out.println("prvi test");
         Long cleanId = SecurityUtility.cleanIdParam(id);
 
         Article article = articleService.findById(cleanId);
@@ -226,6 +226,8 @@ public class ArticleController {
             flash.info("Unfortunately, Article not released");
             return UrlMappings.REDIRECT_HOME;
         }
+
+        articleService.addView(article);
 
         String backUrl = (request.getHeader("Referer") != null)
                 ? request.getHeader("Referer")

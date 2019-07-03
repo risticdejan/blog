@@ -53,6 +53,8 @@
                                 <label class="label-dislikes" th:text="${article.dislikesCount}">0</label>
                                 <button class="btn-dislike" type="submit"><i class="fas fa-thumbs-down"></i></button>
                             </form>
+
+                            <span class="float-right"> views: <b th:text="${article.viewsCount}"></b></span>
                         </div>
                         <div class="post-meta">Posted by
                             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).USER_ARTICLES + '/' + article.user.id}__}"

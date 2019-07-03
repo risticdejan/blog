@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-10 mx-auto">
                         <div class="post-heading">
-                            <div class="post-details">
+                            <div class="post-details mb-2">
                                 <h1 th:text="${article.title}">Man must explore, and this is exploration at its greatest</h1>
                                 <h2 th:text="${article.description}" class="subheading">Problems look mighty small from 150 miles up</h2>
 
@@ -28,7 +28,8 @@
                                        th:text="${article.user.username}"
                                        ></a>
                                     on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>,
-                                    <span>category: <a href="#" th:text="${article.category.name}"></a></span>
+                                    <span>category: <a href="#" th:text="${article.category.name}"></a></span>,
+                                    <span> views: <b th:text="${article.viewsCount}" style="color: #ffc107;"></b></span>
                                 </span>
                             </div>
                             <div class="clearfix mb-4">
@@ -83,7 +84,7 @@
                                         data-th-each="comment : ${comments}"
                                         >
 
-                                        <img src="#" alt="">
+                                        <img  alt="">
 
                                         <div class="media-body">
                                             <div>

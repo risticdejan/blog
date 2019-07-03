@@ -78,6 +78,7 @@ public class ArticleServiceImpl implements ArticleService {
         } else {
             article.setLikesCount(0);
             article.setDislikesCount(0);
+            article.setViewsCount(0);
             article.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
             article.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
             return articleRepository.save(article);
@@ -115,6 +116,12 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article save(Article article) {
         return this.articleRepository.save(article);
+    }
+
+    @Override
+    public void addView(Article article) {
+        article.setViewsCount(article.getViewsCount() + 1);
+        this.articleRepository.save(article);
     }
 
 }

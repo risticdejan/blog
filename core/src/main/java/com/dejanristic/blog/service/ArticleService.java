@@ -35,4 +35,6 @@ public interface ArticleService {
 
     Article save(Article article);
 
+    void addView(Article article);
+
 }

@@ -40,6 +40,9 @@ public class Article implements Serializable {
     @JsonIgnore
     private Set<Comment> comments;
 
+    @Column(name = "views_count")
+    private Integer viewsCount;
+
     @Column(name = "likes_count")
     private Integer likesCount;
 
