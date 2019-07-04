@@ -66,7 +66,10 @@ var Home = {
         numberOfArticles: "#noa",
         articlePerUser: "#apu",
         username: "#username",
-        email: "#email"
+        email: "#email",
+        likes: "#likes",
+        dislikes: "#dislikes",
+        globarRate: "#gr"
     },
 
     init: function (config) {
@@ -114,7 +117,10 @@ var Home = {
                 $numberOfArticles = $(config.numberOfArticles),
                 $articlePerUser = $(config.articlePerUser),
                 $username = $(config.username),
-                $email = $(config.email);
+                $email = $(config.email),
+                $likes = $(config.likes),
+                $dislikes = $(config.dislikes),
+                $globalRate = $(config.globarRate);
 
         if (data.status === "success") {
             self.setPie(data);
@@ -122,10 +128,12 @@ var Home = {
 
             $numberOfUser.html(data.body.userCount);
             $numberOfArticles.html(data.body.articleCount);
-            $articlePerUser.html(data.body.articleCount / data.body.userCount);
+            $articlePerUser.html((data.body.articleCount / data.body.userCount).toFixed(2));
             $username.html(data.body.user.username);
             $email.html(data.body.user.email);
-
+            $likes.html(data.body.likesCount);
+            $dislikes.html(data.body.dislikesCount);
+            $globalRate.html((data.body.likesCount / data.body.dislikesCount).toFixed(2));
             console.log(data);
         }
     },
