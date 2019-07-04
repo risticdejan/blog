@@ -3,22 +3,29 @@ package com.dejanristic.blog.controller;
 import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.Contact;
 import com.dejanristic.blog.domain.form.ContactForm;
+import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.ContactService;
 import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class ContactController {
@@ -55,21 +62,27 @@ public class ContactController {
     }
 
     @PostMapping(UrlMappings.CONTACT_STORE)
-    public String store(
+    @ResponseBody
+    public ResponseEntity<?> store(
             @Valid @ModelAttribute(AttributeNames.NEW_CONTACT) ContactForm formData,
             BindingResult result,
-            RedirectAttributes redirectAttributes,
+            HttpServletRequest request,
             Model model
     ) {
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute(
-                    "org.springframework.validation.BindingResult."
-                    + AttributeNames.NEW_CONTACT,
-                    result
-            );
-            redirectAttributes.addFlashAttribute(AttributeNames.NEW_CONTACT, formData);
+        String path = request.getContextPath();
 
-            return UrlMappings.REDIRECT_CONTACT;
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap();
+            for (FieldError fe : result.getFieldErrors()) {
+                if (!errors.containsKey(fe.getField())) {
+                    errors.put(fe.getField(), fe.getDefaultMessage());
+                }
+            }
+
+            return new ResponseEntity(
+                    new JsonRespone("failed", errors),
+                    HttpStatus.OK
+            );
         }
 
         Contact contact = new Contact(
@@ -89,6 +102,13 @@ public class ContactController {
                     + "please try again later");
         }
 
-        return UrlMappings.REDIRECT_HOME;
+        Map<String, Object> data = new HashMap();
+
+        data.put("url", path + UrlMappings.HOME);
+
+        return new ResponseEntity(
+                new JsonRespone("success", data),
+                HttpStatus.OK
+        );
     }
 }

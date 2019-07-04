@@ -12,6 +12,14 @@ $.validator.addMethod("noSpecialCharacters", function (value, element) {
     return this.optional(element) || /^[a-z0-9\s.,_\\-\\'\"!?]+$/i.test(value);
 }, "The field cannot contain special characters");
 
+$.validator.addMethod("nameRules", function (value, element) {
+    return this.optional(element) || /^[A-Za-z0-9._\\-]+$/i.test(value);
+}, "The field can contain characters, digits, underscore and/or dash");
+
+$.validator.addMethod("phoneRules", function (value, element) {
+    return this.optional(element) || /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(value);
+}, "Please specify a valid phone number");
+
 var getImg = function (name, size) {
 
     name = name || '';
@@ -144,7 +152,7 @@ var Article = {
                 if (data.status === "success") {
                     window.location = data.body.url;
                 } else if (data.status === "failed") {
-                    if (data.body.bod) {
+                    if (data.body.body) {
                         $(config.body).closest('div')
                                 .append(Template.errorField(data.body.body));
                     }
@@ -160,7 +168,6 @@ var Article = {
                         $(config.category).closest('div')
                                 .append(Template.errorField(data.body.categoryId));
                     }
-                    console.log(data);
                 }
             });
         }
@@ -369,5 +376,124 @@ var Comment = {
     }
 };
 
+var Contact = {
+    config: {
+        form: '#contact-form',
+        name: '#name',
+        email: '#email',
+        phone: '#phone',
+        message: '#message'
+    },
+
+    init: function (config) {
+        $.extend(this.config, config);
+
+        this.bindEvents();
+    },
+
+    bindEvents: function () {
+        var config = this.config,
+                form = config.form;
+
+        $(form).find('button').on('click', $.proxy(this.send, this));
+        $(form).on('focus', 'textarea', this.removeError);
+        $(form).on('focus', 'input', this.removeError);
+    },
+
+    send: function (e) {
+        var config = this.config,
+                $form = $(config.form),
+                url = $form.attr('action'),
+                data = $form.serialize();
+
+        validator = this.validateForm(config.form);
+
+        if (validator.form()) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                dataType: 'JSON'
+            }).done(function (data) {
+                if (data.status === "success") {
+                    window.location = data.body.url;
+                } else if (data.status === "failed") {
+                    if (data.body.name) {
+                        $(config.name).closest('div')
+                                .append(Template.errorField(data.body.name));
+                    }
+                    if (data.body.email) {
+                        $(config.email).closest('div')
+                                .append(Template.errorField(data.body.email));
+                    }
+                    if (data.body.phone) {
+                        $(config.phone).closest('div')
+                                .append(Template.errorField(data.body.phone));
+                    }
+                    if (data.body.body) {
+                        $(config.message).closest('div')
+                                .append(Template.errorField(data.body.body));
+                    }
+                }
+            });
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+    },
+
+    removeError: function () {
+        var $this = $(this);
+
+        $('div.invalid-feedback').remove();
+    },
+
+    validateForm: function (form) {
+        return $(form).validate({
+            lang: 'en',
+            rules: {
+                body: {
+                    required: true,
+                    noSpecialCharacters: true,
+                    minlength: 4,
+                    maxlength: 511
+                },
+                name: {
+                    required: true,
+                    nameRules: true,
+                    minlength: 4,
+                    maxlength: 511
+                },
+                email: {
+                    required: true,
+                    email: true,
+                    minlength: 4,
+                    maxlength: 511
+                },
+                phone: {
+                    required: true,
+                    phoneRules: true
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    }
+};
+
+Contact.init();
 Comment.init();
 Article.init();
