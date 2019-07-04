@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +24,11 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> findAll() {
         return (List<Comment>) commentRepository.findAll();
+    }
+
+    @Override
+    public Page<Comment> findAll(Pageable pageable) {
+        return commentRepository.findAll(pageable);
     }
 
     @Override

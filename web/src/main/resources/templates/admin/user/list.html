@@ -30,14 +30,14 @@
                                     <th scope="col">Username</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Enabled</th>
-
+                                    <th scope="col">Created at</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr data-th-each="user : ${users}">
                                     <td th:text="${user.id}"></td>
                                     <td>
-                                        <a th:text="${user.username}" style="color: #fff;"
+                                        <a class="text-ellipsis title" th:text="${user.username}" style="color: #fff;"
                                            th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id}__}"
                                            ></a>
                                     </td>
@@ -48,6 +48,9 @@
                                     </td>
                                     <td>
                                         <span th:text="${user.enabled}"></span>
+                                    </td>
+                                    <td>
+                                        <span class="text-ellipsis action" th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  HH:mm')}"></span>
                                     </td>
                                 </tr>
                             </tbody>

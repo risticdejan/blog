@@ -16,6 +16,9 @@ public class UrlAdminMappings {
     public static final String REDIRECT_ADMIN_USER_LIST = "redirect:" + ADMIN_USER_LIST;
     public static final String ADMIN_USER_BANNED = "/admin/user/banned";
     public static final String ADMIN_USER_UNBANNED = "/admin/user/unbanned";
+    public static final String ADMIN_COMMENT_LIST = "/admin/comment";
+    public static final String ADMIN_COMMENT_SHOW = "/admin/comment";
+    public static final String ADMIN_COMMENT_DELETE = "/admin/comment/delete";
 
     public UrlAdminMappings() {
     }

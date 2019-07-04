@@ -29,7 +29,11 @@
                                     <th scope="col">Id</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">Author</th>
+                                    <th scope="col">Likes</th>
+                                    <th scope="col">Dislikes</th>
+                                    <th scope="col">Views</th>
                                     <th scope="col">Action</th>
+                                    <th scope="col">Created at</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,17 +45,29 @@
                                            ></a>
                                     </td>
                                     <td>
-                                        <a th:text="${article.user.username}" class="text-ellipsis user" style="color: #fff;"
+                                        <a th:text="${article.user.username}" class="text-ellipsis" style="color: #fff;"
                                            th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + article.user.id}__}"
                                            ></a>
                                     </td>
                                     <td>
-                                        <span class="text-ellipsis action">
+                                        <span th:text="${article.likesCount}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${article.dislikesCount}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${article.viewsCount}"></span>
+                                    </td>
+                                    <td>
+                                        <span class="text-ellipsis">
                                             <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
-                                               style="color: #bd2130;" >
+                                               class="deleteButton">
                                                 delete
                                             </a>
                                         </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-ellipsis action" th:text="${#dates.format(article.createdAt, 'MMMM dd, yyyy  HH:mm')}"></span>
                                     </td>
                                 </tr>
                             </tbody>

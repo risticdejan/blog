@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head th:replace="~{common/adminHead :: headFragment}"></head>
+
+    <body>
+
+        <div class="d-flex" id="wrapper">
+
+            <!-- Sidebar -->
+            <nav th:replace="~{common/adminSidebar :: sidebarFragment (activeTab=${'comment.list'})}"></nav>
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+
+                <nav th:replace="~{common/adminNavbar :: navbarFragment}"></nav>
+
+                <div th:if="${flashMessage}">
+                    <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
+                </div>
+
+                <div class="container-fluid">
+                    <div class="clearfix mb-4">
+                        <h2 class="mt-4">Comment</h2>
+
+                        <a id="back-button" class="btn btn-primary btn-sm float-left"
+                           th:href="@{__${back}__}">
+                            Back
+                        </a>
+                    </div>
+                    <div th:if="${comment} neq null">
+                        <div class="mb-2">
+                            <div><strong>Id</strong> : <span th:text="${comment.id}"></span></div>
+                            <div><strong>Comment</strong> : <span th:text="${comment.body}"></span></div>
+                            <div><strong>User</strong> : <span th:text="${comment.user.username}"></span></div>
+                            <div><strong>Created at</strong> : <span th:text="${#dates.format(comment.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></div>
+                        </div>
+                    </div>
+
+
+                    <div th:if="${comment} eq null" class="post-preview">
+                        <p class="post-title">There is no comment</p>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div th:replace="~{common/adminFooter :: footerFragment}"></div>
+
+        <script th:src="@{/js/admin.js}"></script>
+
+    </body>
+
+</html>

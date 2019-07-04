@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head th:replace="~{common/adminHead :: headFragment}"></head>
+
+    <body>
+
+        <div class="d-flex" id="wrapper">
+
+            <!-- Sidebar -->
+            <nav th:replace="~{common/adminSidebar :: sidebarFragment (activeTab=${'comment.list'})}"></nav>
+
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+
+                <nav th:replace="~{common/adminNavbar :: navbarFragment}"></nav>
+
+                <div th:if="${flashMessage}">
+                    <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
+                </div>
+
+                <div class="container-fluid">
+                    <h2 class="mt-4">List of comments</h2>
+
+                    <div th:if="${!comments.isEmpty()}" class="table-responsive">
+                        <table class="table table-dark table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Id</th>
+                                    <th scope="col">Comment</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col"></th>
+                                    <th scope="col">Created at</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-th-each="comment : ${comments}">
+                                    <td th:text="${comment.id}"></td>
+                                    <td>
+                                        <a class="text-ellipsis title" th:text="${comment.body}" style="color: #fff;"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_COMMENT_SHOW + '/' + comment.id}__}"
+                                           ></a>
+                                    </td>
+                                    <td>
+                                        <a th:text="${comment.user.username}" style="color: #fff;"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + comment.user.id}__}"
+                                           ></a>
+                                    </td>
+                                    <td>
+                                        <span class="text-ellipsis">
+                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_COMMENT_DELETE + '/' + comment.id}__}"
+                                               class="deleteButton">
+                                                delete
+                                            </a>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-ellipsis action" th:text="${#dates.format(comment.createdAt, 'MMMM dd, yyyy  HH:mm')}"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div th:if="${comments.isEmpty()}" class="post-preview">
+                        <p class="post-title">There are no comments</p>
+                    </div>
+
+                    <!-- Pager -->
+                    <div th:if="${comments.getNumber()} &lt; ${comments.getTotalPages()}" class="clearfix" >
+                        <a th:if="${comments.getNumber() + 1} neq 1" class="btn btn-light btn-sm"
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_COMMENT_LIST + '?page=' + comments.getNumber()}__}">
+                            Previous
+                        </a>
+                        <a th:if="${comments.getNumber() + 1} neq ${comments.getTotalPages()}" class="btn btn-light btn-sm ml-2"
+                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_COMMENT_LIST + '?page=' + {comments.getNumber() + 2}}__}">
+                            Next
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Footer -->
+        <div th:replace="~{common/adminFooter :: footerFragment}"></div>
+
+        <script th:src="@{/js/admin.js}"></script>
+
+    </body>
+
+</html>

@@ -29,7 +29,11 @@
                                     <th scope="col">Id</th>
                                     <th scope="col">Title</th>
                                     <th scope="col">Author</th>
-                                    <th scope="col">Action</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col">Created at</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -41,27 +45,33 @@
                                            ></a>
                                     </td>
                                     <td>
-                                        <a th:text="${article.user.username}" class="text-ellipsis user" style="color: #fff;"
+                                        <a th:text="${article.user.username}" class="text-ellipsis" style="color: #fff;"
                                            th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + article.user.id}__}"
                                            ></a>
                                     </td>
                                     <td>
-                                        <span class="text-ellipsis action2">
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
-                                               style="color: #cecc34;">
-                                                check
-                                            </a>
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_RELEASE + '/' + article.id}__}"
-                                               class="ml-2"
-                                               style="color: #34ce57;">
-                                                release
-                                            </a>
-                                            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
-                                               style="color: #bd2130;"
-                                               class="ml-2">
-                                                delete
-                                            </a>
-                                        </span>
+                                        <span th:text="${article.category.name}"></span>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
+                                           class="commentButton">
+                                            check
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_RELEASE + '/' + article.id}__}"
+                                           class="editButton">
+                                            release
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
+                                           class="deleteButton">
+                                            delete
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <span class="text-ellipsis action" th:text="${#dates.format(article.createdAt, 'MMMM dd, yyyy  HH:mm')}"></span>
                                     </td>
                                 </tr>
                             </tbody>

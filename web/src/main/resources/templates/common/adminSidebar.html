@@ -27,6 +27,12 @@ admin.<!DOCTYPE html>
                >
                 Users
             </a>
+            <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_COMMENT_LIST}__}"
+               class="list-group-item list-group-item-action bg-dark"
+               th:classappend="${activeTab == 'comment.list' ? 'active':''}"
+               >
+                Comments
+            </a>
             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).LOGOUT}__}"
                class="list-group-item list-group-item-action bg-dark"
                >
