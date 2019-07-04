@@ -2,7 +2,8 @@ package com.dejanristic.blog.controller;
 
 import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
-import com.dejanristic.blog.domain.form.UserForm;
+import com.dejanristic.blog.domain.form.LoginForm;
+import com.dejanristic.blog.domain.form.RegisterForm;
 import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.Flash;
@@ -63,14 +64,76 @@ public class AuthController {
     }
 
     @GetMapping(UrlMappings.LOGIN)
-    public String loginForm() {
+    public String loginForm(Model model) {
+        if (!model.containsAttribute(AttributeNames.LOGIN_USER)) {
+            model.addAttribute(AttributeNames.LOGIN_USER, new LoginForm());
+        }
+
         return ViewNames.LOGIN;
+    }
+
+    @PostMapping(UrlMappings.LOGIN)
+    @ResponseBody
+    public ResponseEntity<?> login(
+            @Valid @ModelAttribute(AttributeNames.LOGIN_USER) LoginForm dataForm,
+            BindingResult result,
+            HttpServletRequest request
+    ) {
+
+        String path = request.getContextPath();
+        Map<String, Object> data = new HashMap();
+        Map<String, String> errors = new HashMap();
+
+        if (result.hasErrors()) {
+            for (FieldError fe : result.getFieldErrors()) {
+                if (!errors.containsKey(fe.getField())) {
+                    errors.put(fe.getField(), fe.getDefaultMessage());
+                }
+            }
+
+            return new ResponseEntity(
+                    new JsonRespone("failed", errors),
+                    HttpStatus.OK
+            );
+        }
+
+        User user = this.userService.findByUsername(dataForm.getUsername());
+
+        if (SecurityUtility.passwordEncoder().matches(dataForm.getPassword(), user.getPassword())) {
+
+            UserDetails userDetails
+                    = userSecurityService.loadUserByUsername(user.getUsername());
+
+            Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails,
+                    userDetails.getPassword(),
+                    userDetails.getAuthorities()
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            data.put("url", path + UrlMappings.HOME);
+
+            flash.success("Now, You are logged successfully");
+
+            return new ResponseEntity(
+                    new JsonRespone("success", data),
+                    HttpStatus.OK
+            );
+        }
+
+        errors.put("username", "Incorrect username or password");
+
+        return new ResponseEntity(
+                new JsonRespone("failed", errors),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping(UrlMappings.REGISTER)
     public String registerForm(Model model) {
         if (!model.containsAttribute(AttributeNames.NEW_USER)) {
-            model.addAttribute(AttributeNames.NEW_USER, new UserForm());
+            model.addAttribute(AttributeNames.NEW_USER, new RegisterForm());
         }
 
         return ViewNames.REGISTER;
@@ -79,10 +142,9 @@ public class AuthController {
     @PostMapping(UrlMappings.REGISTER)
     @ResponseBody
     public ResponseEntity<?> register(
-            @Valid @ModelAttribute(AttributeNames.NEW_USER) UserForm dataForm,
+            @Valid @ModelAttribute(AttributeNames.NEW_USER) RegisterForm dataForm,
             BindingResult result,
-            HttpServletRequest request,
-            Model model
+            HttpServletRequest request
     ) {
         String path = request.getContextPath();
 

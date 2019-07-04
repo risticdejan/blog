@@ -47,11 +47,11 @@ public class DBData {
 
     private void insertUsers() {
         userService.createUser(new User("dejan",
-                SecurityUtility.passwordEncoder().encode("dejan"),
+                SecurityUtility.passwordEncoder().encode("dejan123"),
                 "dejan@test.com"
         ));
         userService.createAdmin(new User("admin",
-                SecurityUtility.passwordEncoder().encode("admin"),
+                SecurityUtility.passwordEncoder().encode("admin123"),
                 "admin@test.com"
         ));
     }

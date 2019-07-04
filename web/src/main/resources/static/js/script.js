@@ -497,6 +497,7 @@ var Contact = {
 var Auth = {
     config: {
         formRegister: '#register-form',
+        formLogin: '#login-form',
         username: '#username',
         email: '#email',
         password: '#password'
@@ -513,6 +514,8 @@ var Auth = {
 
         $(config.formRegister).find('button').on('click', $.proxy(this.register, this));
         $(config.formRegister).on('focus', 'input', this.removeError);
+        $(config.formLogin).find('button').on('click', $.proxy(this.login, this));
+        $(config.formLogin).on('focus', 'input', this.removeError);
     },
 
     register: function (e) {
@@ -521,7 +524,7 @@ var Auth = {
                 url = $form.attr('action'),
                 data = $form.serialize();
 
-        validator = this.validateForm(config.formRegister);
+        validator = this.validateRegistrationForm(config.formRegister);
 
         if (validator.form()) {
             $.ajax({
@@ -553,13 +556,75 @@ var Auth = {
         e.stopPropagation();
     },
 
+    login: function (e) {
+        var config = this.config,
+                $form = $(config.formLogin),
+                url = $form.attr('action'),
+                data = $form.serialize();
+
+        validator = this.validateLoginForm(config.formLogin);
+
+        if (validator.form()) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                dataType: 'JSON'
+            }).done(function (data) {
+                if (data.status === "success") {
+                    window.location = data.body.url;
+                } else if (data.status === "failed") {
+                    if (data.body.username || data.body.password) {
+                        $(config.username).closest('div')
+                                .append(Template.errorField("Incorrect username or password"));
+                    }
+                }
+            });
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+    },
+
     removeError: function () {
         var $this = $(this);
 
         $('div.invalid-feedback').remove();
     },
 
-    validateForm: function (form) {
+    validateLoginForm: function (form) {
+        return $(form).validate({
+            lang: 'en',
+            rules: {
+                username: {
+                    required: true,
+                    nameRules: true,
+                    minlength: 4,
+                    maxlength: 511
+                },
+                password: {
+                    required: true
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    },
+
+    validateRegistrationForm: function (form) {
         return $(form).validate({
             lang: 'en',
             rules: {
@@ -575,7 +640,7 @@ var Auth = {
                     minlength: 4,
                     maxlength: 511
                 },
-                pasword: {
+                password: {
                     required: true
                 },
                 confirmPassword: {

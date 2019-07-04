@@ -1,6 +1,5 @@
 package com.dejanristic.blog.domain.form;
 
-import com.dejanristic.blog.domain.validation.FormValidationGroup;
 import com.dejanristic.blog.domain.validation.rules.EmailVerification;
 import com.dejanristic.blog.domain.validation.rules.FieldsVerification;
 import javax.persistence.Transient;
@@ -21,7 +20,7 @@ import lombok.ToString;
             message = "Passwords do not match"
     )
 })
-public class UserForm {
+public class RegisterForm {
 
     @NotBlank
     @Size(min = 4, max = 45)
@@ -31,7 +30,7 @@ public class UserForm {
     private String username;
 
     @NotBlank
-    @Size(min = 6, max = 25, groups = {FormValidationGroup.class})
+    @Size(min = 6, max = 25)
     private String password;
 
     @Transient
@@ -42,10 +41,10 @@ public class UserForm {
     @EmailVerification
     private String email;
 
-    public UserForm() {
+    public RegisterForm() {
     }
 
-    public UserForm(String username, String password, String email) {
+    public RegisterForm(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
