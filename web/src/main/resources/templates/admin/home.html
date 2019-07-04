@@ -44,10 +44,10 @@
                                     <div>
                                         <div><strong>Number of Users: </strong> <span id="nou" th:text="${userCount}"></span></div>
                                         <div><strong>Number of Articles: </strong> <span id="noa" th:text="${articleCount}"></span></div>
-                                        <div><strong>Article per User: </strong> <span id="apu" th:text="${articleCount/userCount}"></span></div>
+                                        <div th:if="${userCount} neq 0"><strong>Article per User: </strong> <span id="apu" th:text="${articleCount/userCount}"></span></div>
                                         <div><strong>Likes: </strong> <span id="likes" th:text="${likesCount}"></span></div>
                                         <div><strong>Dislikes: </strong> <span id="dislikes" th:text="${dislikesCount}"></span></div>
-                                        <div><strong>Global rate: </strong> <span id="gr" th:text="${likesCount/dislikesCount}"></span></div>
+                                        <div th:if="${dislikesCount} neq 0"><strong>Global rate: </strong> <span id="gr" th:text="${likesCount/dislikesCount}"></span></div>
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@
             var dislikesCount = /*[[${dislikesCount}]]*/ 0;
             var visitorPerDay = /*[[${visitorPerDay}]]*/ {};
             var max = /*[[${max}]]*/ 0;
-            var url = /*[[@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN}__}]]*/ "";
+            var urlHome = /*[[@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN}__}]]*/ "";
 
             /*]]>*/
         </script>
@@ -89,6 +89,7 @@
         <script th:src="@{/js/chart-pie-demo.js}"></script>
         <script th:src="@{/js/chart-bar-demo.js}"></script>
         <script th:src="@{/js/admin.js}"></script>
+        <script th:src="@{/js/dashboard.js}"></script>
     </body>
 
 </html>
