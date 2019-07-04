@@ -3,6 +3,7 @@ package com.dejanristic.blog.controller;
 import com.dejanristic.blog.domain.Category;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.UserForm;
+import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.service.UserService;
@@ -11,10 +12,15 @@ import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,10 +28,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -70,23 +77,39 @@ public class AuthController {
     }
 
     @PostMapping(UrlMappings.REGISTER)
-    public String register(
+    @ResponseBody
+    public ResponseEntity<?> register(
             @Valid @ModelAttribute(AttributeNames.NEW_USER) UserForm dataForm,
             BindingResult result,
-            RedirectAttributes redirectAttributes
+            HttpServletRequest request,
+            Model model
     ) {
-        if (result.hasErrors()) {
-            addUserToFlashAttribute(dataForm, result, redirectAttributes);
+        String path = request.getContextPath();
 
-            return UrlMappings.REDIRECT_REGISTRER;
+        Map<String, Object> data = new HashMap();
+
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap();
+            for (FieldError fe : result.getFieldErrors()) {
+                if (!errors.containsKey(fe.getField())) {
+                    errors.put(fe.getField(), fe.getDefaultMessage());
+                }
+            }
+
+            return new ResponseEntity(
+                    new JsonRespone("failed", errors),
+                    HttpStatus.OK
+            );
         }
 
         if (userService.findByUsername(dataForm.getUsername()) != null) {
-            result.rejectValue("username", "error.username.exists", "Username already exists");
+            Map<String, String> errors = new HashMap();
+            errors.put("username", "Username already exists");
 
-            addUserToFlashAttribute(dataForm, result, redirectAttributes);
-
-            return UrlMappings.REDIRECT_REGISTRER;
+            return new ResponseEntity(
+                    new JsonRespone("failed", errors),
+                    HttpStatus.OK
+            );
         }
 
         User user = new User(
@@ -116,18 +139,12 @@ public class AuthController {
             flash.error("Unfortunately, there was a problem, "
                     + "please try again later");
         }
-        return UrlMappings.REDIRECT_HOME;
-    }
 
-    private void addUserToFlashAttribute(
-            UserForm dataForm,
-            BindingResult result,
-            RedirectAttributes redirectAttributes
-    ) {
-        redirectAttributes.addFlashAttribute(
-                "org.springframework.validation.BindingResult." + AttributeNames.NEW_USER,
-                result
+        data.put("url", path + UrlMappings.HOME);
+
+        return new ResponseEntity(
+                new JsonRespone("success", data),
+                HttpStatus.OK
         );
-        redirectAttributes.addFlashAttribute(AttributeNames.NEW_USER, dataForm);
     }
 }

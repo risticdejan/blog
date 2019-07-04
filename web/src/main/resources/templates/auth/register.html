@@ -13,7 +13,7 @@
         </div>
 
         <!-- Page Header -->
-        <header class="masthead" th:style="'background-image:url(' + @{/img/contact-bg.jpg} + ');'" > 
+        <header class="masthead" th:style="'background-image:url(' + @{/img/contact-bg.jpg} + ');'" >
             <div class="overlay"></div>
             <div class="container">
                 <div class="row">
@@ -31,32 +31,29 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-md-10 mx-auto">
-                    <form action="#" th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).REGISTER}__}" th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_USER}__}" method="post">
-                        <div class="form-group floating-label-form-group controls">
-                            <label for="inputUsername">Username</label>
-                            <input type="text" class="form-control" id="inputUsername" th:field="*{username}" placeholder="Enter username" aria-describedby="usernameHelpBlock">
+                    <p>Please, join us</p>
+                    <form id="register-form"
+                          th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).REGISTER}__}"
+                          th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_USER}__}"
+                          method="post">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Enter username">
                         </div>
-                        <small th:if="${#fields.hasErrors('username')}" th:errors="*{username}" id="usernameHelpBlock" class="form-text text-danger"></small>
-                        <div class="form-group floating-label-form-group controls">
-                            <label for="inputEmail">Email address</label>
-                            <input type="email" class="form-control" id="inputEmail" th:field="*{email}"  placeholder="Enter email" aria-describedby="emailHelpBlock">
-                        </div>
-                        <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" id="emailHelpBlock" class="form-text text-danger"></small>
-                        <div class="form-group floating-label-form-group controls">
-                            <label for="inputPassword">Password</label>
-                            <input type="password" class="form-control" id="inputPassword" th:field="*{password}"  placeholder="Enter Password" aria-describedby="passwordHelpBlock">
-                        </div>
-                        <small class="form-text"
-                               th:each="error: ${#fields.errors('password')}">
-                            <span th:each="message : ${error.split(',')}">
-                                <span class="text-danger"
-                                      th:text="${message}"></span>
-                            </span>
-                        </small>
 
-                        <div class="form-group floating-label-form-group controls">
-                            <label for="inputConfirmPassword">Confirm Password</label>
-                            <input type="password" class="form-control" id="inputConfirmPassword" th:field="*{confirmPassword}" placeholder="Confirm Password">
+                        <div class="form-group">
+                            <label for="email">Email address</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}"  placeholder="Enter email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" th:field="*{password}"  placeholder="Enter Password">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Confirm Password">
                         </div>
                         <br/>
                         <button type="submit" class="btn btn-primary">Submit</button>

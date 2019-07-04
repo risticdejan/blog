@@ -494,6 +494,115 @@ var Contact = {
     }
 };
 
+var Auth = {
+    config: {
+        formRegister: '#register-form',
+        username: '#username',
+        email: '#email',
+        password: '#password'
+    },
+
+    init: function (config) {
+        $.extend(this.config, config);
+
+        this.bindEvents();
+    },
+
+    bindEvents: function () {
+        var config = this.config;
+
+        $(config.formRegister).find('button').on('click', $.proxy(this.register, this));
+        $(config.formRegister).on('focus', 'input', this.removeError);
+    },
+
+    register: function (e) {
+        var config = this.config,
+                $form = $(config.formRegister),
+                url = $form.attr('action'),
+                data = $form.serialize();
+
+        validator = this.validateForm(config.formRegister);
+
+        if (validator.form()) {
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                dataType: 'JSON'
+            }).done(function (data) {
+                if (data.status === "success") {
+                    window.location = data.body.url;
+                } else if (data.status === "failed") {
+                    if (data.body.username) {
+                        $(config.username).closest('div')
+                                .append(Template.errorField(data.body.username));
+                    }
+                    if (data.body.email) {
+                        $(config.email).closest('div')
+                                .append(Template.errorField(data.body.email));
+                    }
+                    if (data.body.password) {
+                        $(config.password).closest('div')
+                                .append(Template.errorField(data.body.password));
+                    }
+                }
+            });
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+    },
+
+    removeError: function () {
+        var $this = $(this);
+
+        $('div.invalid-feedback').remove();
+    },
+
+    validateForm: function (form) {
+        return $(form).validate({
+            lang: 'en',
+            rules: {
+                username: {
+                    required: true,
+                    nameRules: true,
+                    minlength: 4,
+                    maxlength: 511
+                },
+                email: {
+                    required: true,
+                    email: true,
+                    minlength: 4,
+                    maxlength: 511
+                },
+                pasword: {
+                    required: true
+                },
+                confirmPassword: {
+                    required: true,
+                    equalTo: "#password"
+                }
+            },
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    }
+};
+
+Auth.init();
 Contact.init();
 Comment.init();
 Article.init();
