@@ -5,7 +5,6 @@ public class UrlMappings {
     public static final String HOME = "/home";
     public static final String REDIRECT_HOME = "redirect:" + HOME;
     public static final String ABOUT = "/about";
-    public static final String CONTACT = "/contact";
     public static final String LOGIN = "/login";
     public static final String LOGOUT = "/logout";
     public static final String REGISTER = "/register";
@@ -29,6 +28,9 @@ public class UrlMappings {
     public static final String ARTICLE_USER_LIST = "/article/user";
     public static final String COMMENT_STORE = "/article/comment";
     public static final String COMMENT_REMOVE = "/article/comment/remove";
+    public static final String CONTACT = "/contact";
+    public static final String REDIRECT_CONTACT = "redirect:" + CONTACT;
+    public static final String CONTACT_STORE = "/contact";
 
     private UrlMappings() {
     }

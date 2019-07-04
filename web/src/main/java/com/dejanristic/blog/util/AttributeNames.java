@@ -14,6 +14,7 @@ public class AttributeNames {
     public static final String CATEGORIES = "categories";
 
     public static final String NEW_COMMENT = "newCommnent";
+    public static final String NEW_CONTACT = "newContact";
 
     private AttributeNames() {
     }

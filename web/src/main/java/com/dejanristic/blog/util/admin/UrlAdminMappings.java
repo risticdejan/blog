@@ -19,6 +19,9 @@ public class UrlAdminMappings {
     public static final String ADMIN_COMMENT_LIST = "/admin/comment";
     public static final String ADMIN_COMMENT_SHOW = "/admin/comment";
     public static final String ADMIN_COMMENT_DELETE = "/admin/comment/delete";
+    public static final String ADMIN_CONTACT_LIST = "/admin/contact";
+    public static final String ADMIN_CONTACT_SHOW = "/admin/contact";
+    public static final String ADMIN_CONTACT_DELETE = "/admin/contact/delete";
 
     public UrlAdminMappings() {
     }

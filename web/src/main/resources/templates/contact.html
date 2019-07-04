@@ -33,34 +33,41 @@
                 <div class="col-lg-8 col-md-10 mx-auto">
                     <p>Want to get in touch? Fill out the form below to send me a message and I will get back to you as soon as possible!</p>
 
-                    <form name="sentMessage" id="contactForm" novalidate>
+                    <form method="post"
+                          th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).CONTACT_STORE}__}"
+                          th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_CONTACT}__}"
+                          >
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls">
                                 <label>Name</label>
-                                <input type="text" class="form-control" placeholder="Name" id="name">
+                                <input type="text" class="form-control" placeholder="Name"  th:field="*{name}">
+                                <small th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="form-text text-danger"></small>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls">
                                 <label>Email Address</label>
-                                <input type="email" class="form-control" placeholder="Email Address" id="email">
+                                <input type="email" class="form-control" placeholder="Email Address"  th:field="*{email}">
+                                <small th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="form-text text-danger"></small>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="form-group col-xs-12 floating-label-form-group controls">
                                 <label>Phone Number</label>
-                                <input type="tel" class="form-control" placeholder="Phone Number" id="phone">
+                                <input type="tel" class="form-control" placeholder="Phone Number"  th:field="*{phone}">
+                                <small th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}" class="form-text text-danger"></small>
                             </div>
                         </div>
                         <div class="control-group">
                             <div class="form-group floating-label-form-group controls">
                                 <label>Message</label>
-                                <textarea rows="5" class="form-control" placeholder="Message" id="message"></textarea>
+                                <textarea rows="5" class="form-control" placeholder="Message"  th:field="*{body}"></textarea>
+                                <small th:if="${#fields.hasErrors('body')}" th:errors="*{body}" class="form-text text-danger"></small>
                             </div>
                         </div>
                         <br>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
+                            <button type="submit" class="btn btn-primary">Send</button>
                         </div>
                     </form>
                 </div>

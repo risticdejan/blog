@@ -10,6 +10,8 @@ public class ViewAdminNames {
     public static final String ADMIN_USER_SHOW = "admin/user/show";
     public static final String ADMIN_COMMENT_LIST = "/admin/comment/list";
     public static final String ADMIN_COMMENT_SHOW = "/admin/comment/show";
+    public static final String ADMIN_CONTACT_LIST = "/admin/contact/list";
+    public static final String ADMIN_CONTACT_SHOW = "/admin/contact/show";
 
     public ViewAdminNames() {
     }
