@@ -163,7 +163,7 @@ public class ArticleController {
                 flash.error("Unfortunately, there was a problem, "
                         + "please try again later");
             }
-            data.put("url", path + UrlMappings.HOME);
+            data.put("url", path + UrlMappings.ARTICLE_UNRELEASED_LIST);
 
             return new ResponseEntity(
                     new JsonRespone("success", data),

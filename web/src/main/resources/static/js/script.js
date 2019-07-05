@@ -40,7 +40,7 @@ var getImg = function (name, size) {
             .split(' '),
             initials, charIndex, colourIndex, canvas, context, dataURI;
 
-    if (nameSplit.length == 1) {
+    if (nameSplit.length === 1) {
         initials = nameSplit[0] ? nameSplit[0].charAt(0) : '?';
     } else {
         initials = nameSplit[0].charAt(0) + nameSplit[1].charAt(0);
@@ -50,7 +50,7 @@ var getImg = function (name, size) {
         size = (size * window.devicePixelRatio);
     }
 
-    charIndex = (initials == '?' ? 72 : initials.charCodeAt(0)) - 64;
+    charIndex = (initials === '?' ? 72 : initials.charCodeAt(0)) - 64;
     colourIndex = charIndex % 20;
     canvas = document.createElement('canvas');
     canvas.width = size;
@@ -106,6 +106,7 @@ var Template = {
 
 var Article = {
     config: {
+        spinner: '.loading',
         form: '#article-form',
         body: '#body',
         title: '#title',
@@ -120,6 +121,8 @@ var Article = {
 
     init: function (config) {
         $.extend(this.config, config);
+
+        $(this.config.spinner).hide();
 
         this.bindEvents();
     },
@@ -146,6 +149,8 @@ var Article = {
         validator = this.validateForm(config.form);
 
         if (validator.form()) {
+            $(config.spinner).show();
+
             var formData = new FormData($form[0]);
 
             $.ajax({
@@ -157,6 +162,8 @@ var Article = {
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
+                $(config.spinner).hide();
+
                 if (data.status === "success") {
                     window.location = data.body.url;
                 } else if (data.status === "failed") {
@@ -177,6 +184,8 @@ var Article = {
                                 .append(Template.errorField(data.body.categoryId));
                     }
                 }
+            }).fail(function (e) {
+                $(config.spinner).hide();
             });
         }
 
@@ -298,6 +307,8 @@ var Comment = {
     init: function (config) {
         $.extend(this.config, config);
 
+        $(this.config.spinner).hide();
+
         this.setImages();
 
         this.bindEvents();
@@ -334,18 +345,22 @@ var Comment = {
         validator = this.validateForm(config.form);
 
         if (validator.form()) {
+            $(config.spinner).hide();
             $.ajax({
                 url: url,
                 data: data,
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
+                $(config.spinner).hide();
                 if (data.status === "success") {
                     $list.prepend(Template.comment(data.body));
                 } else if (data.status === "failed") {
                     $(config.body).closest('div')
                             .append(Template.errorField(data.body.body));
                 }
+            }).fail(function (e) {
+                $(config.spinner).hide();
             });
         }
 
@@ -391,6 +406,7 @@ var Comment = {
 
 var Contact = {
     config: {
+        spinner: '.loading',
         form: '#contact-form',
         name: '#name',
         email: '#email',
@@ -400,6 +416,8 @@ var Contact = {
 
     init: function (config) {
         $.extend(this.config, config);
+
+        $(this.config.spinner).hide();
 
         this.bindEvents();
     },
@@ -422,12 +440,16 @@ var Contact = {
         validator = this.validateForm(config.form);
 
         if (validator.form()) {
+            $(config.spinner).show();
+
             $.ajax({
                 url: url,
                 data: data,
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
+                $(config.spinner).hide();
+
                 if (data.status === "success") {
                     window.location = data.body.url;
                 } else if (data.status === "failed") {
@@ -448,6 +470,8 @@ var Contact = {
                                 .append(Template.errorField(data.body.body));
                     }
                 }
+            }).fail(function (e) {
+                $(config.spinner).hide();
             });
         }
 
@@ -509,6 +533,7 @@ var Contact = {
 
 var Auth = {
     config: {
+        spinner: '.loading',
         formRegister: '#register-form',
         formLogin: '#login-form',
         username: '#username',
@@ -518,6 +543,8 @@ var Auth = {
 
     init: function (config) {
         $.extend(this.config, config);
+
+        $(this.config.spinner).hide();
 
         this.bindEvents();
     },
@@ -540,12 +567,16 @@ var Auth = {
         validator = this.validateRegistrationForm(config.formRegister);
 
         if (validator.form()) {
+            $(config.spinner).show();
+
             $.ajax({
                 url: url,
                 data: data,
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
+                $(config.spinner).hide();
+
                 if (data.status === "success") {
                     window.location = data.body.url;
                 } else if (data.status === "failed") {
@@ -562,6 +593,8 @@ var Auth = {
                                 .append(Template.errorField(data.body.password));
                     }
                 }
+            }).fail(function (e) {
+                $(config.spinner).hide();
             });
         }
 
@@ -578,12 +611,15 @@ var Auth = {
         validator = this.validateLoginForm(config.formLogin);
 
         if (validator.form()) {
+            $(config.spinner).show();
             $.ajax({
                 url: url,
                 data: data,
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
+                $(config.spinner).hide();
+
                 if (data.status === "success") {
                     window.location = data.body.url;
                 } else if (data.status === "failed") {
@@ -592,6 +628,8 @@ var Auth = {
                                 .append(Template.errorField("Incorrect username or password"));
                     }
                 }
+            }).fail(function (e) {
+                $(config.spinner).hide();
             });
         }
 

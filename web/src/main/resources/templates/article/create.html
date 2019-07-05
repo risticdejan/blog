@@ -4,6 +4,7 @@
     <head th:replace="~{common/head :: headFragment}"></head>
 
     <body class="bg-dark">
+        <div class="loading">Loading&#8230;</div>
 
         <!-- Navigation -->
         <nav th:replace="~{common/navigation :: navigationFragment (activeTab=${'article.create'})}"></nav>
@@ -11,7 +12,6 @@
         <div th:if="${flashMessage}">
             <div th:replace="~{common/fleshMessage :: messageFragment (type=${flashMessage.type}, text=${flashMessage.text})}"></div>
         </div>
-
 
         <!-- Main Content -->
         <article style="margin-top: 4rem;">
