@@ -2,6 +2,7 @@ package com.dejanristic.blog.service;
 
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.exception.ArticleAlreadyExists;
+import com.dejanristic.blog.exception.ArticleNotFound;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,7 +30,7 @@ public interface ArticleService {
 
     Article create(Article article) throws ArticleAlreadyExists;
 
-    Article update(Article odlArticle, Article article) throws ArticleAlreadyExists;
+    Article update(Article odlArticle, Article article) throws ArticleNotFound;
 
     void delete(Article article);
 
@@ -41,4 +42,5 @@ public interface ArticleService {
 
     Long count();
 
+    String getImageUri(Article article);
 }

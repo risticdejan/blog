@@ -10,6 +10,7 @@ import com.dejanristic.blog.domain.form.ArticleForm;
 import com.dejanristic.blog.domain.form.CommentForm;
 import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.exception.ArticleAlreadyExists;
+import com.dejanristic.blog.exception.ArticleNotFound;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.CategoryService;
 import com.dejanristic.blog.service.CommentService;
@@ -22,6 +23,10 @@ import com.dejanristic.blog.util.AttributeNames;
 import com.dejanristic.blog.util.SecurityUtility;
 import com.dejanristic.blog.util.UrlMappings;
 import com.dejanristic.blog.util.ViewNames;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +54,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
@@ -137,6 +143,19 @@ public class ArticleController {
 
             article = articleService.create(article);
 
+            MultipartFile image = formData.getImage();
+
+            try {
+                byte[] bytes = image.getBytes();
+                String name = article.getId() + ".jpg";
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(new File("src/main/resources/static/img/article/" + name)));
+                stream.write(bytes);
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             if (articleService.isItExists(article)) {
                 flash.success("The article was created, as soon as possible "
                         + "it will be released");
@@ -212,7 +231,6 @@ public class ArticleController {
             Model model,
             HttpServletRequest request
     ) {
-        System.out.println("prvi test");
         Long cleanId = SecurityUtility.cleanIdParam(id);
 
         Article article = articleService.findById(cleanId);
@@ -237,6 +255,7 @@ public class ArticleController {
             model.addAttribute(AttributeNames.NEW_COMMENT, new CommentForm());
         }
         model.addAttribute(AttributeNames.BACK_URL, backUrl);
+        model.addAttribute("uriArticle", this.articleService.getImageUri(article));
         model.addAttribute(AttributeNames.ARTICLE, article);
         model.addAttribute("comments", this.commentService.findByArticleId(article.getId()));
 
@@ -346,14 +365,27 @@ public class ArticleController {
                         + "please try again later");
             }
 
-            data.put("url", path + UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST);
+            MultipartFile image = formData.getImage();
+
+            try {
+                byte[] bytes = image.getBytes();
+                String name = article.getId() + ".jpg";
+                BufferedOutputStream stream = new BufferedOutputStream(
+                        new FileOutputStream(new File("src/main/resources/static/img/article/" + name)));
+                stream.write(bytes);
+                stream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            data.put("url", path + UrlMappings.ARTICLE_UNRELEASED_LIST);
 
             return new ResponseEntity(
-                    new JsonRespone("success", article),
+                    new JsonRespone("success", data),
                     HttpStatus.OK
             );
-        } catch (ArticleAlreadyExists ex) {
-            flash.info("Article already exists");
+        } catch (ArticleNotFound ex) {
+            flash.info("Article not found");
 
             data.put("url", path + UrlMappings.ARTICLE_EDIT + "/" + cleanId);
 

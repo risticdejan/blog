@@ -9,6 +9,7 @@ Without this configuration present, some functionality in the IDE may be limited
     <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
         <word>dejanristic</word>
         <word>devtools</word>
+        <word>fileupload</word>
         <word>runtime</word>
         <word>springsecurity</word>
         <word>thymeleaf</word>

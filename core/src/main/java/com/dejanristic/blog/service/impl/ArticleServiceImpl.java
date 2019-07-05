@@ -2,8 +2,10 @@ package com.dejanristic.blog.service.impl;
 
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.exception.ArticleAlreadyExists;
+import com.dejanristic.blog.exception.ArticleNotFound;
 import com.dejanristic.blog.repository.ArticleRepository;
 import com.dejanristic.blog.service.ArticleService;
+import java.io.File;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +42,6 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Page<Article> findByUserId(Long id, Pageable pageable) {
         return this.articleRepository.findByUserId(id, pageable);
-//        return this.articleRepository.findAllReleasedArticlesByUser(id, pageable);
     }
 
     @Override
@@ -93,10 +94,9 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     @Transactional
-    public Article update(Article oldArticle, Article article) throws ArticleAlreadyExists {
-        if (oldArticle != null) {
-            log.info("article {} already exists", article.getTitle());
-            throw new ArticleAlreadyExists("article alredy exists");
+    public Article update(Article oldArticle, Article article) throws ArticleNotFound {
+        if (oldArticle == null) {
+            throw new ArticleNotFound("article not found");
         } else {
             oldArticle.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
             oldArticle.setTitle(article.getTitle());
@@ -134,4 +134,16 @@ public class ArticleServiceImpl implements ArticleService {
     public Long count() {
         return this.articleRepository.count();
     }
+
+    @Override
+    public String getImageUri(Article article) {
+        File tempFile = new File("src/main/resources/static/img/article/" + article.getId() + ".jpg");
+
+        if (tempFile.exists()) {
+            return "/img/article/" + article.getId() + ".jpg";
+        } else {
+            return "/img/post-bg.jpg";
+        }
+    }
+
 }

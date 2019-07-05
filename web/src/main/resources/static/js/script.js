@@ -12,6 +12,10 @@ $.validator.addMethod("noSpecialCharacters", function (value, element) {
     return this.optional(element) || /^[a-z0-9\s.,_\\-\\'\"!?]+$/i.test(value);
 }, "The field cannot contain special characters");
 
+$.validator.addMethod('filesize', function (value, element, param) {
+    return this.optional(element) || (element.files[0].size <= param);
+}, "The file can not be larger than 1 MB");
+
 $.validator.addMethod("nameRules", function (value, element) {
     return this.optional(element) || /^[A-Za-z0-9._\\-]+$/i.test(value);
 }, "The field can contain characters, digits, underscore and/or dash");
@@ -137,15 +141,19 @@ var Article = {
     save: function (e) {
         var config = this.config,
                 $form = $(config.form),
-                url = $form.attr('action'),
-                data = $form.serialize();
+                url = $form.attr('action');
 
         validator = this.validateForm(config.form);
 
         if (validator.form()) {
+            var formData = new FormData($form[0]);
+
             $.ajax({
                 url: url,
-                data: data,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
@@ -204,6 +212,11 @@ var Article = {
                 },
                 categoryId: {
                     required: true
+                },
+                image: {
+                    required: true,
+                    extension: "jpg|jpeg|png",
+                    filesize: 1000000
                 }
             },
             highlight: function (element) {

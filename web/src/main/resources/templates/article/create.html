@@ -19,7 +19,10 @@
                 <div class="row">
                     <div class="col-lg-11 col-md-11 mx-auto" style="color: #fff;">
                         <h2>Write a new article</h2>
-                        <form id="article-form" th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_STORE}__}" th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_ARTICLE}__}" method="post">
+                        <form id="article-form"
+                              th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_STORE}__}"
+                              th:object="${__${T(com.dejanristic.blog.util.AttributeNames).NEW_ARTICLE}__}"
+                              method="post" enctype="multipart/form-data">
                             <div class="form-group">
                                 <label for="title">Title: </label>
                                 <input type="text" class="form-control" id="title" th:field="*{title}">
@@ -28,6 +31,12 @@
                             <div class="form-group">
                                 <label for="description">Description: </label>
                                 <textarea class="form-control" id="description" th:field="*{description}"></textarea>
+                            </div>
+
+                            <!-- upload image -->
+                            <div class="form-group">
+                                <label for="image">Upload image (jpg, jpeg, png)</label><br>
+                                <input class="file-input" id="image" type="file" th:field="*{image}" th:value="*{image}" />
                             </div>
 
                             <div class="form-group">

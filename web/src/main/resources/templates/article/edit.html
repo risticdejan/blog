@@ -30,6 +30,12 @@
                                 <textarea class="form-control" id="description" th:field="*{description}"></textarea>
                             </div>
 
+                            <!-- upload image -->
+                            <div class="form-group">
+                                <label for="image">Upload image (jpg, jpeg, png)</label><br>
+                                <input class="file-input" id="image" type="file" th:field="*{image}" th:value="*{image}" />
+                            </div>
+
                             <div class="form-group">
                                 <label for="selectCategory">Select Category</label>
                                 <select class="form-control" id="categoryId" th:field="*{categoryId}">

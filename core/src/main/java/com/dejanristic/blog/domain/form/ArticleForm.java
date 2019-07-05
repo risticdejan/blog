@@ -7,6 +7,7 @@ import javax.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -33,6 +34,9 @@ public class ArticleForm {
     @NotBlank
     @Size(min = 4, max = 65535)
     private String body;
+
+    @NotNull
+    private MultipartFile image;
 
     public ArticleForm() {
     }
