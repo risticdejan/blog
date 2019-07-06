@@ -18,6 +18,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import lombok.Data;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
@@ -41,6 +43,7 @@ public class Article implements Serializable {
     private Category category;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @OrderBy(value = "createdAt DESC")
     @JsonIgnore
     private Set<Comment> comments;
@@ -55,10 +58,12 @@ public class Article implements Serializable {
     private Integer dislikesCount;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Set<LikeArticle> likes;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Set<DislikeArticle> dislikes;
 

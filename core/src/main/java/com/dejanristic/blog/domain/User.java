@@ -43,6 +43,12 @@ public class User implements Serializable {
     @Column(name = "username", unique = true, nullable = false, length = 45)
     private String username;
 
+    @Column(name = "firstname", nullable = false, length = 45)
+    private String firstname;
+
+    @Column(name = "lastname", nullable = false, length = 45)
+    private String lastname;
+
     @Column(name = "password", nullable = false, length = 255)
     @JsonIgnore
     private String password;
@@ -94,18 +100,19 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, String firstname, String lastname) {
         this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.password = password;
         this.email = email;
     }
 
-    public User(
-            Long id, String username, String password, String confirmPassword,
-            String email, Date createdAt, Date updatedAt
-    ) {
+    public User(Long id, String username, String firstname, String lastname, String password, String confirmPassword, String email, Date createdAt, Date updatedAt) {
         this.id = id;
         this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
         this.password = password;
         this.confirmPassword = confirmPassword;
         this.email = email;

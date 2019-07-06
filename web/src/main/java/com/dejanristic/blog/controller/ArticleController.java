@@ -401,7 +401,7 @@ public class ArticleController {
     public String delete(
             @PathVariable("id") String id,
             Authentication authentication,
-            RedirectAttributes redirectAttributes
+            HttpServletRequest request
     ) {
         Long cleanId = SecurityUtility.cleanIdParam(id);
 
@@ -422,7 +422,11 @@ public class ArticleController {
                     + "please try again later");
         }
 
-        return UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
+        String backUrl = (request.getHeader("Referer") != null)
+                ? request.getHeader("Referer")
+                : UrlMappings.REDIRECT_ARTICLE_UNRELEASED_LIST;
+
+        return "redirect:" + backUrl;
     }
 
     @GetMapping(UrlMappings.ARTICLE_CATEGORY_LIST + "/{id}")
@@ -471,7 +475,7 @@ public class ArticleController {
         return ViewNames.ARTICLE_USER_LIST;
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(UrlMappings.ARTICLE_LIKE + "/{id}")
     @ResponseBody
     public ResponseEntity<?> like(
@@ -514,7 +518,7 @@ public class ArticleController {
 
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
     @PostMapping(UrlMappings.ARTICLE_DISLIKE + "/{id}")
     @ResponseBody
     public ResponseEntity<?> dislike(

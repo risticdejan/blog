@@ -32,6 +32,8 @@
                         <div class="mb-2">
                             <div><strong>Id</strong> : <span th:text="${user.id}"></span></div>
                             <div><strong>Username</strong> : <span th:text="${user.username}"></span></div>
+                            <div><strong>Firstname</strong> : <span th:text="${user.firstname}"></span></div>
+                            <div><strong>Lastname</strong> : <span th:text="${user.lastname}"></span></div>
                             <div><strong>Email</strong> : <span th:text="${user.email}"></span></div>
                             <div><strong>Enabled</strong> : <span th:text="${user.enabled}"></span></div>
                             <div><strong>Created</strong> : <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></div>

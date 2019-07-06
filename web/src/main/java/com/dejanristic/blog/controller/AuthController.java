@@ -177,7 +177,9 @@ public class AuthController {
         User user = new User(
                 dataForm.getUsername(),
                 SecurityUtility.passwordEncoder().encode(dataForm.getPassword()),
-                dataForm.getEmail()
+                dataForm.getEmail(),
+                dataForm.getFirstname(),
+                dataForm.getLastname()
         );
 
         User newUser = userService.createUser(user);

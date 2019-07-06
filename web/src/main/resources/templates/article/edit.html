@@ -64,7 +64,16 @@
 
         <div th:replace="~{common/script :: scriptFragment}"></div>
         <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-        <script>tinymce.init({selector: '#inputBody'});</script>
+        <script>
+            tinymce.init({
+                selector: '#body',
+                init_instance_callback: function (editor) {
+                    editor.on('NodeChange', function (e) {
+                        $("#body").html(this.getContent());
+                    });
+                }
+            });
+        </script>
 
     </body>
 

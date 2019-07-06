@@ -30,6 +30,20 @@ public class RegisterForm {
     private String username;
 
     @NotBlank
+    @Size(min = 4, max = 45)
+    @Pattern(
+            regexp = "^[A-Za-z0-9._\\-]+$",
+            message = "Firstname can contain characters, digits, underscore and/or dash")
+    private String firstname;
+
+    @NotBlank
+    @Size(min = 4, max = 45)
+    @Pattern(
+            regexp = "^[A-Za-z0-9._\\-]+$",
+            message = "Lastname can contain characters, digits, underscore and/or dash")
+    private String lastname;
+
+    @NotBlank
     @Size(min = 6, max = 25)
     private String password;
 

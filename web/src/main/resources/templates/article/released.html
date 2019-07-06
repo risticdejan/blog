@@ -26,6 +26,9 @@
                                         <th scope="col">Id</th>
                                         <th scope="col">Title</th>
                                         <th scope="col">Category</th>
+                                        <th scope="col">Likes</th>
+                                        <th scope="col">Dislikes</th>
+                                        <th scope="col">Views</th>
                                         <th scope="col">Action</th>
                                     </tr>
                                 </thead>
@@ -38,6 +41,15 @@
                                                ></a>
                                         </td>
                                         <td th:text="${article.category.name}"></td>
+                                        <td>
+                                            <span th:text="${article.likesCount}"></span>
+                                        </td>
+                                        <td>
+                                            <span th:text="${article.dislikesCount}"></span>
+                                        </td>
+                                        <td>
+                                            <span th:text="${article.viewsCount}"></span>
+                                        </td>
                                         <td>
                                             <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_DELETE + '/' + article.id}__}"
                                                class="ml-2 deleteButton">

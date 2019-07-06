@@ -110,6 +110,7 @@ var Util = {
 
     validateForm: function (form, rules) {
         return $(form).validate({
+            ignore: "",
             lang: 'en',
             rules: rules,
             highlight: function (element) {
@@ -264,7 +265,6 @@ var Article = {
                     $parent.find(config.labelLikes).html(data.body.likesCount);
                     $parent.find(config.labelDislikes).html(data.body.dislikesCount);
                 }
-                console.log(data);
             });
         }
         e.preventDefault();
@@ -499,6 +499,18 @@ var Auth = {
         },
         rulesRegister: {
             username: {
+                required: true,
+                nameRules: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            firstname: {
+                required: true,
+                nameRules: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            lastname: {
                 required: true,
                 nameRules: true,
                 minlength: 4,

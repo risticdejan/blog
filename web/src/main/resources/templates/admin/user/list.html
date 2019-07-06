@@ -28,6 +28,7 @@
                                 <tr>
                                     <th scope="col">Id</th>
                                     <th scope="col">Username</th>
+                                    <th scope="col">Full name</th>
                                     <th scope="col">Email</th>
                                     <th scope="col">Enabled</th>
                                     <th scope="col">Created at</th>
@@ -38,6 +39,11 @@
                                     <td th:text="${user.id}"></td>
                                     <td>
                                         <a class="text-ellipsis title" th:text="${user.username}" style="color: #fff;"
+                                           th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id}__}"
+                                           ></a>
+                                    </td>
+                                    <td>
+                                        <a class="text-ellipsis title" th:text="${user.firstname + ' ' + user.lastname}" style="color: #fff;"
                                            th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id}__}"
                                            ></a>
                                     </td>

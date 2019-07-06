@@ -26,7 +26,7 @@
 
                                 <span class="meta">Posted by
                                     <a th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_USER_LIST + '/' + article.user.id}__}"
-                                       th:text="${article.user.username}"
+                                       th:text="${article.user.firstname + ' ' + article.user.lastname}"
                                        ></a>
                                     on <span th:text="${#dates.format(article.publishedAt, 'MMMM dd, yyyy')}"></span>,
                                     <span>category: <a href="#" th:text="${article.category.name}"></a></span>,

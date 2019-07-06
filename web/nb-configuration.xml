@@ -10,6 +10,8 @@ Without this configuration present, some functionality in the IDE may be limited
         <word>dejanristic</word>
         <word>devtools</word>
         <word>fileupload</word>
+        <word>Firstname</word>
+        <word>Lastname</word>
         <word>runtime</word>
         <word>springsecurity</word>
         <word>thymeleaf</word>
