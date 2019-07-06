@@ -49,7 +49,7 @@ var User = {
         }).done(function (data) {
             window.location = backUrl;
         }).fail(function (err) {
-            console.log(err)
+//            console.log(err);
         });
 
 

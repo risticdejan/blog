@@ -24,63 +24,11 @@ $.validator.addMethod("phoneRules", function (value, element) {
     return this.optional(element) || /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im.test(value);
 }, "Please specify a valid phone number");
 
-var getImg = function (name, size) {
-
-    name = name || '';
-    size = size || 60;
-
-    var colours = [
-        "#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9",
-        "#8e44ad", "#2c3e50",
-        "#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b",
-        "#bdc3c7", "#7f8c8d"
-    ],
-            nameSplit = String(name)
-            .toUpperCase()
-            .split(' '),
-            initials, charIndex, colourIndex, canvas, context, dataURI;
-
-    if (nameSplit.length === 1) {
-        initials = nameSplit[0] ? nameSplit[0].charAt(0) : '?';
-    } else {
-        initials = nameSplit[0].charAt(0) + nameSplit[1].charAt(0);
-    }
-
-    if (window.devicePixelRatio) {
-        size = (size * window.devicePixelRatio);
-    }
-
-    charIndex = (initials === '?' ? 72 : initials.charCodeAt(0)) - 64;
-    colourIndex = charIndex % 20;
-    canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    context = canvas.getContext("2d");
-
-    context.fillStyle = colours[colourIndex - 1];
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.font = Math.round(canvas.width / 2) + "px Arial";
-    context.textAlign = "center";
-    context.fillStyle = "#FFF";
-    context.fillText(initials, size / 2, size / 1.5);
-
-    dataURI = canvas.toDataURL();
-    canvas = null;
-
-    return dataURI;
-};
-
-var date_format = function (d) {
-    var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    var date = month[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
-    var time = d.getHours() + ":" + d.getMinutes();
-    return (date + " " + time);
-};
 
 var Template = {
     comment: function (data) {
-        var imgUri = getImg(data.user.username, 30);
-        var date = date_format(new Date(data.createdAt));
+        var imgUri = Template.getImg(data.user.username, 30);
+        var date = Template.getDate(new Date(data.createdAt));
         var temp = "";
         temp += "<li class='media comment-item'>";
         temp += "<img src='" + imgUri + "' alt=''>";
@@ -101,6 +49,85 @@ var Template = {
         temp += error;
         temp += "</div>";
         return temp;
+    },
+    getImg: function (name, size) {
+
+        name = name || '';
+        size = size || 60;
+
+        var colours = [
+            "#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9",
+            "#8e44ad", "#2c3e50",
+            "#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b",
+            "#bdc3c7", "#7f8c8d"
+        ],
+                nameSplit = String(name)
+                .toUpperCase()
+                .split(' '),
+                initials, charIndex, colourIndex, canvas, context, dataURI;
+
+        if (nameSplit.length === 1) {
+            initials = nameSplit[0] ? nameSplit[0].charAt(0) : '?';
+        } else {
+            initials = nameSplit[0].charAt(0) + nameSplit[1].charAt(0);
+        }
+
+        if (window.devicePixelRatio) {
+            size = (size * window.devicePixelRatio);
+        }
+
+        charIndex = (initials === '?' ? 72 : initials.charCodeAt(0)) - 64;
+        colourIndex = charIndex % 20;
+        canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        context = canvas.getContext("2d");
+
+        context.fillStyle = colours[colourIndex - 1];
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.font = Math.round(canvas.width / 2) + "px Arial";
+        context.textAlign = "center";
+        context.fillStyle = "#FFF";
+        context.fillText(initials, size / 2, size / 1.5);
+
+        dataURI = canvas.toDataURL();
+        canvas = null;
+
+        return dataURI;
+    },
+    getDate: function (d) {
+        var month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var date = month[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+        var time = d.getHours() + ":" + d.getMinutes();
+        return (date + " " + time);
+    }
+};
+
+var Util = {
+    removeError: function () {
+        $('div.invalid-feedback').remove();
+    },
+
+    validateForm: function (form, rules) {
+        return $(form).validate({
+            lang: 'en',
+            rules: rules,
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
+            errorElement: 'div',
+            errorClass: 'invalid-feedback',
+            errorPlacement: function (error, element) {
+                if (element.parent('.input-group').length) {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
     }
 };
 
@@ -116,7 +143,33 @@ var Article = {
         formDislike: '.form-dislike',
         labelLikes: '.label-likes',
         labelDislikes: '.label-dislikes',
-        navbarDropdown: "#navbarDropdown"
+        navbarDropdown: "#navbarDropdown",
+        rules: {
+            body: {
+                required: true,
+                minlength: 4
+            },
+            title: {
+                required: true,
+                noSpecialCharacters: true,
+                minlength: 4,
+                maxlength: 155
+            },
+            description: {
+                required: true,
+                noSpecialCharacters: true,
+                minlength: 4,
+                maxlength: 255
+            },
+            categoryId: {
+                required: true
+            },
+            image: {
+                required: true,
+                extension: "jpg|jpeg|png",
+                filesize: 1000000
+            }
+        }
     },
 
     init: function (config) {
@@ -134,8 +187,8 @@ var Article = {
                 formDislike = config.formDislike;
 
         $(form).find('button').on('click', $.proxy(this.save, this));
-        $(form).on('focus', 'textarea', this.removeError);
-        $(form).on('focus', 'input', this.removeError);
+        $(form).on('focus', 'textarea', Util.removeError);
+        $(form).on('focus', 'input', Util.removeError);
 
         $(formLike).find('button').on('click', this.like);
         $(formDislike).find('button').on('click', this.dislike);
@@ -146,7 +199,7 @@ var Article = {
                 $form = $(config.form),
                 url = $form.attr('action');
 
-        validator = this.validateForm(config.form);
+        validator = Util.validateForm(config.form, config.rules);
 
         if (validator.form()) {
             $(config.spinner).show();
@@ -191,59 +244,6 @@ var Article = {
 
         e.preventDefault();
         e.stopPropagation();
-    },
-
-    removeError: function () {
-        var $this = $(this);
-
-        $('div.invalid-feedback').remove();
-    },
-
-    validateForm: function (form) {
-        return $(form).validate({
-            lang: 'en',
-            rules: {
-                body: {
-                    required: true,
-                    minlength: 4
-                },
-                title: {
-                    required: true,
-                    noSpecialCharacters: true,
-                    minlength: 4,
-                    maxlength: 155
-                },
-                description: {
-                    required: true,
-                    noSpecialCharacters: true,
-                    minlength: 4,
-                    maxlength: 255
-                },
-                categoryId: {
-                    required: true
-                },
-                image: {
-                    required: true,
-                    extension: "jpg|jpeg|png",
-                    filesize: 1000000
-                }
-            },
-            highlight: function (element) {
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error');
-            },
-            errorElement: 'div',
-            errorClass: 'invalid-feedback',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
     },
 
     like: function (e) {
@@ -298,10 +298,19 @@ var Article = {
 
 var Comment = {
     config: {
+        spinner: '.loading',
         form: '#comment-add',
         list: '#comment-list',
         listItem: '.comment-item',
-        body: "#body"
+        body: "#body",
+        rules: {
+            body: {
+                required: true,
+                noSpecialCharacters: true,
+                minlength: 4,
+                maxlength: 511
+            }
+        }
     },
 
     init: function (config) {
@@ -319,7 +328,7 @@ var Comment = {
                 form = config.form;
 
         $(form).find('button').on('click', $.proxy(this.addComment, this));
-        $(form).on('focus', 'textarea', this.removeError);
+        $(form).on('focus', 'textarea', Util.removeError);
     },
 
     setImages: function () {
@@ -331,7 +340,7 @@ var Comment = {
                     img = $el.find("img"),
                     name = $el.find("strong").text().slice(1);
 
-            img.attr("src", getImg(name, "30"));
+            img.attr("src", Template.getImg(name, "30"));
         });
     },
 
@@ -342,7 +351,7 @@ var Comment = {
                 url = $form.attr('action'),
                 data = $form.serialize();
 
-        validator = this.validateForm(config.form);
+        validator = Util.validateForm(config.form, config.rules);
 
         if (validator.form()) {
             $(config.spinner).hide();
@@ -366,41 +375,6 @@ var Comment = {
 
         e.preventDefault();
         e.stopPropagation();
-    },
-
-    removeError: function () {
-        var $this = $(this);
-
-        $('div.invalid-feedback').remove();
-    },
-
-    validateForm: function (form) {
-        return $(form).validate({
-            lang: 'en',
-            rules: {
-                body: {
-                    required: true,
-                    noSpecialCharacters: true,
-                    minlength: 4,
-                    maxlength: 511
-                }
-            },
-            highlight: function (element) {
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error');
-            },
-            errorElement: 'div',
-            errorClass: 'invalid-feedback',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
     }
 };
 
@@ -411,7 +385,31 @@ var Contact = {
         name: '#name',
         email: '#email',
         phone: '#phone',
-        message: '#message'
+        message: '#message',
+        rules: {
+            body: {
+                required: true,
+                noSpecialCharacters: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            name: {
+                required: true,
+                nameRules: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            email: {
+                required: true,
+                email: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            phone: {
+                required: true,
+                phoneRules: true
+            }
+        }
     },
 
     init: function (config) {
@@ -427,8 +425,8 @@ var Contact = {
                 form = config.form;
 
         $(form).find('button').on('click', $.proxy(this.send, this));
-        $(form).on('focus', 'textarea', this.removeError);
-        $(form).on('focus', 'input', this.removeError);
+        $(form).on('focus', 'textarea', Util.removeError);
+        $(form).on('focus', 'input', Util.removeError);
     },
 
     send: function (e) {
@@ -437,7 +435,7 @@ var Contact = {
                 url = $form.attr('action'),
                 data = $form.serialize();
 
-        validator = this.validateForm(config.form);
+        validator = Util.validateForm(config.form, config.rules);
 
         if (validator.form()) {
             $(config.spinner).show();
@@ -477,57 +475,6 @@ var Contact = {
 
         e.preventDefault();
         e.stopPropagation();
-    },
-
-    removeError: function () {
-        var $this = $(this);
-
-        $('div.invalid-feedback').remove();
-    },
-
-    validateForm: function (form) {
-        return $(form).validate({
-            lang: 'en',
-            rules: {
-                body: {
-                    required: true,
-                    noSpecialCharacters: true,
-                    minlength: 4,
-                    maxlength: 511
-                },
-                name: {
-                    required: true,
-                    nameRules: true,
-                    minlength: 4,
-                    maxlength: 511
-                },
-                email: {
-                    required: true,
-                    email: true,
-                    minlength: 4,
-                    maxlength: 511
-                },
-                phone: {
-                    required: true,
-                    phoneRules: true
-                }
-            },
-            highlight: function (element) {
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error');
-            },
-            errorElement: 'div',
-            errorClass: 'invalid-feedback',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
     }
 };
 
@@ -538,7 +485,39 @@ var Auth = {
         formLogin: '#login-form',
         username: '#username',
         email: '#email',
-        password: '#password'
+        password: '#password',
+        rulesLogin: {
+            username: {
+                required: true,
+                nameRules: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            password: {
+                required: true
+            }
+        },
+        rulesRegister: {
+            username: {
+                required: true,
+                nameRules: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            email: {
+                required: true,
+                email: true,
+                minlength: 4,
+                maxlength: 511
+            },
+            password: {
+                required: true
+            },
+            confirmPassword: {
+                required: true,
+                equalTo: "#password"
+            }
+        }
     },
 
     init: function (config) {
@@ -553,9 +532,9 @@ var Auth = {
         var config = this.config;
 
         $(config.formRegister).find('button').on('click', $.proxy(this.register, this));
-        $(config.formRegister).on('focus', 'input', this.removeError);
+        $(config.formRegister).on('focus', 'input', Util.removeError);
         $(config.formLogin).find('button').on('click', $.proxy(this.login, this));
-        $(config.formLogin).on('focus', 'input', this.removeError);
+        $(config.formLogin).on('focus', 'input', Util.removeError);
     },
 
     register: function (e) {
@@ -564,7 +543,7 @@ var Auth = {
                 url = $form.attr('action'),
                 data = $form.serialize();
 
-        validator = this.validateRegistrationForm(config.formRegister);
+        validator = Util.validateForm(config.formRegister, config.rulesRegister);
 
         if (validator.form()) {
             $(config.spinner).show();
@@ -608,7 +587,7 @@ var Auth = {
                 url = $form.attr('action'),
                 data = $form.serialize();
 
-        validator = this.validateLoginForm(config.formLogin);
+        validator = Util.validateForm(config.formLogin, config.rulesLogin);
 
         if (validator.form()) {
             $(config.spinner).show();
@@ -635,86 +614,6 @@ var Auth = {
 
         e.preventDefault();
         e.stopPropagation();
-    },
-
-    removeError: function () {
-        var $this = $(this);
-
-        $('div.invalid-feedback').remove();
-    },
-
-    validateLoginForm: function (form) {
-        return $(form).validate({
-            lang: 'en',
-            rules: {
-                username: {
-                    required: true,
-                    nameRules: true,
-                    minlength: 4,
-                    maxlength: 511
-                },
-                password: {
-                    required: true
-                }
-            },
-            highlight: function (element) {
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error');
-            },
-            errorElement: 'div',
-            errorClass: 'invalid-feedback',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
-    },
-
-    validateRegistrationForm: function (form) {
-        return $(form).validate({
-            lang: 'en',
-            rules: {
-                username: {
-                    required: true,
-                    nameRules: true,
-                    minlength: 4,
-                    maxlength: 511
-                },
-                email: {
-                    required: true,
-                    email: true,
-                    minlength: 4,
-                    maxlength: 511
-                },
-                password: {
-                    required: true
-                },
-                confirmPassword: {
-                    required: true,
-                    equalTo: "#password"
-                }
-            },
-            highlight: function (element) {
-                $(element).closest('.form-group').addClass('has-error');
-            },
-            unhighlight: function (element) {
-                $(element).closest('.form-group').removeClass('has-error');
-            },
-            errorElement: 'div',
-            errorClass: 'invalid-feedback',
-            errorPlacement: function (error, element) {
-                if (element.parent('.input-group').length) {
-                    error.insertAfter(element.parent());
-                } else {
-                    error.insertAfter(element);
-                }
-            }
-        });
     }
 };
 
