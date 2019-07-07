@@ -281,12 +281,25 @@ header.masthead .post-details .meta a {
     color: #3d94f6;
 }
 
+.comments-count {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.comments-count .comments-nb {
+    margin-right: 10px;
+}
+
 .form-like,
 .form-dislike {
     font-size: 24px;
     font-weight: bold;
     float: left;
-    margin-right: 15px;
+    margin-left: 15px;
+}
+
+.form-wrapper .comments-count.home {
+    font-size: 18px;
 }
 
 .form-like.home,

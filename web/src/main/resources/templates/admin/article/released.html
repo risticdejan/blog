@@ -31,6 +31,7 @@
                                     <th scope="col">Author</th>
                                     <th scope="col">Likes</th>
                                     <th scope="col">Dislikes</th>
+                                    <th scope="col">Comments</th>
                                     <th scope="col">Views</th>
                                     <th scope="col">Action</th>
                                     <th scope="col">Created at</th>
@@ -54,6 +55,9 @@
                                     </td>
                                     <td>
                                         <span th:text="${article.dislikesCount}"></span>
+                                    </td>
+                                    <td>
+                                        <span th:text="${article.commentsCount}"></span>
                                     </td>
                                     <td>
                                         <span th:text="${article.viewsCount}"></span>

@@ -1,7 +1,9 @@
 package com.dejanristic.blog.controller.admin;
 
 import com.dejanristic.blog.annotation.PerPageAdmin;
+import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.domain.Comment;
+import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.CommentService;
 import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.util.AttributeNames;
@@ -30,14 +32,17 @@ public class CommentController {
     private int perPage;
 
     private CommentService commentService;
+    private ArticleService articleService;
     private final Flash flash;
 
     @Autowired
     public CommentController(
             CommentService commentService,
+            ArticleService articleService,
             Flash flash
     ) {
         this.commentService = commentService;
+        this.articleService = articleService;
         this.flash = flash;
     }
 
@@ -90,6 +95,10 @@ public class CommentController {
         Long cleanId = SecurityUtility.cleanIdParam(id);
 
         Comment comment = commentService.findById(cleanId);
+
+        Article article = comment.getArticle();
+        article.setCommentsCount(article.getCommentsCount() - 1);
+        article = articleService.save(article);
 
         if (comment != null) {
             commentService.delete(comment);

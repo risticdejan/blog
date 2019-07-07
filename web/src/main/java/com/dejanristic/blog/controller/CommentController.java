@@ -2,9 +2,9 @@ package com.dejanristic.blog.controller;
 
 import com.dejanristic.blog.domain.Article;
 import com.dejanristic.blog.domain.Comment;
-import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.form.CommentForm;
+import com.dejanristic.blog.domain.model.JsonRespone;
 import com.dejanristic.blog.service.ArticleService;
 import com.dejanristic.blog.service.CommentService;
 import com.dejanristic.blog.service.impl.UserDetailsImpl;
@@ -70,6 +70,9 @@ public class CommentController {
         Long cleanId = SecurityUtility.cleanIdParam(id);
         Article article = articleService.findById(cleanId);
         User user = ((UserDetailsImpl) authentication.getPrincipal()).getUser();
+
+        article.setCommentsCount(article.getCommentsCount() + 1);
+        article = articleService.save(article);
 
         Comment comment = new Comment(formData.getBody());
         comment.setArticle(article);

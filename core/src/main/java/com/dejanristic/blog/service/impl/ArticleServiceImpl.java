@@ -83,6 +83,7 @@ public class ArticleServiceImpl implements ArticleService {
             log.info("article {} already exists", article.getTitle());
             throw new ArticleAlreadyExists("article alredy exists");
         } else {
+            article.setCommentsCount(0);
             article.setLikesCount(0);
             article.setDislikesCount(0);
             article.setViewsCount(0);

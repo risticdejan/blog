@@ -48,6 +48,9 @@ public class Article implements Serializable {
     @JsonIgnore
     private Set<Comment> comments;
 
+    @Column(name = "comments_count")
+    private Integer commentsCount;
+
     @Column(name = "views_count")
     private Integer viewsCount;
 

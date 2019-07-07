@@ -28,6 +28,7 @@
                                         <th scope="col">Category</th>
                                         <th scope="col">Likes</th>
                                         <th scope="col">Dislikes</th>
+                                        <th scope="col">Comments</th>
                                         <th scope="col">Views</th>
                                         <th scope="col">Action</th>
                                     </tr>
@@ -46,6 +47,9 @@
                                         </td>
                                         <td>
                                             <span th:text="${article.dislikesCount}"></span>
+                                        </td>
+                                        <td>
+                                            <span th:text="${article.commentsCount}"></span>
                                         </td>
                                         <td>
                                             <span th:text="${article.viewsCount}"></span>
