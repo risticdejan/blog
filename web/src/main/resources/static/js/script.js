@@ -9,7 +9,7 @@ $(document).ready(function () {
 });
 
 $.validator.addMethod("noSpecialCharacters", function (value, element) {
-    return this.optional(element) || /^[a-z0-9\s.,_\\-\\'\"!?]+$/i.test(value);
+    return this.optional(element) || /^[a-z0-9\s.,_\\\-\\'\"!?]+$/i.test(value);
 }, "The field cannot contain special characters");
 
 $.validator.addMethod('filesize', function (value, element, param) {
@@ -17,7 +17,7 @@ $.validator.addMethod('filesize', function (value, element, param) {
 }, "The file can not be larger than 1 MB");
 
 $.validator.addMethod("nameRules", function (value, element) {
-    return this.optional(element) || /^[A-Za-z0-9._\\-]+$/i.test(value);
+    return this.optional(element) || /^[A-Za-z0-9._\\\-]+$/i.test(value);
 }, "The field can contain characters, digits, underscore and/or dash");
 
 $.validator.addMethod("phoneRules", function (value, element) {
