@@ -65,6 +65,7 @@ public class DBData {
         categoryService.create(new Category("java"));
         categoryService.create(new Category("javascript"));
         categoryService.create(new Category("sql"));
+        categoryService.create(new Category("css"));
     }
 
     private void insertInitVisitor() {
