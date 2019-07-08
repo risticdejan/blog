@@ -73,6 +73,10 @@
                     "insertdatetime media nonbreaking save table contextmenu directionality",
                     "emoticons template paste textcolor colorpicker textpattern"
                 ],
+                image_class_list: [
+                    {title: 'None', value: ''},
+                    {title: 'Img fluid', value: 'img-fluid'}
+                ],
                 init_instance_callback: function (editor) {
                     editor.on('NodeChange', function (e) {
                         $("#body").html(this.getContent());
