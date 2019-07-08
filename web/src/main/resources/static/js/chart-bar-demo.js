@@ -48,7 +48,7 @@ var configLine = {
                     ticks: {
                         min: 0,
                         max: max,
-                        maxTicksLimit: 10
+                        maxTicksLimit: 5
                     },
                     gridLines: {
                         display: true

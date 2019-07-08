@@ -75,6 +75,11 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public Page<Article> findAllArticlesByUser(Long userId, Pageable pageable) {
+        return (Page<Article>) this.articleRepository.findByUserId(userId, pageable);
+    }
+
+    @Override
     @Transactional
     public Article create(Article article) throws ArticleAlreadyExists {
         Article oldArticle = articleRepository.findByTitle(article.getTitle());

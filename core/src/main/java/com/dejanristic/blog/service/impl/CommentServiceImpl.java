@@ -42,6 +42,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    public Page<Comment> findAllCommentsByUser(Long userId, Pageable pageable) {
+        return (Page<Comment>) commentRepository.findByUserId(userId, pageable);
+    }
+
+    @Override
     public void delete(Comment commnet) {
         commentRepository.delete(commnet);
     }

@@ -24,6 +24,8 @@ public interface ArticleService {
 
     Page<Article> findAllUnreleasedArticlesByUser(Long id, Pageable pageable);
 
+    Page<Article> findAllArticlesByUser(Long userId, Pageable pageable);
+
     Article findByTitle(String title);
 
     Article findById(Long id);

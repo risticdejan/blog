@@ -5,6 +5,8 @@ var Home = {
         numberOfArticles: "#noa",
         articlePerUser: "#apu",
         username: "#username",
+        firstname: "#firstname",
+        lastname: "#lastname",
         email: "#email",
         likes: "#likes",
         dislikes: "#dislikes",
@@ -55,6 +57,8 @@ var Home = {
                 $numberOfArticles = $(config.numberOfArticles),
                 $articlePerUser = $(config.articlePerUser),
                 $username = $(config.username),
+                $firstname = $(config.firstname),
+                $lastname = $(config.lastname),
                 $email = $(config.email),
                 $likes = $(config.likes),
                 $dislikes = $(config.dislikes),
@@ -68,6 +72,8 @@ var Home = {
             $numberOfArticles.html(data.body.articleCount);
             $articlePerUser.html((data.body.articleCount / data.body.userCount).toFixed(2));
             $username.html(data.body.user.username);
+            $firstname.html(data.body.user.firstname);
+            $lastname.html(data.body.user.lastname);
             $email.html(data.body.user.email);
             $likes.html(data.body.likesCount);
             $dislikes.html(data.body.dislikesCount);

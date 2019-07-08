@@ -15,6 +15,8 @@ public interface CommentService {
 
     Page<Comment> findAll(Pageable pageable);
 
+    Page<Comment> findAllCommentsByUser(Long userId, Pageable pageable);
+
     void delete(Comment commnet);
 
     Comment create(Comment commnet);

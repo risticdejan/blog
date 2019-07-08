@@ -34,6 +34,8 @@
                                         <div>
                                             <div><strong>Id</strong> : <span th:text="${user.id}"></span></div>
                                             <div><strong>Username</strong> : <span id="username" th:text="${user.username}"></span></div>
+                                            <div><strong>Firstname</strong> : <span id="firstname" th:text="${user.firstname}"></span></div>
+                                            <div><strong>Lastname</strong> : <span id="lastname" th:text="${user.lastname}"></span></div>
                                             <div><strong>Email</strong> : <span  id="email" th:text="${user.email}"></span></div>
                                             <div><strong>Enabled</strong> : <span th:text="${user.enabled}"></span></div>
                                             <div><strong>Created</strong> : <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></div>

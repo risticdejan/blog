@@ -39,7 +39,6 @@ var User = {
                 $form = $(config.form),
                 url = $form.attr('action'),
                 data = $form.serialize();
-        console.log(backUrl);
 
         $.ajax({
             url: url,

@@ -8,7 +8,7 @@
         <div class="d-flex" id="wrapper">
 
             <!-- Sidebar -->
-            <nav th:replace="~{common/adminSidebar :: sidebarFragment (activeTab=${'article.list'})}"></nav>
+            <nav th:replace="~{common/adminSidebar :: sidebarFragment (activeTab=${'user.list'})}"></nav>
 
             <!-- Page Content -->
             <div id="page-content-wrapper">
@@ -22,60 +22,202 @@
                 <div class="container-fluid">
                     <div class="clearfix mb-4">
                         <h2 class="mt-4">User Details</h2>
-
-                        <a id="back-button" class="btn btn-primary btn-sm float-left"
-                           th:href="@{__${back}__}">
-                            Back
-                        </a>
                     </div>
                     <div th:if="${user} neq null">
-                        <div class="mb-2">
-                            <div><strong>Id</strong> : <span th:text="${user.id}"></span></div>
-                            <div><strong>Username</strong> : <span th:text="${user.username}"></span></div>
-                            <div><strong>Firstname</strong> : <span th:text="${user.firstname}"></span></div>
-                            <div><strong>Lastname</strong> : <span th:text="${user.lastname}"></span></div>
-                            <div><strong>Email</strong> : <span th:text="${user.email}"></span></div>
-                            <div><strong>Enabled</strong> : <span th:text="${user.enabled}"></span></div>
-                            <div><strong>Created</strong> : <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></div>
-                            <div><strong>Updated</strong> : <span th:text="${#dates.format(user.updatedAt, 'MMMM dd, yyyy (HH:MM:SS)')}"></span></div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-6">
+                                <div class="mb-2">
+                                    <div><strong>Id</strong> : <span th:text="${user.id}"></span></div>
+                                    <div><strong>Username</strong> : <span th:text="${user.username}"></span></div>
+                                    <div><strong>Firstname</strong> : <span th:text="${user.firstname}"></span></div>
+                                    <div><strong>Lastname</strong> : <span th:text="${user.lastname}"></span></div>
+                                    <div><strong>Email</strong> : <span th:text="${user.email}"></span></div>
+                                    <div><strong>Enabled</strong> : <span th:text="${user.enabled}"></span></div>
+                                    <div><strong>Created</strong> : <span th:text="${#dates.format(user.createdAt, 'MMMM dd, yyyy  (HH:MM:SS)')}"></span></div>
+                                    <div><strong>Updated</strong> : <span th:text="${#dates.format(user.updatedAt, 'MMMM dd, yyyy (HH:MM:SS)')}"></span></div>
+                                </div>
+
+                            </div>
+                            <div class="col-md-12 col-lg-6">
+                                <div class="mb-2">
+                                    <div><strong>article count</strong> : <span th:text="${articles.getTotalElements()}"></span></div>
+                                    <div><strong>comment count</strong> : <span th:text="${comments.getTotalElements()}"></span></div>
+                                </div>
+                                <div class="clearfix">
+                                    <form  id="ban-user"
+                                           th:if="${user.isEnabled()}"
+                                           th:action="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_BANNED + '/' + user.id}__}"
+                                           method="post">
+                                        <button
+                                            type="submit"
+                                            class="btn btn-danger btn-sm" >
+                                            ban
+                                        </button>
+                                    </form>
+                                    <form  id="ban-user"
+                                           th:if="${!user.isEnabled()}"
+                                           th:action="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_UNBANNED + '/' + user.id}__}"
+                                           method="post">
+                                        <button
+                                            type="submit"
+                                            class="btn btn-success btn-sm">
+                                            unban
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
-                        <div class="clearfix">
-                            <form  id="ban-user"
-                                   th:if="${user.isEnabled()}"
-                                   th:action="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_BANNED + '/' + user.id}__}"
-                                   method="post">
-                                <button
-                                    type="submit"
-                                    class="btn btn-danger btn-sm" >
-                                    ban
-                                </button>
-                            </form>
-                            <form  id="ban-user"
-                                   th:if="${!user.isEnabled()}"
-                                   th:action="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_UNBANNED + '/' + user.id}__}"
-                                   method="post">
-                                <button
-                                    type="submit"
-                                    class="btn btn-success btn-sm">
-                                    unban
-                                </button>
-                            </form>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2 class="mt-4">List of articles</h2>
+
+                                <div th:if="${!articles.isEmpty()}" class="table-responsive">
+                                    <table class="table table-dark table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Id</th>
+                                                <th scope="col">Title</th>
+                                                <th scope="col">Author</th>
+                                                <th scope="col">Likes</th>
+                                                <th scope="col">Dislikes</th>
+                                                <th scope="col">Comments</th>
+                                                <th scope="col">Views</th>
+                                                <th scope="col">Action</th>
+                                                <th scope="col">Created at</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-th-each="article : ${articles}">
+                                                <td th:text="${article.id}"></td>
+                                                <td>
+                                                    <a th:text="${article.title}" class="text-ellipsis title"style="color: #fff;"
+                                                       th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
+                                                       ></a>
+                                                </td>
+                                                <td>
+                                                    <a th:text="${article.user.username}" class="text-ellipsis" style="color: #fff;"
+                                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + article.user.id}__}"
+                                                       ></a>
+                                                </td>
+                                                <td>
+                                                    <span th:text="${article.likesCount}"></span>
+                                                </td>
+                                                <td>
+                                                    <span th:text="${article.dislikesCount}"></span>
+                                                </td>
+                                                <td>
+                                                    <span th:text="${article.commentsCount}"></span>
+                                                </td>
+                                                <td>
+                                                    <span th:text="${article.viewsCount}"></span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-ellipsis">
+                                                        <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_DELETE + '/' + article.id}__}"
+                                                           class="deleteButton">
+                                                            delete
+                                                        </a>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-ellipsis action" th:text="${#dates.format(article.createdAt, 'MMMM dd, yyyy  HH:mm')}"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div th:if="${articles.isEmpty()}" class="post-preview">
+                                    <p class="post-title">There are no articles</p>
+                                </div>
+
+                                <!-- Pager -->
+                                <div  class="clearfix" >
+                                    <a th:if="${articles.getNumber() + 1} neq 1" class="btn btn-light btn-sm"
+                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id + '?apage=' + articles.getNumber() + '&cpage=' + {comments.getNumber() + 1}}__}">
+                                        Previous
+                                    </a>
+                                    <a th:if="${articles.getNumber() + 1} &lt; ${articles.getTotalPages()}" class="btn btn-light btn-sm ml-2"
+                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id + '?apage=' + {articles.getNumber() + 2}+ '&cpage=' + {comments.getNumber() + 1}}__}">
+                                        Next
+                                    </a>
+                                </div>
+                            </div>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h2 class="mt-4">List of comments</h2>
+
+                                <div th:if="${!comments.isEmpty()}" class="table-responsive">
+                                    <table class="table table-dark table-sm table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Id</th>
+                                                <th scope="col">Comment</th>
+                                                <th scope="col">User</th>
+                                                <th scope="col"></th>
+                                                <th scope="col">Created at</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-th-each="comment : ${comments}">
+                                                <td th:text="${comment.id}"></td>
+                                                <td>
+                                                    <a class="text-ellipsis title" th:text="${comment.body}" style="color: #fff;"
+                                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_COMMENT_SHOW + '/' + comment.id}__}"
+                                                       ></a>
+                                                </td>
+                                                <td>
+                                                    <a th:text="${comment.user.username}" style="color: #fff;"
+                                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + comment.user.id}__}"
+                                                       ></a>
+                                                </td>
+                                                <td>
+                                                    <span class="text-ellipsis">
+                                                        <a th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_COMMENT_DELETE + '/' + comment.id}__}"
+                                                           class="deleteButton">
+                                                            delete
+                                                        </a>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="text-ellipsis action" th:text="${#dates.format(comment.createdAt, 'MMMM dd, yyyy  HH:mm')}"></span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div th:if="${comments.isEmpty()}" class="post-preview">
+                                    <p class="post-title">There are no comments</p>
+                                </div>
+
+                                <!-- Pager -->
+                                <div  class="clearfix" >
+                                    <a th:if="${comments.getNumber() + 1} neq 1" class="btn btn-light btn-sm"
+                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id + '?cpage=' + comments.getNumber() + '&apage=' + {articles.getNumber()+1}}__}">
+                                        Previous
+                                    </a>
+                                    <a th:if="${comments.getNumber() + 1} &lt; ${comments.getTotalPages()}" class="btn btn-light btn-sm ml-2"
+                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_USER_SHOW + '/' + user.id + '?cpage=' + {comments.getNumber() + 2} + '&apage=' + {articles.getNumber() + 1}}__}">
+                                        Next
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div th:if="${user} eq null" class="post-preview">
+                            <p class="post-title">There is no user</p>
+                        </div>
+
+
                     </div>
-
-
-                    <div th:if="${user} eq null" class="post-preview">
-                        <p class="post-title">There is no user</p>
-                    </div>
-
-
                 </div>
             </div>
-        </div>
-        <!-- Footer -->
-        <div th:replace="~{common/adminFooter :: footerFragment}"></div>
+            <!-- Footer -->
+            <div th:replace="~{common/adminFooter :: footerFragment}"></div>
 
-        <script th:src="@{/js/admin.js}"></script>
+            <script th:src="@{/js/admin.js}"></script>
 
     </body>
 

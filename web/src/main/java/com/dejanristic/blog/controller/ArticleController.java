@@ -464,7 +464,7 @@ public class ArticleController {
         User user = userService.findById(cleanId);
 
         Page<Article> articles
-                = articleService.findByUserId(
+                = articleService.findAllReleasedArticlesByUser(
                         user.getId(),
                         PageRequest.of(cleanPage, perPage, Sort.by("publishedAt").descending())
                 );

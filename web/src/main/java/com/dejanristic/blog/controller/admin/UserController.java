@@ -1,8 +1,12 @@
 package com.dejanristic.blog.controller.admin;
 
 import com.dejanristic.blog.annotation.PerPageAdmin;
+import com.dejanristic.blog.domain.Article;
+import com.dejanristic.blog.domain.Comment;
 import com.dejanristic.blog.domain.User;
 import com.dejanristic.blog.domain.model.JsonRespone;
+import com.dejanristic.blog.service.ArticleService;
+import com.dejanristic.blog.service.CommentService;
 import com.dejanristic.blog.service.Flash;
 import com.dejanristic.blog.service.UserService;
 import com.dejanristic.blog.util.AttributeNames;
@@ -35,14 +39,20 @@ public class UserController {
     private int perPage;
 
     private final UserService userService;
+    private final ArticleService articleService;
+    private final CommentService commentService;
     private final Flash flash;
 
     @Autowired
     public UserController(
             UserService userService,
+            ArticleService articleService,
+            CommentService commetService,
             Flash flash
     ) {
         this.userService = userService;
+        this.articleService = articleService;
+        this.commentService = commetService;
         this.flash = flash;
     }
 
@@ -69,13 +79,25 @@ public class UserController {
     @GetMapping(UrlAdminMappings.ADMIN_USER_SHOW + "/{id}")
     public String show(
             @PathVariable("id") String id,
+            @RequestParam(required = false) String apage,
+            @RequestParam(required = false) String cpage,
             HttpServletRequest request,
             Model model
     ) {
 
         Long cleanId = SecurityUtility.cleanIdParam(id);
+        int cleanAPage = SecurityUtility.cleanPageParam(apage);
+        int cleanCPage = SecurityUtility.cleanPageParam(cpage);
 
         User user = userService.findById(cleanId);
+        Page<Article> articles = articleService.findAllArticlesByUser(
+                user.getId(),
+                PageRequest.of(cleanAPage, perPage, Sort.by("publishedAt").descending())
+        );
+        Page<Comment> comments = commentService.findAllCommentsByUser(
+                user.getId(),
+                PageRequest.of(cleanCPage, perPage, Sort.by("createdAt").descending())
+        );
 
         String backUrl = (request.getHeader("Referer") != null)
                 ? request.getHeader("Referer")
@@ -83,6 +105,8 @@ public class UserController {
 
         model.addAttribute(AttributeNames.BACK_URL, backUrl);
         model.addAttribute("user", user);
+        model.addAttribute("articles", articles);
+        model.addAttribute("comments", comments);
         return ViewAdminNames.ADMIN_USER_SHOW;
     }
 

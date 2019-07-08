@@ -364,6 +364,7 @@ var Comment = {
                 $(config.spinner).hide();
                 if (data.status === "success") {
                     $list.prepend(Template.comment(data.body));
+                    $(config.body).val("");
                 } else if (data.status === "failed") {
                     $(config.body).closest('div')
                             .append(Template.errorField(data.body.body));
