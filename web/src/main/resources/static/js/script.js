@@ -255,16 +255,20 @@ var Article = {
                 $parent = $(e.currentTarget).parents("div").eq(0);
         // checking for if a user logged
         if ($(config.navbarDropdown).length > 0) {
+            $(config.spinner).show();
             $.ajax({
                 url: url,
                 data: data,
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
+                $(config.spinner).hide();
                 if (data.status === "success") {
                     $parent.find(config.labelLikes).html(data.body.likesCount);
                     $parent.find(config.labelDislikes).html(data.body.dislikesCount);
                 }
+            }).fail(function (e) {
+                $(config.spinner).hide();
             });
         }
         e.preventDefault();
@@ -279,16 +283,20 @@ var Article = {
                 $parent = $(e.currentTarget).parents("div").eq(0);
         // checking for if a user logged
         if ($(config.navbarDropdown).length > 0) {
+            $(config.spinner).show();
             $.ajax({
                 url: url,
                 data: data,
                 type: 'POST',
                 dataType: 'JSON'
             }).done(function (data) {
+                $(config.spinner).hide();
                 if (data.status === "success") {
                     $parent.find(config.labelLikes).html(data.body.likesCount);
                     $parent.find(config.labelDislikes).html(data.body.dislikesCount);
                 }
+            }).fail(function (e) {
+                $(config.spinner).hide();
             });
         }
         e.preventDefault();

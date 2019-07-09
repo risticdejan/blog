@@ -92,7 +92,7 @@ public class UserController {
         User user = userService.findById(cleanId);
         Page<Article> articles = articleService.findAllArticlesByUser(
                 user.getId(),
-                PageRequest.of(cleanAPage, perPage, Sort.by("publishedAt").descending())
+                PageRequest.of(cleanAPage, perPage, Sort.by("createdAt").descending())
         );
         Page<Comment> comments = commentService.findAllCommentsByUser(
                 user.getId(),

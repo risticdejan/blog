@@ -35,7 +35,6 @@ var User = {
 
     send: function (e) {
         var config = this.config,
-                backUrl = $(config.back).attr("href"),
                 $form = $(config.form),
                 url = $form.attr('action'),
                 data = $form.serialize();
@@ -46,7 +45,7 @@ var User = {
             type: 'POST',
             dataType: 'JSON'
         }).done(function (data) {
-            window.location = backUrl;
+            window.location.reload();
         }).fail(function (err) {
 //            console.log(err);
         });
