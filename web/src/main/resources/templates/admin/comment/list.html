@@ -23,6 +23,10 @@
                     <h2 class="mt-4">List of comments</h2>
 
                     <div th:if="${!comments.isEmpty()}" class="table-responsive">
+                        <p>
+                            Page <span th:text="${comments.getNumber() + 1}"></span> of
+                            <span th:text="${comments.getTotalPages()}"></span>
+                        </p>
                         <table class="table table-dark table-sm table-hover">
                             <thead>
                                 <tr>
