@@ -24,7 +24,7 @@ public class FlashInterceptor implements HandlerInterceptor {
             HttpServletResponse response,
             Object handler
     ) throws Exception {
-        Map<String, Message> message = flash.getMessage();
+        Map<String, Message> message = flash.getMessages();
 
         if (!message.isEmpty()) {
             request.setAttribute(

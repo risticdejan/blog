@@ -34,15 +34,16 @@
 
                         <h4>User: </h4>
                         <div class="check-article-item">
-                            <a th:text="${article.user.username}" style="color: #479af3;"
-                               href="#"
-                               ></a>
+                            <span th:text="${article.user.username}" ></span>
                         </div>
                         <h4>body: </h4>
                         <div class="check-article-item"  th:text="${article.description}"></div>
 
-                        <h4>body: </h4>
+                        <h4>body(source code): </h4>
                         <div class="check-article-item" th:text="${article.body}"></div>
+
+                        <h4>body(preview): </h4>
+                        <div class="check-article-item" th:utext="${article.body}"></div>
                     </div>
 
 

@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 @Scope(value = "session", proxyMode = ScopedProxyMode.INTERFACES)
 public class FlashImpl implements Flash {
 
-    Map<String, Message> message = new HashMap();
+    Map<String, Message> messages = new HashMap();
 
     private void add(Message message) {
-        this.message.put(AttributeNames.FLASH_MESSAGE, message);
+        this.messages.put(AttributeNames.FLASH_MESSAGE, message);
     }
 
     @Override
@@ -37,12 +37,12 @@ public class FlashImpl implements Flash {
 
     @Override
     public void reset() {
-        this.message.clear();
+        this.messages.clear();
     }
 
     @Override
-    public Map<String, Message> getMessage() {
-        return this.message;
+    public Map<String, Message> getMessages() {
+        return this.messages;
     }
 
 }

@@ -310,6 +310,7 @@ var Comment = {
         form: '#comment-add',
         list: '#comment-list',
         listItem: '.comment-item',
+        commentsNb: '.comments-nb',
         body: "#body",
         rules: {
             body: {
@@ -373,6 +374,7 @@ var Comment = {
                 if (data.status === "success") {
                     $list.prepend(Template.comment(data.body));
                     $(config.body).val("");
+                    $(config.commentsNb).html(parseInt($(config.commentsNb).html()) + 1);
                 } else if (data.status === "failed") {
                     $(config.body).closest('div')
                             .append(Template.errorField(data.body.body));

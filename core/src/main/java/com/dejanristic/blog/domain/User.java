@@ -1,7 +1,5 @@
 package com.dejanristic.blog.domain;
 
-import com.dejanristic.blog.domain.validation.FormValidationGroup;
-import com.dejanristic.blog.domain.validation.rules.FieldsVerification;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.util.Date;
@@ -25,14 +23,6 @@ import lombok.Data;
 
 @Data
 @Entity
-@FieldsVerification.List({
-    @FieldsVerification(
-            field = "password",
-            fieldMatch = "confirmPassword",
-            message = "Passwords do not match",
-            groups = {FormValidationGroup.class}
-    )
-})
 public class User implements Serializable {
 
     @Id

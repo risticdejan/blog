@@ -74,7 +74,7 @@ public class CommentController {
         article.setCommentsCount(article.getCommentsCount() + 1);
         article = articleService.save(article);
 
-        Comment comment = new Comment(formData.getBody());
+        Comment comment = new Comment(SecurityUtility.stripXSS(formData.getBody()));
         comment.setArticle(article);
         comment.setUser(user);
 

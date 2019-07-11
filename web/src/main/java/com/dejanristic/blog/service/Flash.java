@@ -13,5 +13,5 @@ public interface Flash {
 
     void reset();
 
-    Map<String, Message> getMessage();
+    Map<String, Message> getMessages();
 }

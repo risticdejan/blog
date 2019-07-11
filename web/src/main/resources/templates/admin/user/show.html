@@ -94,8 +94,11 @@
                                             <tr data-th-each="article : ${articles}">
                                                 <td th:text="${article.id}"></td>
                                                 <td>
-                                                    <a th:text="${article.title}" class="text-ellipsis title"style="color: #fff;"
+                                                    <a th:if="${article.publishedAt} neq null" th:text="${article.title}" class="text-ellipsis title"style="color: #fff;"
                                                        th:href="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_SHOW + '/' + article.id}__}"
+                                                       ></a>
+                                                    <a th:if="${article.publishedAt} eq null" th:text="${article.title}" class="text-ellipsis title"style="color: #fff;"
+                                                       th:href="@{__${T(com.dejanristic.blog.util.admin.UrlAdminMappings).ADMIN_ARTICLE_SHOW + '/' + article.id}__}"
                                                        ></a>
                                                 </td>
                                                 <td>

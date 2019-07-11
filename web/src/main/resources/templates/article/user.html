@@ -38,6 +38,8 @@
                             <h3 th:text="${article.description}" class="post-subtitle"> </h3>
                         </a>
                         <div class="clearfix form-wrapper">
+                            <span class="float-left comments-count home"><b class="comments-nb" th:text="${article.commentsCount}"></b> <i class="far fa-comment-alt"></i></span>
+
                             <form class="form-like home"
                                   th:action="@{__${T(com.dejanristic.blog.util.UrlMappings).ARTICLE_LIKE + '/' + article.id}__}"
                                   method="post"
