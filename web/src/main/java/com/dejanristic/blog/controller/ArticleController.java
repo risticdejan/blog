@@ -134,7 +134,7 @@ public class ArticleController {
         }
 
         Article article
-                = new Article(formData.getTitle(), formData.getDescription(), formData.getBody());
+                = new Article(formData.getTitle(), formData.getDescription(), SecurityUtility.stripXSS(formData.getBody()));
         article.setUser(userService.findByUsername(principal.getName()));
         article.setCategory(categoryService.findById(formData.getCategoryId()));
 
@@ -350,7 +350,7 @@ public class ArticleController {
         }
 
         Article article
-                = new Article(formData.getTitle(), formData.getDescription(), formData.getBody());
+                = new Article(formData.getTitle(), formData.getDescription(), SecurityUtility.stripXSS(formData.getBody()));
         article.setCategory(categoryService.findById(formData.getCategoryId()));
 
         Map<String, Object> data = new HashMap();
