@@ -240,6 +240,7 @@ var Article = {
                 }
             }).fail(function (e) {
                 $(config.spinner).hide();
+                window.location.reload();
             });
         }
 

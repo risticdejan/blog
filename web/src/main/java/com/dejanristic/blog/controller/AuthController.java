@@ -99,7 +99,7 @@ public class AuthController {
 
         User user = this.userService.findByUsername(dataForm.getUsername());
 
-        if (SecurityUtility.passwordEncoder().matches(dataForm.getPassword(), user.getPassword())
+        if (user != null && SecurityUtility.passwordEncoder().matches(dataForm.getPassword(), user.getPassword())
                 && user.isEnabled()) {
 
             UserDetails userDetails
